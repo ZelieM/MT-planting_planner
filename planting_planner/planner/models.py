@@ -5,6 +5,9 @@ class Garden(models.Model):
     def __str__(self):
         return "Garden: " + self.name
 
+    def get_absolute_url(self):
+        return "/planner/%i/" % self.id
+
 class Bed(models.Model):
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
