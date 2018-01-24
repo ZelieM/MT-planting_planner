@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vous etes bien sur la page détaillée d'un jardin</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+<body>
+<div class="jumbotron text-center">
+    <h1>Page du jardin  {{ garden.name }} ({{ garden.id }}) </h1>
+</div>
+
+
+{% load planner_extras %}
+<nav class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="{% url 'planner:index' %}">Home</a></li>
+        <li class="{% navactive request 'planner:garden_view' garden.id %}"><a href="{% url 'planner:garden_view' garden.id %}">Mon jardin</a></li>
+        <li class="{% navactive request 'planner:planification_view' garden.id %}"><a href="{% url 'planner:planification_view' garden.id %}">Planification</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    {% block content %}{% endblock content %}
+
+</div>
+</body>
+</html>
