@@ -2,8 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-from .models import Garden, Bed
+from .models import Garden, Bed, Vegetable, Event
 
+from .ganttchart import create_gantt
 
 def index(request):
     return render(request, 'planner/index.html')
@@ -43,5 +44,19 @@ def delete_bed(request, bedid):
 
 def planification_view(request, garden_id):
     garden = get_object_or_404(Garden, pk=garden_id)
-    return render(request, 'planner/planification.html', {'garden': garden})
+    beds = Bed.objects.filter(garden_id=garden.id)
+    vegetables = Vegetable.objects.all()
+    events = Event.objects.all()
+    create_gantt(events)
+    return render(request, 'planner/planification.html', {'garden': garden, 'beds': beds, 'vegetables': vegetables, 'events': events})
 
+
+def add_event(request, garden_id):
+    vid = request.POST["vegetablename"]
+    bid = request.POST["bedname"]
+    seedingS = request.POST["seedingstart"]
+    seedingE = request.POST["seedingend"]
+    harvestS = request.POST["harveststart"]
+    harvestE = request.POST["harvestend"]
+    Event.objects.create(bed_id=bid, vegetable_id=vid, seeding_start=seedingS, seeding_end=seedingE, harvest_start=harvestS, harvest_end=harvestE)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
