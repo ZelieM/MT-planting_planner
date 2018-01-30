@@ -1,9 +1,9 @@
 console.log('hello');
 
 // Set the min date of SeedingStart to Today
-var today = new Date();
-var todayFormated = today.getFullYear() + '-' + today.getMonth() + 1 + '-' + today.getDate();
-document.getElementById("SeedingStart").min = todayFormated;
+// var today = new Date();
+// var todayFormated = today.getFullYear() + '-' + today.getMonth() + 1 + '-' + today.getDate();
+// document.getElementById("SeedingStart").min = todayFormated;
 
 // Set the min date of SeedingEnd to the value of SeedingStart
 document.getElementById("SeedingStart").addEventListener("change", function (event) {

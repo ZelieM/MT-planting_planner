@@ -2,7 +2,7 @@ import datetime
 import gantt
 
 
-def create_gantt(eventlist):
+def create_gantt(eventlist, garden_id):
 
     # Create a resource
     #rGARDEN = gantt.Resource('rGARDEN')
@@ -15,7 +15,8 @@ def create_gantt(eventlist):
                        color="#FF8080")
         p.add_task(t)
 
-    p.make_svg_for_tasks(filename='planner/static/planner/ganttcharts/all_events.svg',
+    fname = 'planner/static/planner/ganttcharts/all_events_%i.svg' %garden_id
+    p.make_svg_for_tasks(filename=fname,
                          today=datetime.date.today(),
                          start=datetime.date(2018,1, 1), ## TODO : first seeding start
                          end=datetime.date(2019, 1, 14), ## TODO : last harvest end

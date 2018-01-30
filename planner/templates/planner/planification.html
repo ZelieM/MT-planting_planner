@@ -6,7 +6,7 @@
 
     <div class="row well well-lg
 ">
-        <form action="{% url 'planner:add_event' garden.id %}" name="addevent" role="form" class="" method="post"
+        <form action="{% url 'planner:add_event' %}" name="addevent" role="form" class="" method="post"
               accept-charset="utf-8">
             {% csrf_token %}
 
@@ -32,22 +32,22 @@
             <div class="row panel panel-default panel-body">
                 <div class="col-md-3">
                     <label for="seedingstart"> Début de la période de semis</label>
-                    <input name="seedingstart" class="form-control" type="date" id="SeedingStart"/>
+                    <input name="seedingstart" class="form-control" type="date" id="SeedingStart" required/>
                 </div>
 
                 <div class="col-md-3">
                     <label for="seedingend"> Fin de la période de semis</label>
-                    <input name="seedingend" class="form-control" type="date" id="SeedingEnd"/>
+                    <input name="seedingend" class="form-control" type="date" id="SeedingEnd" required/>
                 </div>
 
                 <div class="col-md-3">
                     <label for="harveststart"> Début de la période de récolte</label>
-                    <input name="harveststart" class="form-control" type="date" id="HarvestStart"/>
+                    <input name="harveststart" class="form-control" type="date" id="HarvestStart" required/>
                 </div>
 
                 <div class="col-md-3">
                     <label for="harvestend"> Fin de la période de récolte</label>
-                    <input name="harvestend" class="form-control" type="date" id="HarvestEnd"/>
+                    <input name="harvestend" class="form-control" type="date" id="HarvestEnd" required/>
                 </div>
             </div>
             <br>
@@ -86,8 +86,14 @@
     <br>
 
     {% load static %}
+    {% load planner_extras %}
     <div style="overflow-x: auto">
-        <img src="{% static "planner/ganttcharts/all_events.svg" %}" alt="My image">
+
+        {% with 'planner/ganttcharts/all_events_'|addstr:garden.id|addstr:'.svg' as chart_static %}
+
+        <img src="{% static  chart_static  %}" alt="Calendrier des actions">
+        {% endwith %}
+
     </div>
 
     <script src="{% static "planner/js/dates_constraints.js" %}" type="text/javascript"></script>

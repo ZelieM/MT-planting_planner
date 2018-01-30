@@ -11,6 +11,6 @@ urlpatterns = [
     path('<int:bedid>/delete_bed', views.delete_bed, name='delete_bed'),
     path('<int:garden_id>/', views.garden_view, name='garden_view'),
     path('<int:garden_id>/planification', views.planification_view, name='planification_view'),
-    path('<int:garden_id>/planification/add_event', views.add_event, name='add_event')
+    path('planification/add_event', views.add_event, name='add_event')
 
 ]

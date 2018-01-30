@@ -45,13 +45,15 @@ def delete_bed(request, bedid):
 def planification_view(request, garden_id):
     garden = get_object_or_404(Garden, pk=garden_id)
     beds = Bed.objects.filter(garden_id=garden.id)
+    beds_ids = Bed.objects.filter(garden_id=garden.id).values_list('id', flat=True)
+    print(beds_ids)
     vegetables = Vegetable.objects.all()
-    events = Event.objects.all()
-    create_gantt(events)
+    events = Event.objects.filter(bed_id__in=beds_ids)
+    create_gantt(events, garden_id)
     return render(request, 'planner/planification.html', {'garden': garden, 'beds': beds, 'vegetables': vegetables, 'events': events})
 
 
-def add_event(request, garden_id):
+def add_event(request):
     vid = request.POST["vegetablename"]
     bid = request.POST["bedname"]
     seedingS = request.POST["seedingstart"]
