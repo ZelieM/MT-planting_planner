@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un nouvel utilisateur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+
+{% if messages %}
+<ul class="messages list-group">
+    {% for message in messages %}
+    <li{% if message.tags == "error" %} class="alert alert-danger"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="col-xs-6 col-xs-offset-3">
+
+    <h1>Créez un nouveau compte</h1>
+    <form action="" name="createuser" role="form" class="form-horizontal" method="post" accept-charset="utf-8">
+       {% csrf_token %}
+                  <div class="form-group">
+            <div class="col-md-8"><input name="username" placeholder="Nom d'utilisateur" class="form-control" type="text" id="UserName" required/></div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-8"><input name="password" placeholder="Mot de passe" class="form-control" type="password" id="Password" required/></div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-8"><input name="mailaddress" placeholder="Addresse email" class="form-control" type="email" id="MailAddress" required/></div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-0 col-md-8"><input  class="btn btn-success btn btn-success" type="submit" value="S'enregistrer" required/></div>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>
