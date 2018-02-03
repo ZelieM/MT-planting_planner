@@ -123,4 +123,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-LOGIN_REDIRECT_URL = '/planner/gardenselection'
+LOGIN_REDIRECT_URL = '/planner/garden_selection'

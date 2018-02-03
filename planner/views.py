@@ -11,9 +11,8 @@ from django.contrib import messages
 from .ganttchart import create_gantt
 
 
-def index(request): ## TODO : if user logged in, redirect to gardenselection
+def index(request): ## TODO : if user logged in, redirect to garden_selection
     return HttpResponseRedirect('login')
-
 
 
 def signup(request):
@@ -21,11 +20,9 @@ def signup(request):
         username = request.POST['username']
         password = request.POST['password']
         mail = request.POST['mailaddress']
-
         try:
             new_user = User.objects.create_user(username=username, password=password, email=mail)
-
-            return HttpResponseRedirect('gardenselection')
+            return HttpResponseRedirect('garden_selection')
         except IntegrityError:
             messages.error(request, 'Le nom d\'utilisateur existe deja')
             return render(request, 'planner/signup.html')
@@ -34,8 +31,7 @@ def signup(request):
         return render(request, 'planner/signup.html')
 
 
-
-def gardenselection(request):
+def garden_selection(request):
     return render(request, 'planner/gardenselection.html')
 
 
