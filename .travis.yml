@@ -9,20 +9,17 @@ services:
 # setup environment
 env:
   - DJANGO_VERSION=2.0.1
-  global:
-    - CC_TEST_REPORTER_ID=3ae52c7f790fa5c53ef0184827eaa059e0e89c2b611d3a2ee90bead0f99d4faf
+
 
 install:
   - pip install -r requirements.txt
-
-before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
+  - pip install codeclimate-test-reporter
 
 # command to run tests
 script:
-  - python manage.py test
+  - export DJANGO_SECRETKEY=secret
+  - coverage run --source=planting_planner manage.py test
+  #- python manage.py test
 
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - codeclimate-test-reporter --file .coverage
