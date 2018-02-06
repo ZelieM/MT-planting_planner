@@ -9,10 +9,24 @@ services:
 # setup environment
 env:
   - DJANGO_VERSION=2.0.1
+  global:
+    - CC_TEST_REPORTER_ID=787a2f89b15c637323c7340d65ec17e898ac44480706b4b4122ea040c2a88f1d
+
+rvm:
+  - 2.2.0
 
 install:
   - pip install -r requirements.txt
 
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
 # command to run tests
 script:
   - python manage.py test
+  - bundle exec rspec
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
