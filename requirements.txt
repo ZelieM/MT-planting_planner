@@ -1,3 +1,8 @@
 python_gantt==0.6.0
 Django==2.0.1
+virtualenv==15.1.0
+virtualenvwrapper-win==1.2.5
+Pillow==5.0.0
+pipreqs==0.4.9
+psycopg2==2.7.3.2
 
