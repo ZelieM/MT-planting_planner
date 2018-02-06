@@ -10,7 +10,7 @@ services:
 env:
   - DJANGO_VERSION=2.0.1
   global:
-    - CC_TEST_REPORTER_ID=6a1ffb3e6b4f9d3164103e467bc73d0f92f32fbb
+    - CC_TEST_REPORTER_ID=3ae52c7f790fa5c53ef0184827eaa059e0e89c2b611d3a2ee90bead0f99d4faf
 
 install:
   - pip install -r requirements.txt
