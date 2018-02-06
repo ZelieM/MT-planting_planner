@@ -4,18 +4,13 @@
 
     {% if beds %}
 
-{% load planner_extras %}
-         {% for b in beds %}
-        <svg width="150" height="400">
-            <rect width={{  b.width|divide:"10" }} height={{ b.length }} style="fill:green;stroke-width:3;stroke:green" />
-        </svg>
-         {% endfor %}
+        {% load planner_extras %}
 
         <table class="table table-hover table-bordered table-responsive ">
             <tr>
                 <th>Nom de la planche</th>
-                <th>Longueur</th>
-                <th>Largeur</th>
+                <th>Longueur [cm]</th>
+                <th>Largeur [cm]</th>
                 <th></th>
             </tr>
             {% for b in beds %}
@@ -24,7 +19,7 @@
                     <td class="col-md-3">{{ b.length }}</td>
                     <td class="col-md-3">{{ b.width }}</td>
                     <form action="{% url 'planner:delete_bed' b.id %}" name="deletebed" role="form" class="form-horizontal" method="post" accept-charset="utf-8">
-                    {% csrf_token %}
+                        {% csrf_token %}
                         <td class="col-md-3"><input  class="btn btn-danger" type="submit" value="Supprimer"/></td>
                     </form>
                 </tr>
@@ -42,18 +37,25 @@
                 </div>
             </form>
         </table>
+        {% for b in beds %}
+            <svg width="150" height="400">
+                <rect width={{  b.width|divide:"5" }} height={{ b.length|divide:"5" }} style="fill:green;stroke-width:3;stroke:green" />
+            </svg>
+        {% endfor %}
     {% else %}
         <p>Pas de planches sur ce jardin</p>
 
-                    <form action="{% url 'planner:add_bed' garden.id %}" name="addbed" role="form" class="form-horizontal" method="post" accept-charset="utf-8">
-                {% csrf_token %}
-                <div class="form-group">
-                         <div class="col-md-3"><input name="bedname" placeholder="Nom de la planche" class="form-control" type="text" id="BedName"/></div>
-                        <div class="col-md-3"><input name="bedlength" placeholder="Longueur de la planche" class="form-control" type="number" id="BedLength" maxlength="15"/></div>
-                        <div class="col-md-3"><input name="bedwidth" placeholder="Largeur de la planche" class="form-control" type="number" id="BedWidth" maxlength="15"/></div>
-                        <div class="col-md-3"><input  class="btn btn-success btn btn-success " type="submit" value="Ajouter"/></div>
-                </div>
-            </form>
+        <form action="{% url 'planner:add_bed' garden.id %}" name="addbed" role="form" class="form-horizontal" method="post" accept-charset="utf-8">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="col-md-3"><input name="bedname" placeholder="Nom de la planche" class="form-control" type="text" id="BedName"/></div>
+                <div class="col-md-3"><input name="bedlength" placeholder="Longueur de la planche" class="form-control" type="number" id="BedLength" maxlength="15"/></div>
+                <div class="col-md-3"><input name="bedwidth" placeholder="Largeur de la planche" class="form-control" type="number" id="BedWidth" maxlength="15"/></div>
+                <div class="col-md-3"><input  class="btn btn-success btn btn-success " type="submit" value="Ajouter"/></div>
+            </div>
+        </form>
     {% endif %}
+
+
 
 {% endblock content %}
