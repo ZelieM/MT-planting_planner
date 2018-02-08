@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 from planner.forms import UserForm
-from .models import Garden, Surface, Bed, ProductionPeriod
+from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation
 from django.contrib import messages
 
 from datetime import datetime
@@ -81,6 +81,16 @@ def add_bed(request, gardenid):
 def delete_bed(request, bedid):
     Surface.objects.get(pk=bedid).delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required(login_url="/planner/login/")
+def vegetables_view(request, garden_id):
+    garden = Garden.objects.get(pk=garden_id)
+    vegetables = Vegetable.objects.values()
+    print(Vegetable.objects.get(pk=2).culturaloperation_set.all())
+    cultural_operations = CulturalOperation.objects.select_subclasses()
+    context = {'garden': garden, 'vegetables': vegetables, "cultural_operations": cultural_operations}
+    return render(request, 'planner/myvegetables.html', context=context)
 
 
 # @login_required(login_url="/planner/login/")

@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
@@ -15,7 +18,7 @@
     <ul class="nav navbar-nav">
         <li><a href="{% url 'planner:garden_selection' %}">Home</a></li>
         <li class="{% navactive request 'planner:garden_view' garden.id %}"><a href="{% url 'planner:garden_view' garden.id %}">Mon jardin</a></li>
-{#        <li class="{% navactive request 'planner:planification_view' garden.id %}"><a href="{% url 'planner:planification_view' garden.id %}">Planification</a></li>#}
+        <li class="{% navactive request 'planner:vegetables_view' garden.id %}"><a href="{% url 'planner:vegetables_view' garden.id %}">Mes légumes</a></li>
     </ul>
 </nav>
 

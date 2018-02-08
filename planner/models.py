@@ -18,6 +18,9 @@ class Garden(models.Model):
 class Vegetable(models.Model):
     name = models.CharField(unique= True,max_length=100)
 
+    def __str__(self):
+        return self.name
+
 
 class ProductionPeriod(models.Model):
     start_date = models.DateField()
@@ -62,9 +65,13 @@ class Area(Surface):
 
 
 class CulturalOperation(models.Model):
+    objects = InheritanceManager()
     name = models.CharField(max_length=NAME_MAX_LENGTH)
     vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE)
     duration = models.IntegerField()
+
+    def __str__(self):
+        return self.name + " " + str(self.vegetable)
 
 
 class COWithOffset(CulturalOperation):
