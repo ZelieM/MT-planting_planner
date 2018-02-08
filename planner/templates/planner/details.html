@@ -13,11 +13,11 @@
                 <th>Largeur [cm]</th>
                 <th></th>
             </tr>
-            {% for b in beds %}
+            {% for b in beds.all %}
                 <tr>
                     <td class="col-md-3">{{ b.name }}</td>
                     <td class="col-md-3">{{ b.length }}</td>
-                    <td class="col-md-3">{{ b.width }}</td>
+                    <td class="col-md-3">{{  b.width }} </td>
                     <form action="{% url 'planner:delete_bed' b.id %}" name="deletebed" role="form" class="form-horizontal" method="post" accept-charset="utf-8">
                         {% csrf_token %}
                         <td class="col-md-3"><input  class="btn btn-danger" type="submit" value="Supprimer"/></td>

@@ -1,7 +1,6 @@
 language: python
 python:
   - "3.5"
-  - "3.6"
 
 services:
   - postgresql
@@ -19,7 +18,7 @@ install:
 script:
   - export DJANGO_SECRETKEY=secret
   - coverage run --source=planting_planner manage.py test
-  #- python manage.py test
+  - python manage.py test
 
 after_script:
   - codeclimate-test-reporter --file .coverage

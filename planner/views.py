@@ -7,8 +7,10 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 from planner.forms import UserForm
-from .models import Garden, Bed, Vegetable, Event
+from .models import Garden, Surface, Bed, ProductionPeriod
 from django.contrib import messages
+
+from datetime import datetime
 from .ganttchart import create_gantt
 
 
@@ -47,8 +49,15 @@ def create_garden(request):
 @login_required(login_url="/planner/login/")
 def garden_view(request, garden_id):
     garden = get_object_or_404(Garden, pk=garden_id)
-    beds = Bed.objects.filter(garden_id=garden.id)
-    return render(request, 'planner/details.html', {'garden': garden, 'beds': beds})
+    if not ProductionPeriod.objects.filter(garden_id=garden_id):
+        # If this garden doesn't have an active production period, create a new one starting now
+        ProductionPeriod.objects.create(label="first_period", start_date=datetime.today(), garden_id=garden_id)
+    ## Take the latest production period of this garden, supposed still active
+
+    current_period = ProductionPeriod.objects.filter(garden_id=garden_id).latest('start_date')
+    surfaces = ProductionPeriod.objects.get(pk=current_period.id).surface_set.select_subclasses()
+    c = {'garden': garden, 'beds': surfaces, 'current_period': current_period}
+    return render(request, 'planner/details.html', context=c)
 
 
 @login_required(login_url="/planner/login/")
@@ -63,34 +72,35 @@ def add_bed(request, gardenid):
     bname = request.POST['bedname']
     blength = request.POST['bedlength']
     bwidth = request.POST['bedwidth']
-    Bed.objects.create(name=bname, length=blength, width=bwidth, garden_id=gardenid)
+    current_period = ProductionPeriod.objects.filter(garden_id=gardenid).latest('start_date')
+    Bed.objects.create(name=bname, length=blength, width=bwidth, production_period=current_period)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required(login_url="/planner/login/")
 def delete_bed(request, bedid):
-    Bed.objects.get(pk=bedid).delete()
+    Surface.objects.get(pk=bedid).delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-@login_required(login_url="/planner/login/")
-def planification_view(request, garden_id):
-    garden = get_object_or_404(Garden, pk=garden_id)
-    beds = Bed.objects.filter(garden_id=garden.id)
-    beds_ids = Bed.objects.filter(garden_id=garden.id).values_list('id', flat=True)
-    vegetables = Vegetable.objects.all()
-    events = Event.objects.filter(bed_id__in=beds_ids)
-    create_gantt(events, garden_id)
-    return render(request, 'planner/planification.html', {'garden': garden, 'beds': beds, 'vegetables': vegetables, 'events': events})
-
-
-@login_required(login_url="/planner/login/")
-def add_event(request):
-    vid = request.POST["vegetablename"]
-    bid = request.POST["bedname"]
-    seedingS = request.POST["seedingstart"]
-    seedingE = request.POST["seedingend"]
-    harvestS = request.POST["harveststart"]
-    harvestE = request.POST["harvestend"]
-    Event.objects.create(bed_id=bid, vegetable_id=vid, seeding_start=seedingS, seeding_end=seedingE, harvest_start=harvestS, harvest_end=harvestE)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+# @login_required(login_url="/planner/login/")
+# def planification_view(request, garden_id):
+#     garden = get_object_or_404(Garden, pk=garden_id)
+#     beds = Bed.objects.filter(garden_id=garden.id)
+#     beds_ids = Bed.objects.filter(garden_id=garden.id).values_list('id', flat=True)
+#     vegetables = Vegetable.objects.all()
+#     events = Event.objects.filter(bed_id__in=beds_ids)
+#     create_gantt(events, garden_id)
+#     return render(request, 'planner/planification.html', {'garden': garden, 'beds': beds, 'vegetables': vegetables, 'events': events})
+#
+#
+# @login_required(login_url="/planner/login/")
+# def add_event(request):
+#     vid = request.POST["vegetablename"]
+#     bid = request.POST["bedname"]
+#     seedingS = request.POST["seedingstart"]
+#     seedingE = request.POST["seedingend"]
+#     harvestS = request.POST["harveststart"]
+#     harvestE = request.POST["harvestend"]
+#     Event.objects.create(bed_id=bid, vegetable_id=vid, seeding_start=seedingS, seeding_end=seedingE, harvest_start=harvestS, harvest_end=harvestE)
+#     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

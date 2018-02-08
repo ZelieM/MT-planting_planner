@@ -15,7 +15,7 @@
     <ul class="nav navbar-nav">
         <li><a href="{% url 'planner:garden_selection' %}">Home</a></li>
         <li class="{% navactive request 'planner:garden_view' garden.id %}"><a href="{% url 'planner:garden_view' garden.id %}">Mon jardin</a></li>
-        <li class="{% navactive request 'planner:planification_view' garden.id %}"><a href="{% url 'planner:planification_view' garden.id %}">Planification</a></li>
+{#        <li class="{% navactive request 'planner:planification_view' garden.id %}"><a href="{% url 'planner:planification_view' garden.id %}">Planification</a></li>#}
     </ul>
 </nav>
 
