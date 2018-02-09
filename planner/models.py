@@ -6,7 +6,7 @@ NAME_MAX_LENGTH = 100
 
 
 class Garden(models.Model):
-    name = models.CharField(unique=True, max_length=NAME_MAX_LENGTH)
+    name = models.CharField(unique=True, max_length=NAME_MAX_LENGTH, verbose_name="Nom du jardin")
 
     def __str__(self):
         return "Garden: " + self.name

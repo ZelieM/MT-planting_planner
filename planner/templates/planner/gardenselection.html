@@ -19,38 +19,28 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-
             <div class="main">
-
                 <div class="row">
                     <div class="col-xs-12 col-sm-6">
-
                         <h1>Créer un jardin</h1>
 
-                        <form action="{% url 'planner:create_garden' %}" name="creategarden" role="form" class="form-horizontal" method="post" accept-charset="utf-8">
-                             {% csrf_token %}
-                            <div class="form-group">
-                                <div class="col-md-8"><input name="gardenname" placeholder="Nom du jardin" class="form-control" type="text" id="GardenName"/></div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-offset-0 col-md-8"><input  class="btn btn-success btn btn-success" type="submit" value="Créer"/></div>
-                            </div>
-
+                        {% load crispy_forms_tags %}
+                        <form action="" name="" role="form" class="form-horizontal col-md-6" method="post" accept-charset="utf-8">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <input  class="btn btn-success" type="submit" value="Créer"/>
                         </form>
                     </div>
-
                     <div class="col-xs-12 col-sm-6">
-
                         <h1>Rejoindre un jardin existant</h1>
                         <form action="{% url 'planner:join_garden' %}" name="joingarden" role="form" class="form-horizontal" method="post" accept-charset="utf-8">
-                           {% csrf_token %}
-                           <div class="form-group">
+                            {% csrf_token %}
+                            <div class="form-group">
                                 <div class="col-md-8"><input name="gardenname" placeholder="Nom du jardin" class="form-control" type="text" id="GardenName"/></div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-offset-0 col-md-8"><input  class="btn btn-success btn btn-success" type="submit" value="Rejoindre"/></div>
                             </div>
-
                         </form>
                     </div>
                 </div>
