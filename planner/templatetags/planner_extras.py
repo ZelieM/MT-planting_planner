@@ -24,6 +24,7 @@ def addstr(arg1, arg2):
     """concatenate arg1 & arg2"""
     return str(arg1) + str(arg2)
 
+
 @register.filter
 def related_to(cultural_operation, vegetableid):
     return cultural_operation.filter(vegetable_id=vegetableid)

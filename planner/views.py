@@ -1,20 +1,18 @@
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse,HttpResponseRedirect
-from django.template import loader
-from django.urls import reverse
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
-
-from planner.forms import UserForm
-from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation
 from django.contrib import messages
+
+from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation
+
 
 from datetime import datetime
 from .ganttchart import create_gantt
 
 
-def index(request): ## TODO : if user logged in, redirect to garden_selection
+def index(request): # TODO : if user logged in, redirect to garden_selection
     return HttpResponseRedirect('login')
 
 
@@ -24,7 +22,7 @@ def signup(request):
         password = request.POST['password']
         mail = request.POST['mailaddress']
         try:
-            new_user = User.objects.create_user(username=username, password=password, email=mail)
+            User.objects.create_user(username=username, password=password, email=mail)
             return HttpResponseRedirect('garden_selection')
         except IntegrityError:
             messages.error(request, 'Le nom d\'utilisateur existe deja')
@@ -52,8 +50,7 @@ def garden_view(request, garden_id):
     if not ProductionPeriod.objects.filter(garden_id=garden_id):
         # If this garden doesn't have an active production period, create a new one starting now
         ProductionPeriod.objects.create(label="first_period", start_date=datetime.today(), garden_id=garden_id)
-    ## Take the latest production period of this garden, supposed still active
-
+    # Take the latest production period of this garden, supposed still active
     current_period = ProductionPeriod.objects.filter(garden_id=garden_id).latest('start_date')
     surfaces = ProductionPeriod.objects.get(pk=current_period.id).surface_set.select_subclasses()
     c = {'garden': garden, 'beds': surfaces, 'current_period': current_period}

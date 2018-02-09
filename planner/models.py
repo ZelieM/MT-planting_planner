@@ -16,7 +16,7 @@ class Garden(models.Model):
 
 
 class Vegetable(models.Model):
-    name = models.CharField(unique= True,max_length=100)
+    name = models.CharField(unique=True, max_length=100)
 
     def __str__(self):
         return self.name
@@ -61,7 +61,7 @@ class Area(Surface):
     area_surface = models.IntegerField()
 
     def get_area(self):
-        return self.area
+        return self.area_surface
 
 
 class CulturalOperation(models.Model):
