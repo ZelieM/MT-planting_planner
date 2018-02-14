@@ -6,3 +6,4 @@ virtualenvwrapper-win==1.2.5
 Pillow==5.0.0
 psycopg2==2.7.3.2
 django-crispy-forms==1.7.0
+selenium==3.9.0

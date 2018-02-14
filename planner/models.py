@@ -34,15 +34,13 @@ class ProductionPeriod(models.Model):
 
 class Surface(models.Model):
     objects = InheritanceManager()
-    vegetable = models.ForeignKey(Vegetable, null=True, on_delete=models.SET_NULL)
-    production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
 
     @property
     def get_area(self):
         raise NotImplementedError()
 
     def __str__(self):
-        return "Surface from production period starting :" + str(self.production_period) + " Area : " + self.get_area()
+        return "Surface with area : " + self.get_area()
 
 
 class Bed(Surface):
@@ -64,6 +62,12 @@ class Area(Surface):
         return self.area_surface
 
 
+class CultivatedArea(models.Model):
+    vegetable = models.ForeignKey(Vegetable, null=True, on_delete=models.SET_NULL)
+    production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
+    surface = models.ForeignKey(Surface, on_delete=models.CASCADE)
+
+
 class CulturalOperation(models.Model):
     objects = InheritanceManager()
     name = models.CharField(max_length=NAME_MAX_LENGTH)
@@ -83,7 +87,7 @@ class COWithDate(CulturalOperation):
     absoluteDate = models.DateField()
 
 
-class CompletedOperation(models.Model):
+class COperationHistory(models.Model):
     production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
     original_C_Operation = models.ForeignKey(CulturalOperation, on_delete=models.CASCADE)
     date = models.DateField()
