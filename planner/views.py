@@ -4,14 +4,12 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from model_utils.managers import InheritanceManager
+from planner.forms import GardenForm, CODateForm, COOffsetForm, COForm
+from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate
 
-from planner.forms import GardenForm
-from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation
-
-
+from django.contrib.auth import logout
 from datetime import datetime
-from .ganttchart import create_gantt
-
 
 def index(request): # TODO : if user logged in, redirect to garden_selection
     return HttpResponseRedirect('login')
@@ -52,6 +50,11 @@ def garden_selection(request):
 
 
 @login_required(login_url="/planner/login/")
+def alerts_view(request, garden_id):
+    return render(request, 'planner/alertsview.html', {'garden': Garden.objects.get(pk=garden_id)})
+
+
+@login_required(login_url="/planner/login/")
 def garden_view(request, garden_id):
     garden = get_object_or_404(Garden, pk=garden_id)
     if not ProductionPeriod.objects.filter(garden_id=garden_id):
@@ -59,7 +62,7 @@ def garden_view(request, garden_id):
         ProductionPeriod.objects.create(label="first_period", start_date=datetime.today(), garden_id=garden_id)
     # Take the latest production period of this garden, supposed still active
     current_period = ProductionPeriod.objects.filter(garden_id=garden_id).latest('start_date')
-    surfaces = ProductionPeriod.objects.get(pk=current_period.id).surface_set.select_subclasses()
+    surfaces = garden.surface_set.all().select_subclasses()
     c = {'garden': garden, 'beds': surfaces, 'current_period': current_period}
     return render(request, 'planner/details.html', context=c)
 
@@ -76,8 +79,7 @@ def add_bed(request, gardenid):
     bname = request.POST['bedname']
     blength = request.POST['bedlength']
     bwidth = request.POST['bedwidth']
-    current_period = ProductionPeriod.objects.filter(garden_id=gardenid).latest('start_date')
-    Bed.objects.create(name=bname, length=blength, width=bwidth, production_period=current_period)
+    Bed.objects.create(name=bname, length=blength, width=bwidth, garden_id=gardenid)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -91,11 +93,59 @@ def delete_bed(request, bedid):
 def vegetables_view(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
     vegetables = Vegetable.objects.values()
-    print(Vegetable.objects.get(pk=2).culturaloperation_set.all())
+    # print(Vegetable.objects.get(pk=2).culturaloperation_set.all())
     cultural_operations = CulturalOperation.objects.select_subclasses()
     context = {'garden': garden, 'vegetables': vegetables, "cultural_operations": cultural_operations}
     return render(request, 'planner/myvegetables.html', context=context)
 
+
+@login_required(login_url="/planner/login/")
+def edit_co_view(request, garden_id, co_id):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        co = CulturalOperation.objects.select_subclasses().get(pk=co_id)
+        if isinstance(co, COWithDate):
+            form = CODateForm(request.POST, instance=co)
+        else:
+            form = COOffsetForm(request.POST, instance=co)
+        # check whether it's valid:
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/planner/%i/vegetables' % garden_id)
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        co = CulturalOperation.objects.select_subclasses().get(pk=co_id)
+        if isinstance(co, COWithDate):
+            form = CODateForm(instance=co)
+        else:
+            form = COOffsetForm(instance=co)
+    return render(request,  'planner/coform.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
+
+
+def delete_co(request, co_id):
+    CulturalOperation.objects.select_subclasses().get(pk=co_id).delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required(login_url="/planner/login/")
+def add_co(request, garden_id, vegetable_id):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = COForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/planner/%i/vegetables' % garden_id)
+    # if a GET (or any other method) we'll create a blank form
+    else:
+            form = COForm(initial={'vegetable_id':vegetable_id})
+    return render(request,  'planner/coform.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
+
+
+def log_out(request):
+    logout(request)
+    return HttpResponseRedirect("/planner/login/")
 
 # @login_required(login_url="/planner/login/")
 # def planification_view(request, garden_id):

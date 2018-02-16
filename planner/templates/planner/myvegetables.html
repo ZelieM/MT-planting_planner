@@ -7,11 +7,11 @@
 
 
 
-       {% load planner_extras %}
+        {% load planner_extras %}
         <div class="container">
             <h2>Mes légumes</h2>
             <div class="panel-group">
-                <div class="panel panel-default">
+                <div class="panel panel-primary">
                     {% for v in vegetables.all %}
                         <div class="panel-heading">
                             <h4 class="panel-title">
@@ -19,11 +19,41 @@
                             </h4>
                         </div>
                         <div id="collapse-v{{ v.id }}" class="panel-collapse collapse">
-                            <ul class="list-group">
-                            {% for co in cultural_operations|related_to:v.id %}
-                                     <li class="list-group-item">{{ co }}</li>
-                                {% endfor %}
-                            </ul>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Date ou délai</th>
+                                        <th>Durée [h/m²]</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    {% for co in cultural_operations|related_to:v.id %}
+                                        <tbody>
+                                        <tr>
+                                            <td>{{ co.name }}</td>
+                                            <td>{{ co.get_date }}</td>
+                                            <td>{{ co.duration }}</td>
+                                            <td>
+                                                <a href="{% url 'planner:edit_co_view' garden.id co.id %}">
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                </a>
+                                                <a href="{% url 'planner:delete_co' co.id %}">
+                                                    <span class="glyphicon glyphicon-remove"></span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    {% endfor %}
+                                </table>
+                                <h1>
+                                    <a href="{% url 'planner:add_co_view' garden.id v.id %}" class="btn btn-success" role="button">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                        Ajouter une opération
+                                    </a>
+                                </h1>
+                            </div>
                         </div>
                     {% endfor %}
                 </div>

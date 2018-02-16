@@ -12,7 +12,7 @@ class Garden(models.Model):
         return "Garden: " + self.name
 
     def get_absolute_url(self):
-        return "/planner/%i/" % self.id
+        return "/planner/%i/alerts" % self.id
 
 
 class Vegetable(models.Model):
@@ -34,6 +34,7 @@ class ProductionPeriod(models.Model):
 
 class Surface(models.Model):
     objects = InheritanceManager()
+    garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
 
     @property
     def get_area(self):
@@ -74,17 +75,26 @@ class CulturalOperation(models.Model):
     vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE)
     duration = models.IntegerField()
 
+    def get_date(self):
+        "I'm a cultural operation"
+
     def __str__(self):
-        return self.name + " " + str(self.vegetable)
+        return self.name
 
 
 class COWithOffset(CulturalOperation):
     offset_in_days = models.IntegerField()
     previous_operation = models.ForeignKey(CulturalOperation, related_name='+', on_delete=models.CASCADE)
 
+    def get_date(self):
+        return "(" + str(self.previous_operation) + ") + " + str(self.offset_in_days) + " jours"
+
 
 class COWithDate(CulturalOperation):
     absoluteDate = models.DateField()
+
+    def get_date(self):
+        return str(self.absoluteDate)
 
 
 class COperationHistory(models.Model):

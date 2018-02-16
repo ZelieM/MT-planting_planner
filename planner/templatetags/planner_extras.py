@@ -27,4 +27,4 @@ def addstr(arg1, arg2):
 
 @register.filter
 def related_to(cultural_operation, vegetableid):
-    return cultural_operation.filter(vegetable_id=vegetableid)
+    return cultural_operation.select_subclasses().filter(vegetable_id=vegetableid).all()

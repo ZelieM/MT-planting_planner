@@ -14,11 +14,21 @@
 <body>
 
 {% load planner_extras %}
+
+<div class="jumbotron">
+  <h1>App name</h1>
+    <p>{% now "D d F Y" %}</p>
+  <a href="{% url 'planner:log_out' %}" class="pull-right  btn btn-primary">
+      Se déconnecter
+      <span class="glyphicon glyphicon-log-out"></span>
+    </a>
+</div>
 <nav class="navbar navbar-default">
-    <ul class="nav navbar-nav">
-        <li><a href="{% url 'planner:garden_selection' %}">Home</a></li>
-        <li class="{% navactive request 'planner:garden_view' garden.id %}"><a href="{% url 'planner:garden_view' garden.id %}">Mon jardin</a></li>
+    <ul class="nav nav-pills">
+        <li><a href="{% url 'planner:garden_selection' %}">Choix du jardin</a></li>
+        <li class="{% navactive request 'planner:alerts_view' garden.id %}"><a href="{% url 'planner:alerts_view' garden.id %}">Alertes</a></li>
         <li class="{% navactive request 'planner:vegetables_view' garden.id %}"><a href="{% url 'planner:vegetables_view' garden.id %}">Mes légumes</a></li>
+        <li class="{% navactive request 'planner:garden_view' garden.id %}"><a href="{% url 'planner:garden_view' garden.id %}">Mes planches</a></li>
     </ul>
 </nav>
 
