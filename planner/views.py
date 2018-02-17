@@ -4,12 +4,26 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.views.generic import CreateView
 from model_utils.managers import InheritanceManager
 from planner.forms import GardenForm, CODateForm, COOffsetForm, COForm
 from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate
 
 from django.contrib.auth import logout
 from datetime import datetime
+
+
+class CulturalOperationCreate(CreateView):
+
+    template_name = "planner/coform.html"
+    model = CulturalOperation
+    fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(CulturalOperationCreate, self).get_context_data(**kwargs)
+        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
+        return context
 
 
 def index(request):

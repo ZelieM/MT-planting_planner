@@ -5,6 +5,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 
 from . import views
+from .views import CulturalOperationCreate
 
 app_name = 'planner'
 urlpatterns = [
@@ -23,5 +24,5 @@ urlpatterns = [
     path('<int:garden_id>/vegetables', views.vegetables_view, name='vegetables_view'),
     path('vegetables/delete_co/<int:co_id>', views.delete_co, name='delete_co'),
     path('<int:garden_id>/co/<int:co_id>', views.edit_co_view, name='edit_co_view'),
-    path('<int:garden_id>/<int:vegetable_id>/add_co', views.add_co, name='add_co_view'),
+    path('<int:garden_id>/<int:vegetable_id>/add_co', CulturalOperationCreate.as_view(), name='add_co_view'),
 ]
