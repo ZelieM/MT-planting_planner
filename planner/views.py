@@ -11,7 +11,11 @@ from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalO
 from django.contrib.auth import logout
 from datetime import datetime
 
-def index(request): # TODO : if user logged in, redirect to garden_selection
+
+def index(request):
+    if request.user.is_authenticated:
+        form = GardenForm()
+        return HttpResponseRedirect('garden_selection', {'form': form})
     return HttpResponseRedirect('login')
 
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from model_utils.managers import InheritanceManager
 
 
@@ -12,7 +13,7 @@ class Garden(models.Model):
         return "Garden: " + self.name
 
     def get_absolute_url(self):
-        return "/planner/%i/alerts" % self.id
+        return reverse('planner:alerts_view', kwargs={'garden_id': self.id})
 
 
 class Vegetable(models.Model):
@@ -63,17 +64,12 @@ class Area(Surface):
         return self.area_surface
 
 
-class CultivatedArea(models.Model):
-    vegetable = models.ForeignKey(Vegetable, null=True, on_delete=models.SET_NULL)
-    production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
-    surface = models.ForeignKey(Surface, on_delete=models.CASCADE)
-
-
 class CulturalOperation(models.Model):
     objects = InheritanceManager()
     name = models.CharField(max_length=NAME_MAX_LENGTH)
     vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE)
     duration = models.IntegerField()
+    is_initial = models.BooleanField(default=False)
 
     def get_date(self):
         "I'm a cultural operation"
@@ -103,3 +99,9 @@ class COperationHistory(models.Model):
     date = models.DateField()
     duration = models.IntegerField()
     surface_processed = models.IntegerField()
+
+
+class CultivatedArea(models.Model):
+    vegetable = models.ForeignKey(Vegetable, null=True, on_delete=models.SET_NULL)
+    production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
+    surface = models.ForeignKey(Surface, on_delete=models.CASCADE)
