@@ -1,10 +1,17 @@
 {% extends "planner/base.html" %}
 
+{% block extra_js%}
+    <script src="http://malsup.github.io/jquery.form.js"></script>
+{% endblock %}
+
 {% block content %}
 
     <h2>Les légumes du jardin {{ garden.name }}</h2>
     {% if vegetables %}
 
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    </div><!-- /.modal -->
 
 
         {% load planner_extras %}
@@ -37,9 +44,11 @@
                                             <td>{{ co.get_date }}</td>
                                             <td>{{ co.duration }}</td>
                                             <td>
-                                                <a href="{% url 'planner:edit_co_view' garden.id co.id %}">
-                                                    <span class="glyphicon glyphicon-pencil"></span>
-                                                </a>
+
+                                                <a class="glyphicon glyphicon-pencil" data-toggle="modal" href="{% url 'planner:edit_co_view' garden.id co.id %}" data-target="#modal" title="edit item" data-tooltip></a>
+{#                                                <a href="{% url 'planner:edit_co_view' garden.id co.id %}">#}
+{#                                                    <span class="glyphicon glyphicon-pencil"></span>#}
+{#                                                </a>#}
                                                 <a href="{% url 'planner:delete_co' co.id %}">
                                                     <span class="glyphicon glyphicon-remove"></span>
                                                 </a>
@@ -64,4 +73,14 @@
     {% else %}
         <h2> Pas de légumes dans ce jardin, ajouter un légume ? </h2>
     {% endif %}
+
+
+    <script>
+$('#modal').on('show.bs.modal', function (event) {
+    var modal = $(this)
+    var link = $(event.relatedTarget);
+    modal.load(link.attr("href"));
+})
+</script>
+
 {% endblock content %}

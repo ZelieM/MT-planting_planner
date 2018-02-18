@@ -15,7 +15,7 @@ from datetime import datetime
 
 class CulturalOperationCreate(CreateView):
 
-    template_name = "planner/coform.html"
+    template_name = "planner/co_form.html"
     model = CulturalOperation
     fields = '__all__'
 
@@ -64,7 +64,7 @@ def garden_selection(request):
     else:
         form = GardenForm()
 
-    return render(request,  'planner/gardenselection.html', {'form': form})
+    return render(request, 'planner/garden_selection.html', {'form': form})
 
 
 @login_required(login_url="/planner/login/")
@@ -114,12 +114,13 @@ def vegetables_view(request, garden_id):
     # print(Vegetable.objects.get(pk=2).culturaloperation_set.all())
     cultural_operations = CulturalOperation.objects.select_subclasses()
     context = {'garden': garden, 'vegetables': vegetables, "cultural_operations": cultural_operations}
-    return render(request, 'planner/myvegetables.html', context=context)
+    return render(request, 'planner/my_vegetables.html', context=context)
 
 
 @login_required(login_url="/planner/login/")
 def edit_co_view(request, garden_id, co_id):
     # if this is a POST request we need to process the form data
+    print("--------Je suis dans la view co")
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         co = CulturalOperation.objects.select_subclasses().get(pk=co_id)
@@ -130,7 +131,7 @@ def edit_co_view(request, garden_id, co_id):
         # check whether it's valid:
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/planner/%i/vegetables' % garden_id)
+            return render(request, 'planner/co_form_success.html', {'co' : co})
     # if a GET (or any other method) we'll create a blank form
     else:
         co = CulturalOperation.objects.select_subclasses().get(pk=co_id)
@@ -138,7 +139,8 @@ def edit_co_view(request, garden_id, co_id):
             form = CODateForm(instance=co)
         else:
             form = COOffsetForm(instance=co)
-    return render(request,  'planner/coform.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
+
+    return render(request, 'planner/co_form.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
 
 
 def delete_co(request, co_id):
@@ -158,31 +160,10 @@ def add_co(request, garden_id, vegetable_id):
     # if a GET (or any other method) we'll create a blank form
     else:
             form = COForm(initial={'vegetable_id':vegetable_id})
-    return render(request,  'planner/coform.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
+    return render(request, 'planner/co_form.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
 
 
 def log_out(request):
     logout(request)
     return HttpResponseRedirect("/planner/login/")
 
-# @login_required(login_url="/planner/login/")
-# def planification_view(request, garden_id):
-#     garden = get_object_or_404(Garden, pk=garden_id)
-#     beds = Bed.objects.filter(garden_id=garden.id)
-#     beds_ids = Bed.objects.filter(garden_id=garden.id).values_list('id', flat=True)
-#     vegetables = Vegetable.objects.all()
-#     events = Event.objects.filter(bed_id__in=beds_ids)
-#     create_gantt(events, garden_id)
-#     return render(request, 'planner/planification.html', {'garden': garden, 'beds': beds, 'vegetables': vegetables, 'events': events})
-#
-#
-# @login_required(login_url="/planner/login/")
-# def add_event(request):
-#     vid = request.POST["vegetablename"]
-#     bid = request.POST["bedname"]
-#     seedingS = request.POST["seedingstart"]
-#     seedingE = request.POST["seedingend"]
-#     harvestS = request.POST["harveststart"]
-#     harvestE = request.POST["harvestend"]
-#     Event.objects.create(bed_id=bid, vegetable_id=vid, seeding_start=seedingS, seeding_end=seedingE, harvest_start=harvestS, harvest_end=harvestE)
-#     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
