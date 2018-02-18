@@ -15,7 +15,7 @@ from datetime import datetime
 
 class CulturalOperationCreate(CreateView):
 
-    template_name = "planner/co_form.html"
+    template_name = "planner/modals/co_form.html"
     model = CulturalOperation
     fields = '__all__'
 
@@ -69,7 +69,7 @@ def garden_selection(request):
 
 @login_required(login_url="/planner/login/")
 def alerts_view(request, garden_id):
-    return render(request, 'planner/alertsview.html', {'garden': Garden.objects.get(pk=garden_id)})
+    return render(request, 'planner/alerts.html', {'garden': Garden.objects.get(pk=garden_id)})
 
 
 @login_required(login_url="/planner/login/")
@@ -82,7 +82,7 @@ def garden_view(request, garden_id):
     current_period = ProductionPeriod.objects.filter(garden_id=garden_id).latest('start_date')
     surfaces = garden.surface_set.all().select_subclasses()
     c = {'garden': garden, 'beds': surfaces, 'current_period': current_period}
-    return render(request, 'planner/details.html', context=c)
+    return render(request, 'planner/bed_list.html', context=c)
 
 
 @login_required(login_url="/planner/login/")
@@ -114,7 +114,7 @@ def vegetables_view(request, garden_id):
     # print(Vegetable.objects.get(pk=2).culturaloperation_set.all())
     cultural_operations = CulturalOperation.objects.select_subclasses()
     context = {'garden': garden, 'vegetables': vegetables, "cultural_operations": cultural_operations}
-    return render(request, 'planner/my_vegetables.html', context=context)
+    return render(request, 'planner/vegetables_list.html', context=context)
 
 
 @login_required(login_url="/planner/login/")
@@ -131,7 +131,7 @@ def edit_co_view(request, garden_id, co_id):
         # check whether it's valid:
         if form.is_valid():
             form.save()
-            return render(request, 'planner/co_form_success.html', {'co' : co})
+            return render(request, 'planner/modals/co_form_success.html', {'co' : co})
     # if a GET (or any other method) we'll create a blank form
     else:
         co = CulturalOperation.objects.select_subclasses().get(pk=co_id)
@@ -140,7 +140,7 @@ def edit_co_view(request, garden_id, co_id):
         else:
             form = COOffsetForm(instance=co)
 
-    return render(request, 'planner/co_form.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
+    return render(request, 'planner/modals/co_form.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
 
 
 def delete_co(request, co_id):
@@ -160,7 +160,7 @@ def add_co(request, garden_id, vegetable_id):
     # if a GET (or any other method) we'll create a blank form
     else:
             form = COForm(initial={'vegetable_id':vegetable_id})
-    return render(request, 'planner/co_form.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
+    return render(request, 'planner/modals/co_form.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
 
 
 def log_out(request):
