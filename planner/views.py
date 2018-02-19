@@ -6,31 +6,20 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
-from model_utils.managers import InheritanceManager
-from planner.forms import GardenForm, CODateForm, COOffsetForm, COForm
+from planner.forms import GardenForm, CODateForm, COOffsetForm
 from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate
 
 from django.contrib.auth import logout
 from datetime import datetime
 
 
-# class CulturalOperationCreate(CreateView):
-#
-#     template_name = "planner/modals/edit_co_form.html"
-#     model = CulturalOperation
-#     fields = '__all__'
-#
-#     def get_context_data(self, **kwargs):
-#         # Call the base implementation first to get a context
-#         context = super(CulturalOperationCreate, self).get_context_data(**kwargs)
-#         context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
-#         return context
-
-
 class CulturalOperationWithDateCreate(CreateView):
     template_name = "planner/create_co_form.html"
     model = COWithDate
-    fields = '__all__'
+    fields = ['name', 'vegetable', 'duration', 'absoluteDate']
+
+    def get_initial(self):
+        return {'vegetable': self.kwargs['vegetable_id']}
 
     def get_success_url(self):
         if self.kwargs:
@@ -48,7 +37,10 @@ class CulturalOperationWithDateCreate(CreateView):
 class CulturalOperationWithOffsetCreate(CreateView):
     template_name = "planner/create_co_form.html"
     model = COWithOffset
-    fields = '__all__'
+    fields = ['name', 'vegetable', 'duration', 'offset_in_days', 'previous_operation']
+
+    def get_initial(self):
+        return {'vegetable': self.kwargs['vegetable_id']}
 
     def get_success_url(self):
         if self.kwargs:
@@ -130,11 +122,11 @@ def join_garden(request):
 
 
 @login_required(login_url="/planner/login/")
-def add_bed(request, gardenid):
+def add_bed(request, garden_id):
     bname = request.POST['bedname']
     blength = request.POST['bedlength']
     bwidth = request.POST['bedwidth']
-    Bed.objects.create(name=bname, length=blength, width=bwidth, garden_id=gardenid)
+    Bed.objects.create(name=bname, length=blength, width=bwidth, garden_id=garden_id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -195,21 +187,6 @@ def pick_co_type(request, garden_id, v_id):
 def delete_co(request, co_id):
     CulturalOperation.objects.select_subclasses().get(pk=co_id).delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-# @login_required(login_url="/planner/login/")
-# def add_co(request, garden_id, vegetable_id):
-#     # if this is a POST request we need to process the form data
-#     if request.method == 'POST':
-#         # create a form instance and populate it with data from the request:
-#         form = COForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponseRedirect('/planner/%i/vegetables' % garden_id)
-#     # if a GET (or any other method) we'll create a blank form
-#     else:
-#             form = COForm(initial={'vegetable_id':vegetable_id})
-#     return render(request, 'planner/modals/edit_co_form.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
 
 
 def log_out(request):

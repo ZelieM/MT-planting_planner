@@ -6,7 +6,6 @@
 
 {% block content %}
 
-    <h2>Les légumes du jardin {{ garden.name }}</h2>
     {% if vegetables %}
 
         <!-- Modal -->
@@ -20,7 +19,7 @@
 
         {% load planner_extras %}
         <div class="container">
-            <h2>Mes légumes</h2>
+            <h2>Liste des légumes ainsi que de leurs opérations</h2>
             <div class="panel-group">
                 <div class="panel panel-primary">
                     {% for v in vegetables.all %}
