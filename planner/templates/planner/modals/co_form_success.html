@@ -7,7 +7,7 @@
               <div class="modal-body">
                   <p>L'opération {{ co }} a bien été modifiée</p>
                   <script>
-                    setTimeout(function() { jQuery('#modal').modal('hide'); }, 1000);
+                    setTimeout(function() { jQuery('#modal-edit').modal('hide'); }, 1000);
                     $('body').on('hidden.bs.modal', '.modal', function () {
                         $(this).removeData('bs.modal');
                         location.reload();

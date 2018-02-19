@@ -5,7 +5,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 
 from . import views
-from .views import CulturalOperationCreate
+from .views import CulturalOperationWithDateCreate, CulturalOperationWithOffsetCreate
 
 app_name = 'planner'
 urlpatterns = [
@@ -24,5 +24,7 @@ urlpatterns = [
     path('<int:garden_id>/vegetables', views.vegetables_view, name='vegetables_view'),
     path('vegetables/delete_co/<int:co_id>', views.delete_co, name='delete_co'),
     path('<int:garden_id>/co/<int:co_id>', views.edit_co_view, name='edit_co_view'),
-    path('<int:garden_id>/<int:vegetable_id>/add_co', CulturalOperationCreate.as_view(), name='add_co_view'),
+    path('<int:garden_id>/pick_co/<int:v_id>', views.pick_co_type, name='pick_co_type'),
+    path('<int:garden_id>/<int:vegetable_id>/add_date_co', CulturalOperationWithDateCreate.as_view(), name='add_date_co_view'),
+    path('<int:garden_id>/<int:vegetable_id>/add_offset_co', CulturalOperationWithOffsetCreate.as_view(), name='add_offset_co_view'),
 ]
