@@ -14,7 +14,6 @@ from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalO
 from django.contrib.auth import logout
 
 
-
 class CulturalOperationWithDateCreate(CreateView):
     template_name = "planner/create_co_form.html"
     model = COWithDate
@@ -101,7 +100,7 @@ def garden_selection(request):
 @login_required(login_url="/planner/login/")
 def alerts_view(request, garden_id):
     alerts = queries.active_alerts(garden_id)
-    return render(request, 'planner/alerts.html', {'garden': Garden.objects.get(pk=garden_id), 'alerts':alerts})
+    return render(request, 'planner/alerts.html', {'garden': Garden.objects.get(pk=garden_id), 'alerts': alerts})
 
 
 @login_required(login_url="/planner/login/")
@@ -199,7 +198,7 @@ def add_seed(request, garden_id):
     # if this is a POST request we add the initial operation of the vegetable selected in the history
     if request.method == 'POST':
         services.add_initial_operation_to_history(garden_id, request.POST['vegetable_selection'], request.POST['seedingdate'])
-        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id':garden_id}))
+        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     vegetables = Vegetable.objects.all()
     context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables}
     return render(request, 'planner/modals/add_seeding_form.html', context)
