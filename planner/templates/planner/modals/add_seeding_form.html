@@ -1,0 +1,34 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                    class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel"> Ajouter un semis </h4>
+        </div>
+        <form id="add_seeding_form" action="{% url 'planner:add_seed_view' garden.id %}" name=""
+              role="form" class="" method="post" accept-charset="utf-8">
+            <div class="modal-body">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="vegetable_selection">Quel légume avez-vous semé? </label>
+                    <select class="form-control" id="vegetable_selection" name="vegetable_selection" required>
+                        {% for v in vegetables %}
+                            <option id="seeded_vegetable" name="seeded_vegetable"
+                                    value="{{ v.id }}">{{ v.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <label for="seeding_date">A quelle date? </label>
+                    <div class="form-control">
+                        <input id="seeding_date" type="date" name="seedingdate" placeholder="Date de semis" required>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-success" type="submit" value="Ajouter"/>
+            </div>
+        </form>
+    </div>
+</div>

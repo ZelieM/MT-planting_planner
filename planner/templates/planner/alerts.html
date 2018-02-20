@@ -1,8 +1,33 @@
-
 {% extends "planner/base.html" %}
 
 {% block content %}
 
-<h2> TODO ICI: les alertes de ce jardin</h2>
+    <!-- Modal -->
+    <div class="modal fade" id="modal-add_seed" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
+    <!-- Modal -->
+    <div>
+        <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
+           href="{% url 'planner:add_seed_view' garden.id %}"
+           data-target="#modal-add_seed" title="add item" data-tooltip>Ajouter un semis</a>
+        <br>
+    </div>
+    {% for a in alerts %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            {{ a.vegetable }} {{ a.name }}
+        </div>
 
+    {% endfor %}
+
+
+    <script>
+        $('#modal-add_seed').on('show.bs.modal', function (event) {
+            var modal = $(this)
+            var link = $(event.relatedTarget);
+            modal.load(link.attr("href"));
+        })
+    </script>
 {% endblock content %}

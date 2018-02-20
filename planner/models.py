@@ -1,7 +1,8 @@
-from django.db import models
+from datetime import timedelta
+
+from django.db import models, transaction
 from django.urls import reverse
 from model_utils.managers import InheritanceManager
-
 
 NAME_MAX_LENGTH = 100
 
@@ -51,7 +52,7 @@ class Bed(Surface):
     width = models.IntegerField()
 
     def get_area(self):
-        return self.length*self.width
+        return self.length * self.width
 
     def __str__(self):
         return self.name + " : " + str(self.length) + "x" + str(self.width)
@@ -71,29 +72,39 @@ class CulturalOperation(models.Model):
     duration = models.IntegerField()
     is_initial = models.BooleanField(default=False)
 
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        """  Ensure there is only one initial operation by vegetable """""
+        if self.is_initial:
+            CulturalOperation.objects.filter(vegetable_id=self.vegetable_id, is_initial=True).update(is_initial=False)
+        super(CulturalOperation, self).save(*args, **kwargs)
+
     def get_date(self):
-        "I'm a cultural operation"
+        pass
 
     def __str__(self):
-        return self.name
+        return self.vegetable.name + " : " + self.name
 
 
 class COWithOffset(CulturalOperation):
     offset_in_days = models.IntegerField()
     previous_operation = models.ForeignKey(CulturalOperation, related_name='+', on_delete=models.CASCADE)
 
+    def get_previous_operation(self):
+        return CulturalOperation.objects.select_subclasses().get(pk=self.previous_operation.id)
+
     def get_date(self):
-        return "(" + str(self.previous_operation) + ") + " + str(self.offset_in_days) + " jours"
+        return self.get_previous_operation().get_date() + timedelta(days=self.offset_in_days)
 
 
 class COWithDate(CulturalOperation):
     absoluteDate = models.DateField()
 
     def get_date(self):
-        return str(self.absoluteDate)
+        return self.absoluteDate
 
 
-class COperationHistory(models.Model):
+class CulturalOperationHistory(models.Model):
     production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
     original_C_Operation = models.ForeignKey(CulturalOperation, on_delete=models.CASCADE)
     date = models.DateField()

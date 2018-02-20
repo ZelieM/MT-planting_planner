@@ -6,11 +6,13 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
+
+from planner import queries, services
 from planner.forms import GardenForm, CODateForm, COOffsetForm
 from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate
 
 from django.contrib.auth import logout
-from datetime import datetime
+
 
 
 class CulturalOperationWithDateCreate(CreateView):
@@ -98,17 +100,15 @@ def garden_selection(request):
 
 @login_required(login_url="/planner/login/")
 def alerts_view(request, garden_id):
-    return render(request, 'planner/alerts.html', {'garden': Garden.objects.get(pk=garden_id)})
+    alerts = queries.active_alerts(garden_id)
+    return render(request, 'planner/alerts.html', {'garden': Garden.objects.get(pk=garden_id), 'alerts':alerts})
 
 
 @login_required(login_url="/planner/login/")
 def garden_view(request, garden_id):
     garden = get_object_or_404(Garden, pk=garden_id)
-    if not ProductionPeriod.objects.filter(garden_id=garden_id):
-        # If this garden doesn't have an active production period, create a new one starting now
-        ProductionPeriod.objects.create(label="first_period", start_date=datetime.today(), garden_id=garden_id)
-    # Take the latest production period of this garden, supposed still active
-    current_period = ProductionPeriod.objects.filter(garden_id=garden_id).latest('start_date')
+    current_period = queries.get_current_production_period(garden_id)
+
     surfaces = garden.surface_set.all().select_subclasses()
     c = {'garden': garden, 'beds': surfaces, 'current_period': current_period}
     return render(request, 'planner/bed_list.html', context=c)
@@ -193,3 +193,13 @@ def log_out(request):
     logout(request)
     return HttpResponseRedirect("/planner/login/")
 
+
+@login_required(login_url="/planner/login/")
+def add_seed(request, garden_id):
+    # if this is a POST request we add the initial operation of the vegetable selected in the history
+    if request.method == 'POST':
+        services.add_initial_operation_to_history(garden_id, request.POST['vegetable_selection'], request.POST['seedingdate'])
+        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id':garden_id}))
+    vegetables = Vegetable.objects.all()
+    context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables}
+    return render(request, 'planner/modals/add_seeding_form.html', context)

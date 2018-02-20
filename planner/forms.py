@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from django.forms import ModelForm, forms
-from .models import Garden, COWithDate, COWithOffset, CulturalOperation
+from django.forms import ModelForm
+from .models import Garden, COWithDate, COWithOffset
 
 
 class UserForm(ModelForm):
@@ -15,19 +15,13 @@ class GardenForm(ModelForm):
         fields = ['name']
 
 
-class COForm(ModelForm):
-    class Meta:
-        model = CulturalOperation
-        fields = '__all__'
-
-
 class CODateForm(ModelForm):
     class Meta:
         model = COWithDate
-        fields = '__all__'
+        fields = ['name', 'vegetable', 'duration', 'absoluteDate']
 
 
 class COOffsetForm(ModelForm):
     class Meta:
         model = COWithOffset
-        fields = '__all__'
+        fields = ['name', 'vegetable', 'duration', 'offset_in_days', 'previous_operation']
