@@ -111,6 +111,9 @@ class CulturalOperationHistory(models.Model):
     duration = models.IntegerField()
     surface_processed = models.IntegerField()
 
+    def __str__(self):
+        return str(self.original_C_Operation) + " Fait le : " + str(self.date)
+
 
 class CultivatedArea(models.Model):
     vegetable = models.ForeignKey(Vegetable, null=True, on_delete=models.SET_NULL)

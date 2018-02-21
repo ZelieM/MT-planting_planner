@@ -9,7 +9,8 @@ from django.views.generic import CreateView
 
 from planner import queries, services
 from planner.forms import GardenForm, CODateForm, COOffsetForm
-from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate
+from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
+    CulturalOperationHistory
 
 from django.contrib.auth import logout
 
@@ -100,7 +101,9 @@ def garden_selection(request):
 @login_required(login_url="/planner/login/")
 def alerts_view(request, garden_id):
     alerts = queries.active_alerts(garden_id)
-    return render(request, 'planner/alerts.html', {'garden': Garden.objects.get(pk=garden_id), 'alerts': alerts})
+    history = CulturalOperationHistory.objects.filter(production_period=queries.get_current_production_period(garden_id))
+    context = {'garden': Garden.objects.get(pk=garden_id), 'alerts': alerts, 'history': history}
+    return render(request, 'planner/alerts.html', context)
 
 
 @login_required(login_url="/planner/login/")

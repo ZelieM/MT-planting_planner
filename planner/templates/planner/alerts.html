@@ -7,21 +7,66 @@
          aria-hidden="true">
     </div>
     <!-- Modal -->
-    <div>
-        <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
-           href="{% url 'planner:add_seed_view' garden.id %}"
-           data-target="#modal-add_seed" title="add item" data-tooltip>Ajouter un semis</a>
-        <br>
-    </div>
-    {% for a in alerts %}
-        <div class="alert alert-warning alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>
-            {{ a.vegetable }} {{ a.name }}
+
+    <div class="col-md-8">
+        <div>
+            <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
+               href="{% url 'planner:add_seed_view' garden.id %}"
+               data-target="#modal-add_seed" title="add item" data-tooltip>Ajouter un semis</a>
         </div>
+        <br/>
 
-    {% endfor %}
+        <div class="panel panel-default ">
+            <div class="panel-heading">Opérations à faire</div>
+            <div class="panel-body">
+                {% for a in alerts %}
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            {{ a.vegetable }}  :  {{ a.name }}
+                            <div class="pull-right">
+                                <a class="glyphicon glyphicon-ok" data-toggle="modal"
+                                   href=""
+                                   data-target="#modal-done" title="check task" data-tooltip></a>
+                                <a class="glyphicon glyphicon-repeat" data-toggle="modal"
+                                   href=""
+                                   data-target="#modal-done" title="check task" data-tooltip></a>
+                                <a class="glyphicon glyphicon-remove" data-toggle="modal"
+                                   href=""
+                                   data-target="#modal-done" title="check task" data-tooltip></a>
 
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class=" col-md-3 col-md-offset-1">
+        <div class="panel panel-default ">
+            <div class="panel-heading">Historique</div>
+            <div class="panel-body">
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        {% for op in history %}
+                            <tbody>
+                            <tr>
+                                <td>{{ op.original_C_Operation }}</td>
+                                <td>{{ op.date }}</td>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         $('#modal-add_seed').on('show.bs.modal', function (event) {
