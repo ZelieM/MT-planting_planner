@@ -1,4 +1,4 @@
 plugins:
   pep8:
     enabled: true
-    max-line-length = 160
+    max-line-length : 160
