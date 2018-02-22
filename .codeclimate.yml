@@ -1,7 +1,8 @@
 plugins:
   pep8:
     enabled: true
-    max-line-length : 160
+    config:
+      max-line-length: 160
 
 exclude_patterns:
   - "**/test/"
