@@ -1,4 +1,3 @@
-
 {% load crispy_forms_tags %}
 <div class="modal-dialog">
     <div class="modal-content">
@@ -7,10 +6,12 @@
                     class="sr-only">Close</span></button>
             <h4 class="modal-title" id="myModalLabel"> Modification d'une opération </h4>
         </div>
-        <form id="co_update_form" action="{% url 'planner:edit_co_view' garden.id form.instance.id %}" name="" role="form" class="" method="post" accept-charset="utf-8">
+        <form id="co_update_form" action="{% url 'planner:edit_co_view' garden.id form.instance.id %}" name=""
+              role="form" class="" method="post" accept-charset="utf-8">
             <div class="modal-body">
                 {% csrf_token %}
                 {{ form|crispy }}
+
             </div>
             <div class="modal-footer">
                 <input class="btn btn-success" type="submit" value="Editer"/>
@@ -26,6 +27,7 @@
         }
     }
     $('#co_update_form').ajaxForm(form_options);
+
 </script>
 
 

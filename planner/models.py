@@ -119,3 +119,18 @@ class CultivatedArea(models.Model):
     vegetable = models.ForeignKey(Vegetable, null=True, on_delete=models.SET_NULL)
     production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
     surface = models.ForeignKey(Surface, on_delete=models.CASCADE)
+    label = models.TextField()
+
+
+class Alerts(models.Model):
+    # TODO : use this model an delete the history model
+    area_concerned = models.ForeignKey(CultivatedArea, on_delete=models.CASCADE)
+    original_cultural_operation = models.ForeignKey(CulturalOperation, on_delete=models.CASCADE)
+    postponement = models.IntegerField(default=0)
+    date = models.DateField(null=True)
+    duration = models.IntegerField(null=True)
+    done = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.original_C_Operation) + " Reporté de " + str(self.postponement)
+

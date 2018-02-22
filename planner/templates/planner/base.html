@@ -9,7 +9,11 @@
     {% load static %}
     <link rel="stylesheet" href="{% static "planner/css/style.css" %}">
     {#    <link rel="stylesheet" href="{% static "planner/css/bootstrap-sandstone.css" %}">#}
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+            crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 
@@ -30,13 +34,13 @@
 
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-              </button>
-            </div>
+            </button>
+        </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav ">
                 <li><a href="{% url 'planner:garden_selection' %}">Choix du jardin</a></li>

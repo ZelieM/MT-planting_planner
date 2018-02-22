@@ -8,7 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
 
 from planner import queries, services
-from planner.forms import GardenForm, CODateForm, COOffsetForm
+from planner.forms import GardenForm, CODateForm, COOffsetForm, DateInput
 from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
     CulturalOperationHistory
 
@@ -19,6 +19,13 @@ class CulturalOperationWithDateCreate(CreateView):
     template_name = "planner/create_co_form.html"
     model = COWithDate
     fields = ['name', 'vegetable', 'duration', 'absoluteDate']
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super(CulturalOperationWithDateCreate, self).get_form(form_class)
+        form.fields['absoluteDate'].widget = DateInput()
+        return form
 
     def get_initial(self):
         return {'vegetable': self.kwargs['vegetable_id']}
@@ -101,7 +108,8 @@ def garden_selection(request):
 @login_required(login_url="/planner/login/")
 def alerts_view(request, garden_id):
     alerts = queries.active_alerts(garden_id)
-    history = CulturalOperationHistory.objects.filter(production_period=queries.get_current_production_period(garden_id))
+    history = CulturalOperationHistory.objects.filter(
+        production_period=queries.get_current_production_period(garden_id))
     context = {'garden': Garden.objects.get(pk=garden_id), 'alerts': alerts, 'history': history}
     return render(request, 'planner/alerts.html', context)
 
@@ -160,7 +168,7 @@ def edit_co_view(request, garden_id, co_id):
         # check whether it's valid:
         if form.is_valid():
             form.save()
-            return render(request, 'planner/modals/co_form_success.html', {'co' : co})
+            return render(request, 'planner/modals/co_form_success.html', {'co': co})
     # if a GET (or any other method) we'll create a blank form
     else:
         co = CulturalOperation.objects.select_subclasses().get(pk=co_id)
@@ -169,14 +177,15 @@ def edit_co_view(request, garden_id, co_id):
         else:
             form = COOffsetForm(instance=co)
 
-    return render(request, 'planner/modals/edit_co_form.html', {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
+    return render(request, 'planner/modals/edit_co_form.html',
+                  {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
 
 
 @login_required(login_url="/planner/login/")
 def pick_co_type(request, garden_id, v_id):
     # if this is a POST request we need to redirect to a form to create the new operation
     if request.method == 'POST':
-        urlargs= {'garden_id': garden_id, 'vegetable_id':v_id}
+        urlargs = {'garden_id': garden_id, 'vegetable_id': v_id}
         if request.POST['cotype'] == 'offsetco':
             return HttpResponseRedirect(reverse('planner:add_offset_co_view', kwargs=urlargs))
         else:
@@ -200,7 +209,13 @@ def log_out(request):
 def add_seed(request, garden_id):
     # if this is a POST request we add the initial operation of the vegetable selected in the history
     if request.method == 'POST':
-        services.add_initial_operation_to_history(garden_id, request.POST['vegetable_selection'], request.POST['seedingdate'])
+        # TODO create a cultivated area with the vegetable, the surface sowed and and the label
+        # carea = CultivatedArea.object.create(production_period=get_current_production_period(garden_id),
+        # vegetable = request.POST['vegetable_selection'], label = request.POST['label'], surface = request.POST['surface'])
+        # services.add_initial_operation_to_alerts(cultivated_area=carea, date=request.POST['seedingdate'])
+
+        services.add_initial_operation_to_history(garden_id, request.POST['vegetable_selection'],
+                                                  request.POST['seedingdate'])
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     vegetables = Vegetable.objects.all()
     context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables}

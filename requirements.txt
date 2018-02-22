@@ -8,3 +8,4 @@ psycopg2==2.7.3.2
 django-crispy-forms==1.7.0
 selenium==3.9.0
 django-widget-tweaks==1.4.1
+django-extensions==2.0.0
