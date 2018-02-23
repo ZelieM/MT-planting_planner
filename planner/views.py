@@ -119,7 +119,11 @@ def garden_view(request, garden_id):
     current_period = queries.get_current_production_period(garden_id)
 
     surfaces = garden.surface_set.all().select_subclasses()
-    c = {'garden': garden, 'beds': surfaces, 'current_period': current_period}
+    beds = []
+    for s in surfaces:
+        if isinstance(s, Bed):
+            beds.append(s)
+    c = {'garden': garden, 'beds': beds, 'current_period': current_period}
     return render(request, 'planner/bed_list.html', context=c)
 
 
