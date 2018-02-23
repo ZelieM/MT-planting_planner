@@ -19,26 +19,65 @@
         <div class="panel panel-default ">
             <div class="panel-heading">Opérations à faire</div>
             <div class="panel-body">
-                {% for a in alerts %}
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            {{ a.vegetable }}  :  {{ a.name }}
-
-                            <div class="pull-right">
-                                <a class="glyphicon glyphicon-ok" data-toggle="modal"
-                                   href=""
-                                   data-target="#modal-done" title="Valider l'action" data-tooltip></a>
-                                <a class="glyphicon glyphicon-repeat" data-toggle="modal"
-                                   href=""
-                                   data-target="#modal-done" title="Reporter l'action" data-tooltip></a>
-                                <a class="glyphicon glyphicon-remove" data-toggle="modal"
-                                   href=""
-                                   data-target="#modal-done" title="Supprimer l'action" data-tooltip></a>
-
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
+                {% load planner_extras %}
+                {% load l10n %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Plantation</th>
+                            <th>Légume</th>
+                            <th>Action</th>
+                            <th> A faire le</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        {% for current_alert in alerts %}
+                            <tbody>
+                            <tr>
+                                <td><b>{{ current_alert.area_concerned.label }} </b></td>
+                                <td>{{ current_alert.area_concerned.vegetable }}</td>
+                                <td>{{ current_alert.original_cultural_operation.name }}</td>
+                                <td>{% due_date current_alert history as current_due_date%} {{ current_due_date|date:"j F" }} </td>
+                                <td>
+                                    <a class="glyphicon glyphicon-ok" data-toggle="modal"
+                                       href=""
+                                       data-target="#modal-done" title="Valider l'action" data-tooltip></a>
+                                    <a class="glyphicon glyphicon-repeat" data-toggle="modal"
+                                       href=""
+                                       data-target="#modal-done" title="Reporter l'action" data-tooltip></a>
+                                    <a class="glyphicon glyphicon-remove" data-toggle="modal"
+                                       href=""
+                                       data-target="#modal-done" title="Supprimer l'action" data-tooltip></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+                {#                {% for current_alert in alerts %}#}
+                {#                    <div class="panel panel-default">#}
+                {#                        <div class="panel-body">#}
+                {#                            <b>{{ current_alert.area_concerned.label }} </b>#}
+                {#                            {{ current_alert.original_cultural_operation }}#}
+                {##}
+                {#                            {% due_date current_alert history %}#}
+                {##}
+                {#                            <div class="pull-right">#}
+                {#                                <a class="glyphicon glyphicon-ok" data-toggle="modal"#}
+                {#                                   href=""#}
+                {#                                   data-target="#modal-done" title="Valider l'action" data-tooltip></a>#}
+                {#                                <a class="glyphicon glyphicon-repeat" data-toggle="modal"#}
+                {#                                   href=""#}
+                {#                                   data-target="#modal-done" title="Reporter l'action" data-tooltip></a>#}
+                {#                                <a class="glyphicon glyphicon-remove" data-toggle="modal"#}
+                {#                                   href=""#}
+                {#                                   data-target="#modal-done" title="Supprimer l'action" data-tooltip></a>#}
+                {##}
+                {#                            </div>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {#                {% endfor %}#}
             </div>
         </div>
     </div>
@@ -58,8 +97,8 @@
                         {% for op in history %}
                             <tbody>
                             <tr>
-                                <td>{{ op.original_C_Operation }}</td>
-                                <td>{{ op.date }}</td>
+                                <td><b>{{ op.area_concerned.label }} </b> {{ op.original_cultural_operation }}</td>
+                                <td>{{ op.execution_date }}</td>
                             </tr>
                             </tbody>
                         {% endfor %}

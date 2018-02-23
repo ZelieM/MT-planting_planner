@@ -10,7 +10,7 @@ from django.views.generic import CreateView
 from planner import queries, services
 from planner.forms import GardenForm, CODateForm, COOffsetForm, DateInput
 from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
-    CulturalOperationHistory
+    CulturalOperationHistory, CultivatedArea, Area
 
 from django.contrib.auth import logout
 
@@ -108,8 +108,11 @@ def garden_selection(request):
 @login_required(login_url="/planner/login/")
 def alerts_view(request, garden_id):
     alerts = queries.active_alerts(garden_id)
-    history = CulturalOperationHistory.objects.filter(
-        production_period=queries.get_current_production_period(garden_id))
+    history = queries.done_alerts(garden_id)
+    # alerts = queries.active_alerts(garden_id)
+    # history = CulturalOperationHistory.objects.filter(
+    #     production_period=queries.get_current_production_period(garden_id))
+    # context = {'garden': Garden.objects.get(pk=garden_id), 'alerts': alerts, 'history': history}
     context = {'garden': Garden.objects.get(pk=garden_id), 'alerts': alerts, 'history': history}
     return render(request, 'planner/alerts.html', context)
 
@@ -210,12 +213,15 @@ def add_seed(request, garden_id):
     # if this is a POST request we add the initial operation of the vegetable selected in the history
     if request.method == 'POST':
         # TODO create a cultivated area with the vegetable, the surface sowed and and the label
-        # carea = CultivatedArea.object.create(production_period=get_current_production_period(garden_id),
-        # vegetable = request.POST['vegetable_selection'], label = request.POST['label'], surface = request.POST['surface'])
-        # services.add_initial_operation_to_alerts(cultivated_area=carea, date=request.POST['seedingdate'])
-
-        services.add_initial_operation_to_history(garden_id, request.POST['vegetable_selection'],
-                                                  request.POST['seedingdate'])
+        surface = Area.objects.create(area_surface=request.POST['surface_seeded'], garden_id=garden_id)
+        carea = CultivatedArea.objects.create(production_period=queries.get_current_production_period(garden_id),
+                                             vegetable_id=request.POST['vegetable_selection'],
+                                             label=request.POST['seeding_label'],
+                                             surface=surface)
+        services.add_initial_operation_to_alerts(cultivated_area=carea, date=request.POST['seedingdate'])
+        #
+        # services.add_initial_operation_to_history(garden_id, request.POST['vegetable_selection'],
+        #                                           request.POST['seedingdate'])
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     vegetables = Vegetable.objects.all()
     context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables}

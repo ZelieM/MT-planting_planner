@@ -134,4 +134,12 @@ class Alerts(models.Model):
     done = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.original_C_Operation) + " Reporté de " + str(self.postponement)
+        return str(self.area_concerned.label) + " " + str(self.original_cultural_operation)
+
+
+class UrgentAlerts:
+
+    def __init__(self, alert_id, due_date, name):
+        self.alert_id = alert_id
+        self.name = name
+        self.due_date = due_date

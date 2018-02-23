@@ -1,6 +1,8 @@
 from django import template
 from django.urls import reverse
 
+from planner import services
+
 register = template.Library()
 
 
@@ -28,3 +30,9 @@ def addstr(arg1, arg2):
 @register.filter
 def related_to(cultural_operation, vegetableid):
     return cultural_operation.select_subclasses().filter(vegetable_id=vegetableid).all()
+
+
+@register.simple_tag
+def due_date(alert, alert_history):
+    date = services.get_due_date(alert, alert_history)
+    return date

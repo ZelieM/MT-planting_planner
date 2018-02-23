@@ -19,6 +19,18 @@
                         {% endfor %}
                     </select>
                     <br>
+                    <label for="seeding_label">Choisissez un nom pour cette plantation </label>
+                    <div class="form-control">
+                        <input id="seeding_label" type="text" name="seeding_label" placeholder="Label" required>
+                        <br>
+                    </div>
+                    <br>
+                    <label for="surface_seeded">Quelle surface avez-vous semé? [m²] </label>
+                    <div class="form-control">
+                        <input id="surface_seeded" type="integer" name="surface_seeded" placeholder="00" required>
+                        <br>
+                    </div>
+                    <br>
                     <label for="seeding_date">A quelle date? </label>
                     <div class="form-control">
                         <input id="seeding_date" type="date" name="seedingdate" placeholder="Date de semis" required>
