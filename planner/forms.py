@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.forms import ModelForm, forms, DateField, DateInput
 from .models import Garden, COWithDate, COWithOffset
-
+from django.utils.translation import gettext_lazy as _
 
 class DateInput(DateInput):
     input_type = 'date'
@@ -22,7 +22,7 @@ class GardenForm(ModelForm):
 class CODateForm(ModelForm):
     class Meta:
         model = COWithDate
-        fields = ['name', 'vegetable', 'duration', 'absoluteDate']
+        fields = ['name', 'vegetable', 'absoluteDate', 'duration']
         widgets = {
             'absoluteDate': DateInput(),
         }
@@ -31,4 +31,5 @@ class CODateForm(ModelForm):
 class COOffsetForm(ModelForm):
     class Meta:
         model = COWithOffset
-        fields = ['name', 'vegetable', 'duration', 'offset_in_days', 'previous_operation']
+        fields = ['name', 'vegetable', 'previous_operation', 'offset_in_days', 'duration']
+

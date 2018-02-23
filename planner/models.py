@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.db import models, transaction
 from django.urls import reverse
 from model_utils.managers import InheritanceManager
+from django.utils.translation import gettext_lazy as _
 
 NAME_MAX_LENGTH = 100
 
@@ -67,9 +68,9 @@ class Area(Surface):
 
 class CulturalOperation(models.Model):
     objects = InheritanceManager()
-    name = models.CharField(max_length=NAME_MAX_LENGTH)
-    vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE)
-    duration = models.IntegerField()
+    name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name=_('Nom de l\'action'))
+    vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE, verbose_name=_('Légume concerné'))
+    duration = models.IntegerField(verbose_name=_('Temps nécessaire par m²'))
     is_initial = models.BooleanField(default=False)
 
     @transaction.atomic
@@ -87,8 +88,9 @@ class CulturalOperation(models.Model):
 
 
 class COWithOffset(CulturalOperation):
-    offset_in_days = models.IntegerField()
-    previous_operation = models.ForeignKey(CulturalOperation, related_name='+', on_delete=models.CASCADE)
+    offset_in_days = models.IntegerField(verbose_name=_('Délai en jours'))
+    previous_operation = models.ForeignKey(CulturalOperation, related_name='+', on_delete=models.CASCADE,
+                                           verbose_name=_('Opération précédente'))
 
     def get_previous_operation(self):
         return CulturalOperation.objects.select_subclasses().get(pk=self.previous_operation.id)
@@ -98,7 +100,7 @@ class COWithOffset(CulturalOperation):
 
 
 class COWithDate(CulturalOperation):
-    absoluteDate = models.DateField()
+    absoluteDate = models.DateField(verbose_name=_('Date d\'échéance'))
 
     def get_date(self):
         return self.absoluteDate
@@ -127,10 +129,9 @@ class Alerts(models.Model):
     area_concerned = models.ForeignKey(CultivatedArea, on_delete=models.CASCADE)
     original_cultural_operation = models.ForeignKey(CulturalOperation, on_delete=models.CASCADE)
     postponement = models.IntegerField(default=0)
-    date = models.DateField(null=True)
+    execution_date = models.DateField(null=True)
     duration = models.IntegerField(null=True)
     done = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.original_C_Operation) + " Reporté de " + str(self.postponement)
-

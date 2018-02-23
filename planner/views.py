@@ -18,7 +18,7 @@ from django.contrib.auth import logout
 class CulturalOperationWithDateCreate(CreateView):
     template_name = "planner/create_co_form.html"
     model = COWithDate
-    fields = ['name', 'vegetable', 'duration', 'absoluteDate']
+    fields = ['name', 'vegetable', 'absoluteDate', 'duration']
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -46,7 +46,7 @@ class CulturalOperationWithDateCreate(CreateView):
 class CulturalOperationWithOffsetCreate(CreateView):
     template_name = "planner/create_co_form.html"
     model = COWithOffset
-    fields = ['name', 'vegetable', 'duration', 'offset_in_days', 'previous_operation']
+    fields = ['name', 'vegetable', 'previous_operation', 'offset_in_days', 'duration']
 
     def get_initial(self):
         return {'vegetable': self.kwargs['vegetable_id']}
