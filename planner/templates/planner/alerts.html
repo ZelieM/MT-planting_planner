@@ -1,5 +1,10 @@
 {% extends "planner/base.html" %}
 
+ {% block extra_js %}
+     {% load static %}
+     <script src="{% static 'planner/js/sorttable.js' %}"></script>
+ {% endblock extra_js %}
+
 {% block content %}
 
     <!-- Modal -->
@@ -22,7 +27,7 @@
                 {% load planner_extras %}
                 {% load l10n %}
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table sortable">
                         <thead>
                         <tr>
                             <th>Plantation</th>
@@ -55,29 +60,6 @@
                         {% endfor %}
                     </table>
                 </div>
-                {#                {% for current_alert in alerts %}#}
-                {#                    <div class="panel panel-default">#}
-                {#                        <div class="panel-body">#}
-                {#                            <b>{{ current_alert.area_concerned.label }} </b>#}
-                {#                            {{ current_alert.original_cultural_operation }}#}
-                {##}
-                {#                            {% due_date current_alert history %}#}
-                {##}
-                {#                            <div class="pull-right">#}
-                {#                                <a class="glyphicon glyphicon-ok" data-toggle="modal"#}
-                {#                                   href=""#}
-                {#                                   data-target="#modal-done" title="Valider l'action" data-tooltip></a>#}
-                {#                                <a class="glyphicon glyphicon-repeat" data-toggle="modal"#}
-                {#                                   href=""#}
-                {#                                   data-target="#modal-done" title="Reporter l'action" data-tooltip></a>#}
-                {#                                <a class="glyphicon glyphicon-remove" data-toggle="modal"#}
-                {#                                   href=""#}
-                {#                                   data-target="#modal-done" title="Supprimer l'action" data-tooltip></a>#}
-                {##}
-                {#                            </div>#}
-                {#                        </div>#}
-                {#                    </div>#}
-                {#                {% endfor %}#}
             </div>
         </div>
     </div>

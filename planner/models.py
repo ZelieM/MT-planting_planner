@@ -106,17 +106,6 @@ class COWithDate(CulturalOperation):
         return self.absoluteDate
 
 
-class CulturalOperationHistory(models.Model):
-    production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
-    original_C_Operation = models.ForeignKey(CulturalOperation, on_delete=models.CASCADE)
-    date = models.DateField()
-    duration = models.IntegerField()
-    surface_processed = models.IntegerField()
-
-    def __str__(self):
-        return str(self.original_C_Operation) + " Fait le : " + str(self.date)
-
-
 class CultivatedArea(models.Model):
     vegetable = models.ForeignKey(Vegetable, null=True, on_delete=models.SET_NULL)
     production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
@@ -135,11 +124,3 @@ class Alerts(models.Model):
 
     def __str__(self):
         return str(self.area_concerned.label) + " " + str(self.original_cultural_operation)
-
-
-class UrgentAlerts:
-
-    def __init__(self, alert_id, due_date, name):
-        self.alert_id = alert_id
-        self.name = name
-        self.due_date = due_date
