@@ -25,6 +25,7 @@ urlpatterns = [
     # Alerts views
     path('<int:garden_id>/alerts', views.alerts_view, name='alerts_view'),
     path('<int:garden_id>/alerts/add_seed', views.add_seed, name='add_seed_view'),
+    path('<int:garden_id>/alerts/<int:alert_id>/validate', views.validate_alert, name='validate_alert_view'),
 
     # Vegetables view
     path('<int:garden_id>/vegetables', views.vegetables_view, name='vegetables_view'),

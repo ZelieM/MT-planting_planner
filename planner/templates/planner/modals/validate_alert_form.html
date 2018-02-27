@@ -1,0 +1,30 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                    class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel"> Marquer cette opération comme faite?</h4>
+        </div>
+        <form id="validate_alert_form" action="{% url 'planner:validate_alert_view' garden.id alert_id %}" name=""
+              role="form" class="" method="post" accept-charset="utf-8">
+            <div class="modal-body">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="execution_date">Date de réalisation de l'opération </label>
+                    <input id="execution_date" type="date" class="form-control" name="execution_date"
+                           placeholder="date" required>
+                </div>
+{#                <div class="form-group">#}
+{#                    <label for="validation_note"> Commentaire éventuel</label>#}
+{#                    <input id="validation_note" type="date" class="form-control" name="validation_note"#}
+{#                           placeholder="Notes ou commentaires : Pour le moment, fonctionnalité pas intégrée">#}
+{#                </div>#}
+
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-success" type="submit" value="Valider"/>
+            </div>
+        </form>
+    </div>
+</div>

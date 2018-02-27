@@ -118,19 +118,14 @@ class CultivatedArea(models.Model):
 
 
 class Alerts(models.Model):
-    # TODO : use this model an delete the history model
     area_concerned = models.ForeignKey(CultivatedArea, on_delete=models.CASCADE)
     original_cultural_operation = models.ForeignKey(CulturalOperation, on_delete=models.CASCADE)
     postponement = models.IntegerField(default=0)
     execution_date = models.DateField(null=True)
     duration = models.IntegerField(null=True)
     done = models.BooleanField(default=False)
-    executer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    executor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return str(self.area_concerned.label) + " " + str(self.original_cultural_operation)
 
-#
-# class GardenUser(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="garden_user")
-#     garden = models.ForeignKey(Garden, on_delete=models.CASCADE, related_name="followed_gardens")

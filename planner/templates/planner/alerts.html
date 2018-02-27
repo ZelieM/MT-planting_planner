@@ -11,6 +11,9 @@
     <div class="modal fade" id="modal-add_seed" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
     </div>
+        <div class="modal fade" id="modal-validate_alert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
     <!-- Modal -->
 
     <div class="col-md-8">
@@ -46,8 +49,8 @@
                                 <td>{% due_date current_alert history as current_due_date%} {{ current_due_date|date:"j F" }} </td>
                                 <td>
                                     <a class="glyphicon glyphicon-ok" data-toggle="modal"
-                                       href=""
-                                       data-target="#modal-done" title="Valider l'action" data-tooltip></a>
+                                       href="{% url 'planner:validate_alert_view' garden.id current_alert.id %}"
+                                       data-target="#modal-validate_alert" title="Valider l'action" data-tooltip></a>
                                     <a class="glyphicon glyphicon-repeat" data-toggle="modal"
                                        href=""
                                        data-target="#modal-done" title="Reporter l'action" data-tooltip></a>
@@ -92,6 +95,11 @@
 
     <script>
         $('#modal-add_seed').on('show.bs.modal', function (event) {
+            var modal = $(this)
+            var link = $(event.relatedTarget);
+            modal.load(link.attr("href"));
+        })
+            $('#modal-validate_alert').on('show.bs.modal', function (event) {
             var modal = $(this)
             var link = $(event.relatedTarget);
             modal.load(link.attr("href"));

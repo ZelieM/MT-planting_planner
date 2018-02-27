@@ -12,7 +12,7 @@ def add_initial_operation_to_alerts(cultivated_area, date, user):
     # TODO take duration into account
     # Add the initial operation as "done"
     Alerts.objects.create(area_concerned=cultivated_area, original_cultural_operation=initial_co, execution_date=date,
-                          done=True, executer=user)
+                          done=True, executor=user)
     # All the operation relative to this vegetable are added to alerts
     for co in CulturalOperation.objects.select_subclasses().filter(vegetable_id=vegetable_seeded, is_initial=False):
         Alerts.objects.create(area_concerned=cultivated_area, original_cultural_operation=co)
@@ -33,3 +33,12 @@ def get_due_date(alert, alert_history):
             return previous_operation.execution_date + timedelta(days=original_operation.offset_in_days)
         else:
             return original_operation.get_date()
+
+
+def mark_alert_as_done(alert_id, execution_date, executor):
+    """ Mark an alert as done with and execution date and an executor """
+    alert = Alerts.objects.get(pk=alert_id)
+    alert.execution_date = execution_date
+    alert.executor_id = executor
+    alert.done = True
+    alert.save()

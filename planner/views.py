@@ -223,10 +223,8 @@ def add_user_to_garden(request, garden_id):
     # if this is a POST request we add the initial operation of the vegetable selected in the history
     if request.method == 'POST':
         user_to_add = request.POST['user_selection']
-        print(user_to_add)
         garden.user.add(user_to_add)
         return HttpResponseRedirect(reverse('planner:garden_settings_view', kwargs={'garden_id': garden_id}))
-    current_garden_users = garden.user.all()
     users = User.objects.exclude(garden=garden)
     context = {'garden': garden, 'users': users}
     return render(request, 'planner/modals/add_user_to_garden_form.html', context)
@@ -237,3 +235,16 @@ def garden_settings(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
     following_users = garden.user.all()
     return render(request, 'planner/parameters_view.html', {'garden': garden, 'following_users': following_users})
+
+
+@login_required(login_url="/planner/login/")
+def validate_alert(request, garden_id, alert_id):
+    garden = Garden.objects.get(pk=garden_id)
+    # if this is a POST request we add the initial operation of the vegetable selected in the history
+    if request.method == 'POST':
+        executor = request.user.id
+        execution_date = request.POST['execution_date']
+        services.mark_alert_as_done(alert_id, execution_date, executor)
+        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
+    context = {'garden': garden, 'alert_id': alert_id}
+    return render(request, 'planner/modals/validate_alert_form.html', context)
