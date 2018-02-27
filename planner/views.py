@@ -209,7 +209,8 @@ def add_seed(request, garden_id):
         carea = CultivatedArea.objects.create(
             production_period=queries.get_current_production_period(garden_id),
             vegetable_id=request.POST['vegetable_selection'], label=request.POST['seeding_label'], surface=surface)
-        services.add_initial_operation_to_alerts(cultivated_area=carea, date=request.POST['seedingdate'])
+        services.add_initial_operation_to_alerts(cultivated_area=carea, date=request.POST['seedingdate'],
+                                                 user=request.user)
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     vegetables = Vegetable.objects.all()
     context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables}
@@ -221,7 +222,7 @@ def add_user_to_garden(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
     # if this is a POST request we add the initial operation of the vegetable selected in the history
     if request.method == 'POST':
-        user_to_add =request.POST['user_selection']
+        user_to_add = request.POST['user_selection']
         print(user_to_add)
         garden.user.add(user_to_add)
         return HttpResponseRedirect(reverse('planner:garden_settings_view', kwargs={'garden_id': garden_id}))
@@ -235,4 +236,4 @@ def add_user_to_garden(request, garden_id):
 def garden_settings(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
     following_users = garden.user.all()
-    return render(request, 'planner/parameters_view.html',  {'garden': garden, 'following_users': following_users})
+    return render(request, 'planner/parameters_view.html', {'garden': garden, 'following_users': following_users})
