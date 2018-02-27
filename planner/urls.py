@@ -1,7 +1,6 @@
 from django.conf.urls import url
 from django.urls import path
 
-
 from django.contrib.auth import views as auth_views
 
 from . import views
@@ -34,6 +33,12 @@ urlpatterns = [
     path('vegetables/delete_co/<int:co_id>', views.delete_co, name='delete_co'),
     path('<int:garden_id>/co/<int:co_id>', views.edit_co_view, name='edit_co_view'),
     path('<int:garden_id>/pick_co/<int:v_id>', views.pick_co_type, name='pick_co_type'),
-    path('<int:garden_id>/<int:vegetable_id>/add_date_co', CulturalOperationWithDateCreate.as_view(), name='add_date_co_view'),
-    path('<int:garden_id>/<int:vegetable_id>/add_offset_co', CulturalOperationWithOffsetCreate.as_view(), name='add_offset_co_view'),
+    path('<int:garden_id>/<int:vegetable_id>/add_date_co', CulturalOperationWithDateCreate.as_view(),
+         name='add_date_co_view'),
+    path('<int:garden_id>/<int:vegetable_id>/add_offset_co', CulturalOperationWithOffsetCreate.as_view(),
+         name='add_offset_co_view'),
+
+    # Garden management
+    path('<int:garden_id>/settings', views.garden_settings, name='garden_settings_view'),
+    path('<int:garden_id>/settings/add_user', views.add_user_to_garden, name='add_user_to_garden_view'),
 ]

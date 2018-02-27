@@ -1,0 +1,33 @@
+{% extends "planner/base.html" %}
+
+
+{% block content %}
+    <!-- Modal -->
+    <div class="modal fade" id="modal-add_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
+
+
+    <div class="container col-md-6 col-md-offset-3">
+        <h2>Liste des utilisateurs de ce jardin </h2>
+        <ul class="list-group">
+            {% for user in following_users %}
+                <li  class="list-group-item list-group-item-action"> {{ user.username }}</li>
+            {% endfor %}
+        </ul>
+            <div>
+            <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
+               href="{% url 'planner:add_user_to_garden_view' garden.id %}"
+               data-target="#modal-add_user" title="add user" data-tooltip>Ajouter un utilisateur</a>
+        </div>
+    </div>
+
+        <script>
+        $('#modal-add_user').on('show.bs.modal', function (event) {
+            var modal = $(this)
+            var link = $(event.relatedTarget);
+            modal.load(link.attr("href"));
+        })
+    </script>
+
+{% endblock content %}

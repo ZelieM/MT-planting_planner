@@ -15,7 +15,26 @@ from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalO
 from django.contrib.auth import logout
 
 
-class CulturalOperationWithDateCreate(CreateView):
+class CulturalOperationCreate(CreateView):
+    template_name = "planner/create_co_form.html"
+
+    def get_initial(self):
+        return {'vegetable': self.kwargs['vegetable_id']}
+
+    def get_success_url(self):
+        if self.kwargs:
+            return reverse_lazy('planner:vegetables_view', kwargs={'garden_id': self.kwargs['garden_id']})
+        else:
+            return reverse_lazy('planner:garden_selection')
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(CulturalOperationCreate, self).get_context_data(**kwargs)
+        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
+        return context
+
+
+class CulturalOperationWithDateCreate(CulturalOperationCreate):
     template_name = "planner/create_co_form.html"
     model = COWithDate
     fields = ['name', 'vegetable', 'absoluteDate', 'duration']
@@ -27,41 +46,11 @@ class CulturalOperationWithDateCreate(CreateView):
         form.fields['absoluteDate'].widget = DateInput()
         return form
 
-    def get_initial(self):
-        return {'vegetable': self.kwargs['vegetable_id']}
 
-    def get_success_url(self):
-        if self.kwargs:
-            return reverse_lazy('planner:vegetables_view', kwargs={'garden_id': self.kwargs['garden_id']})
-        else:
-            return reverse_lazy('planner:garden_selection')
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(CulturalOperationWithDateCreate, self).get_context_data(**kwargs)
-        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
-        return context
-
-
-class CulturalOperationWithOffsetCreate(CreateView):
+class CulturalOperationWithOffsetCreate(CulturalOperationCreate):
     template_name = "planner/create_co_form.html"
     model = COWithOffset
     fields = ['name', 'vegetable', 'previous_operation', 'offset_in_days', 'duration']
-
-    def get_initial(self):
-        return {'vegetable': self.kwargs['vegetable_id']}
-
-    def get_success_url(self):
-        if self.kwargs:
-            return reverse_lazy('planner:vegetables_view', kwargs={'garden_id': self.kwargs['garden_id']})
-        else:
-            return reverse_lazy('planner:garden_selection')
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(CulturalOperationWithOffsetCreate, self).get_context_data(**kwargs)
-        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
-        return context
 
 
 def index(request):
@@ -89,6 +78,7 @@ def signup(request):
 
 @login_required(login_url="/planner/login/")
 def garden_selection(request):
+    current_user = request.user
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -96,13 +86,14 @@ def garden_selection(request):
         # check whether it's valid:
         if form.is_valid():
             new_garden = form.save()
+            new_garden.user.add(current_user)
             nextpage = new_garden.get_absolute_url()
             return HttpResponseRedirect(nextpage)
     # if a GET (or any other method) we'll create a blank form
     else:
         form = GardenForm()
-
-    return render(request, 'planner/garden_selection.html', {'form': form})
+    gardens_followed = Garden.objects.filter(user=current_user)
+    return render(request, 'planner/garden_selection.html', {'form': form, 'gardens_followed': gardens_followed})
 
 
 @login_required(login_url="/planner/login/")
@@ -117,7 +108,6 @@ def alerts_view(request, garden_id):
 def garden_view(request, garden_id):
     garden = get_object_or_404(Garden, pk=garden_id)
     current_period = queries.get_current_production_period(garden_id)
-
     surfaces = garden.surface_set.all().select_subclasses()
     beds = []
     for s in surfaces:
@@ -129,7 +119,9 @@ def garden_view(request, garden_id):
 
 @login_required(login_url="/planner/login/")
 def join_garden(request):
+    current_user = request.user
     garden = get_object_or_404(Garden, name=request.POST['gardenname'])
+    garden.user.add(current_user)
     nextpage = garden.get_absolute_url()
     return HttpResponseRedirect(nextpage)
 
@@ -214,15 +206,33 @@ def add_seed(request, garden_id):
     if request.method == 'POST':
         # TODO create a cultivated area with the vegetable, the surface sowed and and the label
         surface = Area.objects.create(area_surface=request.POST['surface_seeded'], garden_id=garden_id)
-        carea = CultivatedArea.objects.create(production_period=queries.get_current_production_period(garden_id),
-                                             vegetable_id=request.POST['vegetable_selection'],
-                                             label=request.POST['seeding_label'],
-                                             surface=surface)
+        carea = CultivatedArea.objects.create(
+            production_period=queries.get_current_production_period(garden_id),
+            vegetable_id=request.POST['vegetable_selection'], label=request.POST['seeding_label'], surface=surface)
         services.add_initial_operation_to_alerts(cultivated_area=carea, date=request.POST['seedingdate'])
-        #
-        # services.add_initial_operation_to_history(garden_id, request.POST['vegetable_selection'],
-        #                                           request.POST['seedingdate'])
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     vegetables = Vegetable.objects.all()
     context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables}
     return render(request, 'planner/modals/add_seeding_form.html', context)
+
+
+@login_required(login_url="/planner/login/")
+def add_user_to_garden(request, garden_id):
+    garden = Garden.objects.get(pk=garden_id)
+    # if this is a POST request we add the initial operation of the vegetable selected in the history
+    if request.method == 'POST':
+        user_to_add =request.POST['user_selection']
+        print(user_to_add)
+        garden.user.add(user_to_add)
+        return HttpResponseRedirect(reverse('planner:garden_settings_view', kwargs={'garden_id': garden_id}))
+    current_garden_users = garden.user.all()
+    users = User.objects.exclude(garden=garden)
+    context = {'garden': garden, 'users': users}
+    return render(request, 'planner/modals/add_user_to_garden_form.html', context)
+
+
+@login_required(login_url="/planner/login/")
+def garden_settings(request, garden_id):
+    garden = Garden.objects.get(pk=garden_id)
+    following_users = garden.user.all()
+    return render(request, 'planner/parameters_view.html',  {'garden': garden, 'following_users': following_users})

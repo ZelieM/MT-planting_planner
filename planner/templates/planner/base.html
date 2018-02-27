@@ -52,9 +52,9 @@
                         href="{% url 'planner:garden_view' garden.id %}">Mes planches</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="{% url 'planner:garden_settings_view' garden.id %}"><span class="glyphicon glyphicon glyphicon-cog"></span> </a></li>
                 <li><a href="{% url 'planner:log_out' %}">Se déconnecter <span
                         class="glyphicon glyphicon-log-out"></span> </a></li>
-                </a></li>
             </ul>
         </div>
     </div>

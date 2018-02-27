@@ -15,13 +15,11 @@
 <div class="jumbotron text-center">
     <h1>Gestion de plantations maraicheres</h1>
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="{% url 'planner:log_out' %}">Se déconnecter <span class="glyphicon glyphicon-log-out"></span> </a></li>
+        <li><a href="{% url 'planner:log_out' %}">Se déconnecter <span class="glyphicon glyphicon-log-out"></span> </a>
+        </li>
         </a></li>
     </ul>
 </div>
-
-
-
 
 
 <div class="container">
@@ -30,36 +28,41 @@
             <div class="main">
                 <div class="row">
                     <div class="col-xs-12 col-sm-6">
+                        {#                        <form action="{% url 'planner:join_garden' %}" name="joingarden" role="form"#}
+                        {#                              class="form-horizontal" method="post" accept-charset="utf-8">#}
+                        {#                            {% csrf_token %}#}
+                        {#                            <div class="form-group">#}
+                        {#                                <div class="col-md-8"><input name="gardenname" placeholder="Nom du jardin"#}
+                        {#                                                             class="form-control" type="text" id="GardenName"/></div>#}
+                        {#                            </div>#}
+                        {#                            <div class="form-group">#}
+                        {#                                <div class="col-md-offset-0 col-md-8"><input class="btn btn-success btn btn-success"#}
+                        {#                                                                             type="submit" value="Rejoindre"/></div>#}
+                        {#                            </div>#}
+                        {#                        </form>#}
+                        <h2>Liste des jardins dans lesquels vous êtes actif</h2>
+                        <ul class="list-group">
+                            {% for garden in gardens_followed %}
+                                <a href="{{ garden.get_absolute_url }}"
+                                   class="list-group-item list-group-item-action"> {{ garden.name }}</a>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-xs-12 col-sm-6">
                         <h1>Créer un jardin</h1>
 
                         {% load crispy_forms_tags %}
-                        <form action="" name="" role="form" class="form-horizontal col-md-6" method="post" accept-charset="utf-8">
+                        <form action="" name="" role="form" class="form-horizontal col-md-6" method="post"
+                              accept-charset="utf-8">
                             {% csrf_token %}
                             {{ form|crispy }}
-                            <input  class="btn btn-success" type="submit" value="Créer"/>
+                            <input class="btn btn-success" type="submit" value="Créer"/>
                         </form>
                     </div>
-                    <div class="col-xs-12 col-sm-6">
-                        <h1>Rejoindre un jardin existant</h1>
-                        <form action="{% url 'planner:join_garden' %}" name="joingarden" role="form" class="form-horizontal" method="post" accept-charset="utf-8">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <div class="col-md-8"><input name="gardenname" placeholder="Nom du jardin" class="form-control" type="text" id="GardenName"/></div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-offset-0 col-md-8"><input  class="btn btn-success btn btn-success" type="submit" value="Rejoindre"/></div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
 
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
-
-
 
 
 </body>

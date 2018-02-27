@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.contrib.auth.models import User
 from django.db import models, transaction
 from django.urls import reverse
 from model_utils.managers import InheritanceManager
@@ -10,6 +11,7 @@ NAME_MAX_LENGTH = 100
 
 class Garden(models.Model):
     name = models.CharField(unique=True, max_length=NAME_MAX_LENGTH, verbose_name="Nom du jardin")
+    user = models.ManyToManyField(User)
 
     def __str__(self):
         return "Garden: " + self.name
@@ -26,6 +28,7 @@ class Vegetable(models.Model):
 
 
 class ProductionPeriod(models.Model):
+    """ A garden has a set of production period.s A production period can be a calendar year, but not only"""
     start_date = models.DateField()
     end_date = models.DateField(null=True)
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE, unique_for_date=start_date)
@@ -36,6 +39,7 @@ class ProductionPeriod(models.Model):
 
 
 class Surface(models.Model):
+    """ A garden has a set of surfaces where the farmer can cultivate vegetables"""
     objects = InheritanceManager()
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
 
@@ -124,3 +128,8 @@ class Alerts(models.Model):
 
     def __str__(self):
         return str(self.area_concerned.label) + " " + str(self.original_cultural_operation)
+
+#
+# class GardenUser(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="garden_user")
+#     garden = models.ForeignKey(Garden, on_delete=models.CASCADE, related_name="followed_gardens")
