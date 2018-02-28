@@ -2,6 +2,18 @@
 
 
 {% block content %}
+
+    {% if messages %}
+        <div class="col-md-6 col-md-offset-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <!-- Modal -->
     <div class="modal fade" id="modal-add_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
@@ -12,17 +24,21 @@
         <h2>Liste des utilisateurs de ce jardin </h2>
         <ul class="list-group">
             {% for user in following_users %}
-                <li  class="list-group-item list-group-item-action"> {{ user.username }}</li>
+                <li class="list-group-item list-group-item-action"> {{ user.username }}
+                    <a href="{% url 'planner:delete_user_from_garden' garden.id user.id %}" class="pull-right red">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </li>
             {% endfor %}
         </ul>
-            <div>
+        <div>
             <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
                href="{% url 'planner:add_user_to_garden_view' garden.id %}"
                data-target="#modal-add_user" title="add user" data-tooltip>Ajouter un utilisateur</a>
         </div>
     </div>
 
-        <script>
+    <script>
         $('#modal-add_user').on('show.bs.modal', function (event) {
             var modal = $(this)
             var link = $(event.relatedTarget);

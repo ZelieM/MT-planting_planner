@@ -86,7 +86,7 @@ def garden_selection(request):
         # check whether it's valid:
         if form.is_valid():
             new_garden = form.save()
-            new_garden.user.add(current_user)
+            new_garden.users.add(current_user)
             nextpage = new_garden.get_absolute_url()
             return HttpResponseRedirect(nextpage)
     # if a GET (or any other method) we'll create a blank form
@@ -121,7 +121,7 @@ def garden_view(request, garden_id):
 def join_garden(request):
     current_user = request.user
     garden = get_object_or_404(Garden, name=request.POST['gardenname'])
-    garden.user.add(current_user)
+    garden.users.add(current_user)
     nextpage = garden.get_absolute_url()
     return HttpResponseRedirect(nextpage)
 
@@ -206,11 +206,18 @@ def add_seed(request, garden_id):
     if request.method == 'POST':
         # TODO create a cultivated area with the vegetable, the surface sowed and and the label
         surface = Area.objects.create(area_surface=request.POST['surface_seeded'], garden_id=garden_id)
+        vegetable_id = request.POST['vegetable_selection']
+        seeding_date = request.POST['seedingdate']
         carea = CultivatedArea.objects.create(
             production_period=queries.get_current_production_period(garden_id),
-            vegetable_id=request.POST['vegetable_selection'], label=request.POST['seeding_label'], surface=surface)
-        services.add_initial_operation_to_alerts(cultivated_area=carea, date=request.POST['seedingdate'],
+            vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface=surface)
+        services.add_initial_operation_to_alerts(cultivated_area=carea, date=seeding_date,
                                                  user=request.user)
+        vegetable_concerned = Vegetable.objects.get(pk=vegetable_id).name
+        success_message = 'Vous ({}) avez indiqué avoir fait un semis de {} le {}'.format(
+            request.user.username, vegetable_concerned, seeding_date)
+        messages.add_message(request, messages.SUCCESS, success_message)
+
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     vegetables = Vegetable.objects.all()
     context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables}
@@ -223,7 +230,12 @@ def add_user_to_garden(request, garden_id):
     # if this is a POST request we add the user to the current garden
     if request.method == 'POST':
         user_to_add = request.POST['user_selection']
-        garden.user.add(user_to_add)
+        garden.users.add(user_to_add)
+        new_user_name = User.objects.get(pk=user_to_add).username
+        success_message = 'Vous ({}) avez ajouté l\'utilisateur "{}" au jardin: " {} " '.format(
+            request.user.username, new_user_name, garden.name)
+        messages.add_message(request, messages.SUCCESS, success_message)
+        print(messages)
         return HttpResponseRedirect(reverse('planner:garden_settings_view', kwargs={'garden_id': garden_id}))
     users = User.objects.exclude(garden=garden)
     context = {'garden': garden, 'users': users}
@@ -233,7 +245,7 @@ def add_user_to_garden(request, garden_id):
 @login_required(login_url="/planner/login/")
 def garden_settings(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
-    following_users = garden.user.all()
+    following_users = garden.users.all()
     return render(request, 'planner/parameters_view.html', {'garden': garden, 'following_users': following_users})
 
 
@@ -246,7 +258,7 @@ def validate_alert(request, garden_id, alert_id):
         execution_date = request.POST['execution_date']
         services.mark_alert_as_done(alert_id, execution_date, executor)
         alert_name = Alerts.objects.get(pk=alert_id)
-        success_message = 'Vous ({}) avez indiqué avoir effectué l\'opération \" {} \" le '.format(
+        success_message = 'Vous ({}) avez indiqué avoir effectué l\'opération \" {} \" le {}'.format(
             request.user.username, alert_name, execution_date)
         messages.add_message(request, messages.SUCCESS, success_message)
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
@@ -283,3 +295,12 @@ def delete_alert(request, garden_id, alert_id):
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     context = {'garden': garden, 'alert_id': alert_id}
     return render(request, 'planner/modals/delete_alert_form.html', context)
+
+
+def delete_user_from_garden(request, garden_id, user_id):
+    deleted_user = User.objects.get(pk=user_id)
+    garden = Garden.objects.get(pk=garden_id)
+    garden.users.remove(deleted_user)
+    success_message = 'Vous ({}) avez supprimé l\'utilisateur \" {} \"'.format(request.user.username, deleted_user)
+    messages.add_message(request, messages.SUCCESS, success_message)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
