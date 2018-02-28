@@ -7,6 +7,18 @@
 
 {% block content %}
 
+    {% if messages %}
+        <div class="col-md-7">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
     <!-- Modal -->
     <div class="modal fade" id="modal-add_seed" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
@@ -22,7 +34,7 @@
     </div>
     <!-- Modal -->
 
-    <div class="col-md-8">
+    <div class="col-md-7">
         <div>
             <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
                href="{% url 'planner:add_seed_view' garden.id %}"
@@ -72,7 +84,7 @@
             </div>
         </div>
     </div>
-    <div class=" col-md-3 col-md-offset-1">
+    <div class=" col-md-5 ">
         <div class="panel panel-default ">
             <div class="panel-heading">Historique</div>
             <div class="panel-body">
@@ -89,7 +101,12 @@
                             <tbody>
                             <tr>
                                 <td><b>
-                                    {{ op.is_deleted }}{{ op.area_concerned.label }} </b> {{ op.original_cultural_operation.name }}
+                                    {% if op.is_deleted %}
+                                        <span class="glyphicon glyphicon-remove red"></span>
+                                    {% else %}
+                                        <span class="glyphicon glyphicon-ok green"></span>
+                                    {% endif %}
+                                   {{ op.area_concerned.label }} </b> {{ op.original_cultural_operation.name }}
                                 </td>
                                 <td>{{ op.execution_date }}</td>
                             </tr>

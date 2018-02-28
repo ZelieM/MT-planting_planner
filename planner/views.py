@@ -10,7 +10,7 @@ from django.views.generic import CreateView
 from planner import queries, services
 from planner.forms import GardenForm, CODateForm, COOffsetForm, DateInput
 from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
-    CultivatedArea, Area
+    CultivatedArea, Area, Alerts
 
 from django.contrib.auth import logout
 
@@ -245,6 +245,10 @@ def validate_alert(request, garden_id, alert_id):
         executor = request.user.id
         execution_date = request.POST['execution_date']
         services.mark_alert_as_done(alert_id, execution_date, executor)
+        alert_name = Alerts.objects.get(pk=alert_id)
+        success_message = 'Vous ({}) avez indiqué avoir effectué l\'opération \" {} \" le '.format(
+            request.user.username, alert_name, execution_date)
+        messages.add_message(request, messages.SUCCESS, success_message)
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     context = {'garden': garden, 'alert_id': alert_id}
     return render(request, 'planner/modals/validate_alert_form.html', context)
@@ -257,6 +261,9 @@ def postpone_alert(request, garden_id, alert_id):
     if request.method == 'POST':
         postponement = request.POST['postponement_in_days']
         services.postpone_alert(alert_id, postponement)
+        alert_name = Alerts.objects.get(pk=alert_id)
+        success_message = 'Vous avez bien reporté l\'opération \" {} \" de {} jours'.format(alert_name, postponement)
+        messages.add_message(request, messages.SUCCESS, success_message)
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     context = {'garden': garden, 'alert_id': alert_id}
     return render(request, 'planner/modals/postpone_alert_form.html', context)
@@ -270,6 +277,9 @@ def delete_alert(request, garden_id, alert_id):
         reason = request.POST['deletion_justification']
         executor = request.user
         services.delete_alert(alert_id, executor, reason)
+        alert_name = Alerts.objects.get(pk=alert_id)
+        success_message = 'Vous ({}) avez supprimé l\'opération \" {} \"'.format(request.user.username, alert_name)
+        messages.add_message(request, messages.SUCCESS, success_message)
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     context = {'garden': garden, 'alert_id': alert_id}
     return render(request, 'planner/modals/delete_alert_form.html', context)
