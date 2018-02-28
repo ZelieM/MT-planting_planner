@@ -29,7 +29,7 @@ def from_alerts_get_due_dates(future_alerts, past_alerts):
     time_delta = date.today() + timedelta(days=NOTIFICATION_PERIOD)
     todo = []
     for a in future_alerts:
-        if services.get_due_date(a, past_alerts) + timedelta(a.postponement) < time_delta:
+        if services.get_due_date(a, past_alerts) < time_delta:
             todo.append(a)
     return todo
 

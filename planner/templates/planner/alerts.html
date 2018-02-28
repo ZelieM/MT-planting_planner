@@ -1,9 +1,9 @@
 {% extends "planner/base.html" %}
 
- {% block extra_js %}
-     {% load static %}
-     <script src="{% static 'planner/js/sorttable.js' %}"></script>
- {% endblock extra_js %}
+{% block extra_js %}
+    {% load static %}
+    <script src="{% static 'planner/js/sorttable.js' %}"></script>
+{% endblock extra_js %}
 
 {% block content %}
 
@@ -11,7 +11,10 @@
     <div class="modal fade" id="modal-add_seed" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
     </div>
-        <div class="modal fade" id="modal-validate_alert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    <div class="modal fade" id="modal-validate_alert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
+    <div class="modal fade" id="modal-postpone_alert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
     </div>
     <!-- Modal -->
@@ -46,14 +49,14 @@
                                 <td><b>{{ current_alert.area_concerned.label }} </b></td>
                                 <td>{{ current_alert.area_concerned.vegetable }}</td>
                                 <td>{{ current_alert.original_cultural_operation.name }}</td>
-                                <td>{% due_date current_alert history as current_due_date%} {{ current_due_date|date:"j F" }} </td>
+                                <td>{% due_date current_alert history as current_due_date %} {{ current_due_date|date:"j F" }} </td>
                                 <td>
                                     <a class="glyphicon glyphicon-ok" data-toggle="modal"
                                        href="{% url 'planner:validate_alert_view' garden.id current_alert.id %}"
                                        data-target="#modal-validate_alert" title="Valider l'action" data-tooltip></a>
                                     <a class="glyphicon glyphicon-repeat" data-toggle="modal"
-                                       href=""
-                                       data-target="#modal-done" title="Reporter l'action" data-tooltip></a>
+                                       href="{% url 'planner:postpone_alert_view' garden.id current_alert.id %}"
+                                       data-target="#modal-postpone_alert" title="Reporter l'action" data-tooltip></a>
                                     <a class="glyphicon glyphicon-remove" data-toggle="modal"
                                        href=""
                                        data-target="#modal-done" title="Supprimer l'action" data-tooltip></a>
@@ -82,7 +85,7 @@
                         {% for op in history %}
                             <tbody>
                             <tr>
-                                <td><b>{{ op.area_concerned.label }} </b> {{ op.original_cultural_operation }}</td>
+                                <td><b>{{ op.area_concerned.label }} </b> {{ op.original_cultural_operation.name }}</td>
                                 <td>{{ op.execution_date }}</td>
                             </tr>
                             </tbody>
@@ -99,7 +102,12 @@
             var link = $(event.relatedTarget);
             modal.load(link.attr("href"));
         })
-            $('#modal-validate_alert').on('show.bs.modal', function (event) {
+        $('#modal-validate_alert').on('show.bs.modal', function (event) {
+            var modal = $(this)
+            var link = $(event.relatedTarget);
+            modal.load(link.attr("href"));
+        })
+        $('#modal-postpone_alert').on('show.bs.modal', function (event) {
             var modal = $(this)
             var link = $(event.relatedTarget);
             modal.load(link.attr("href"));

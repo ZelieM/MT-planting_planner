@@ -220,7 +220,7 @@ def add_seed(request, garden_id):
 @login_required(login_url="/planner/login/")
 def add_user_to_garden(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
-    # if this is a POST request we add the initial operation of the vegetable selected in the history
+    # if this is a POST request we add the user to the current garden
     if request.method == 'POST':
         user_to_add = request.POST['user_selection']
         garden.user.add(user_to_add)
@@ -240,7 +240,7 @@ def garden_settings(request, garden_id):
 @login_required(login_url="/planner/login/")
 def validate_alert(request, garden_id, alert_id):
     garden = Garden.objects.get(pk=garden_id)
-    # if this is a POST request we add the initial operation of the vegetable selected in the history
+    # if this is a POST request we have to mark the alert as done, else we show a modal to validate
     if request.method == 'POST':
         executor = request.user.id
         execution_date = request.POST['execution_date']
@@ -248,3 +248,15 @@ def validate_alert(request, garden_id, alert_id):
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     context = {'garden': garden, 'alert_id': alert_id}
     return render(request, 'planner/modals/validate_alert_form.html', context)
+
+
+@login_required(login_url="/planner/login/")
+def postpone_alert(request, garden_id, alert_id):
+    garden = Garden.objects.get(pk=garden_id)
+    # if this is a POST request we have to postpone the alert by the number of days encoded
+    if request.method == 'POST':
+        postponement = request.POST['postponement_in_days']
+        services.postpone_alert(alert_id, postponement)
+        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
+    context = {'garden': garden, 'alert_id': alert_id}
+    return render(request, 'planner/modals/postpone_alert_form.html', context)
