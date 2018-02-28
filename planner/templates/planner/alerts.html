@@ -115,7 +115,7 @@
                         </thead>
                         {% for op in history %}
                             <tbody>
-                            <tr>
+                            <tr data-toggle="collapse" href="#collapse-history{{ op.id }}" class="clickable">
                                 <td><b>
                                     {% if op.is_deleted %}
                                         <span class="glyphicon glyphicon-remove red"></span>
@@ -125,6 +125,18 @@
                                     {{ op.area_concerned.label }} </b> {{ op.original_cultural_operation.name }}
                                 </td>
                                 <td>{{ op.execution_date }}</td>
+                            </tr>
+
+                            <tr class="info">
+                                <td colspan="5" class="hiddenRow">
+                                    <div class="collapse" id="collapse-history{{ op.id }}">
+                                        <b> Légume : </b> {{ op.area_concerned.vegetable }}
+                                        <br>
+                                        <b> A été reporté de : </b> {{ op.postponement }} jours
+                                        <br>
+                                        <b> Opération effectuée par : </b> {{ op.executor }}
+                                    </div>
+                                </td>
                             </tr>
                             </tbody>
                         {% endfor %}

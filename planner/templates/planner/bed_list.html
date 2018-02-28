@@ -37,11 +37,11 @@
                 </div>
             </form>
         </table>
-        {% for b in beds %}
-            <svg width="150" height="400">
-                <rect width={{  b.width|divide:"5" }} height={{ b.length|divide:"5" }} style="fill:green;stroke-width:3;stroke:green" />
-            </svg>
-        {% endfor %}
+{#        {% for b in beds %}#}
+{#            <svg width="150" height="400">#}
+{#                <rect width={{  b.width|divide:"5" }} height={{ b.length|divide:"5" }} style="fill:green;stroke-width:3;stroke:green" />#}
+{#            </svg>#}
+{#        {% endfor %}#}
     {% else %}
         <p>Pas de planches sur ce jardin</p>
 
