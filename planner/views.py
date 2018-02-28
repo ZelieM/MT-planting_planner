@@ -235,7 +235,6 @@ def add_user_to_garden(request, garden_id):
         success_message = 'Vous ({}) avez ajouté l\'utilisateur "{}" au jardin: " {} " '.format(
             request.user.username, new_user_name, garden.name)
         messages.add_message(request, messages.SUCCESS, success_message)
-        print(messages)
         return HttpResponseRedirect(reverse('planner:garden_settings_view', kwargs={'garden_id': garden_id}))
     users = User.objects.exclude(garden=garden)
     context = {'garden': garden, 'users': users}
