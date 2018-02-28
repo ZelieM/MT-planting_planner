@@ -92,7 +92,7 @@ def garden_selection(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = GardenForm()
-    gardens_followed = Garden.objects.filter(user=current_user)
+    gardens_followed = Garden.objects.filter(users=current_user)
     return render(request, 'planner/garden_selection.html', {'form': form, 'gardens_followed': gardens_followed})
 
 

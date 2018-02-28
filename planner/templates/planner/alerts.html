@@ -58,9 +58,9 @@
                             <th></th>
                         </tr>
                         </thead>
+                        <tbody>
                         {% for current_alert in alerts %}
-                            <tbody>
-                            <tr>
+                            <tr data-toggle="collapse" href="#collapse-a{{ current_alert.id }}" class="clickable">
                                 <td><b>{{ current_alert.area_concerned.label }} </b></td>
                                 <td>{{ current_alert.area_concerned.vegetable }}</td>
                                 <td>{{ current_alert.original_cultural_operation.name }}</td>
@@ -68,17 +68,33 @@
                                 <td>
                                     <a class="glyphicon glyphicon-ok" data-toggle="modal"
                                        href="{% url 'planner:validate_alert_view' garden.id current_alert.id %}"
-                                       data-target="#modal-validate_alert" title="Valider l'action" data-tooltip></a>
+                                       data-target="#modal-validate_alert" title="Valider l'action"
+                                       data-tooltip></a>
                                     <a class="glyphicon glyphicon-repeat" data-toggle="modal"
                                        href="{% url 'planner:postpone_alert_view' garden.id current_alert.id %}"
-                                       data-target="#modal-postpone_alert" title="Reporter l'action" data-tooltip></a>
+                                       data-target="#modal-postpone_alert" title="Reporter l'action"
+                                       data-tooltip></a>
                                     <a class="glyphicon glyphicon-remove" data-toggle="modal"
                                        href="{% url 'planner:delete_alert_view' garden.id current_alert.id %}"
-                                       data-target="#modal-delete_alert" title="Supprimer l'action" data-tooltip></a>
+                                       data-target="#modal-delete_alert" title="Supprimer l'action"
+                                       data-tooltip></a>
                                 </td>
                             </tr>
-                            </tbody>
+                            <tr class="info">
+                                <td colspan="5" class="hiddenRow">
+                                    <div class="collapse" id="collapse-a{{ current_alert.id }}">
+                                        <b> Légume : </b> {{ current_alert.area_concerned.vegetable }}
+                                        <br>
+                                        <b> Reporté de : </b> {{ current_alert.postponement }} jours
+                                        <br>
+                                        <b> En retard de : </b> {% days_late current_due_date%} jours
+                                        <br>
+                                        <b> Temps estimé : </b> {% estimated_needed_time current_alert %} heures
+                                    </div>
+                                </td>
+                            </tr>
                         {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -106,7 +122,7 @@
                                     {% else %}
                                         <span class="glyphicon glyphicon-ok green"></span>
                                     {% endif %}
-                                   {{ op.area_concerned.label }} </b> {{ op.original_cultural_operation.name }}
+                                    {{ op.area_concerned.label }} </b> {{ op.original_cultural_operation.name }}
                                 </td>
                                 <td>{{ op.execution_date }}</td>
                             </tr>

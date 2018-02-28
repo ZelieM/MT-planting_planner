@@ -48,7 +48,7 @@ class Surface(models.Model):
         raise NotImplementedError()
 
     def __str__(self):
-        return "Surface with area : " + self.get_area()
+        return "Surface with area : " + str(self.get_area())
 
 
 class Bed(Surface):

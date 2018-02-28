@@ -19,7 +19,7 @@ def get_currently_active_alerts(garden_id):
 def done_alerts(garden_id):
     """ Return the list of alerts of this garden that are marked as done """
     garden_areas = get_garden_areas(garden_id)
-    return Alerts.objects.filter(area_concerned__in=garden_areas, done=True)
+    return Alerts.objects.filter(area_concerned__in=garden_areas, done=True).order_by('execution_date')
 
 
 def from_alerts_get_due_dates(future_alerts, past_alerts):

@@ -26,3 +26,7 @@ footer {
 .red {
     color: red;
 }
+
+.hiddenRow {
+    padding: 0 !important;
+}
