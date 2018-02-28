@@ -38,4 +38,3 @@ class COOffsetForm(ModelForm):
     class Meta:
         model = COWithOffset
         fields = ['name', 'vegetable', 'previous_operation', 'offset_in_days', 'duration']
-

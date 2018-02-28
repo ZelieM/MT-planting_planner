@@ -98,7 +98,7 @@ def garden_selection(request):
 
 @login_required(login_url="/planner/login/")
 def alerts_view(request, garden_id):
-    alerts = queries.active_alerts(garden_id)
+    alerts = queries.get_currently_active_alerts(garden_id)
     history = queries.done_alerts(garden_id)
     context = {'garden': Garden.objects.get(pk=garden_id), 'alerts': alerts, 'history': history}
     return render(request, 'planner/alerts.html', context)
@@ -260,3 +260,16 @@ def postpone_alert(request, garden_id, alert_id):
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     context = {'garden': garden, 'alert_id': alert_id}
     return render(request, 'planner/modals/postpone_alert_form.html', context)
+
+
+@login_required(login_url="/planner/login/")
+def delete_alert(request, garden_id, alert_id):
+    garden = Garden.objects.get(pk=garden_id)
+    # if this is a POST request we have to postpone the alert by the number of days encoded
+    if request.method == 'POST':
+        reason = request.POST['deletion_justification']
+        executor = request.user
+        services.delete_alert(alert_id, executor, reason)
+        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
+    context = {'garden': garden, 'alert_id': alert_id}
+    return render(request, 'planner/modals/delete_alert_form.html', context)

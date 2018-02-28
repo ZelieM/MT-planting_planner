@@ -3,16 +3,16 @@ from planner.models import CulturalOperation, ProductionPeriod, COWithDate, COWi
     Alerts, CultivatedArea
 from datetime import datetime, timedelta, date
 
-
 NOTIFICATION_PERIOD = 5  # in days
 
 
-def active_alerts(garden_id):
+def get_currently_active_alerts(garden_id):
     """ Return the list of active alerts for the garden with id garden_id.
     An alert is considered as active if it is marked as notdone and the due date is within NOTIFICATION_PERIOD """
     garden_areas = get_garden_areas(garden_id)
     notdone_alerts = Alerts.objects.filter(area_concerned__in=garden_areas, done=False)
-    past_alerts = Alerts.objects.filter(area_concerned__in=garden_areas, done=True)
+    past_alerts = Alerts.objects.filter(area_concerned__in=garden_areas, done=True,
+                                        is_deleted=False)  # Deleted alerts should not be taken into account
     return from_alerts_get_due_dates(notdone_alerts, past_alerts)
 
 
@@ -46,4 +46,3 @@ def get_current_production_period(garden_id):
 def get_garden_areas(garden_id):
     """ Return the garden's areas of the current production period of the garden """
     return CultivatedArea.objects.filter(production_period=get_current_production_period(garden_id))
-

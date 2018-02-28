@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, date
 from planner.models import CulturalOperation, Alerts, COWithDate, COWithOffset
 from planner.templatetags.planner_extras import register
 
@@ -49,4 +49,23 @@ def postpone_alert(alert_id, postponement):
     """ Postpone an alert by the number of days passed as argument """
     alert = Alerts.objects.get(pk=alert_id)
     alert.postponement = alert.postponement + int(postponement)
+    alert.save()
+
+
+def delete_alert(alert_id, executor, reason):
+    """ Delete an alert and eventually all the futures alerts relative to this cultivated_area"""
+    alert = Alerts.objects.get(pk=alert_id)
+    if reason == "destruction":
+        alerts_to_delete = Alerts.objects.filter(area_concerned=alert.area_concerned, done=False, is_deleted=False)
+        for a in alerts_to_delete:
+            mark_alert_as_deleted(a, executor)
+    else:
+        mark_alert_as_deleted(alert, executor)
+
+
+def mark_alert_as_deleted(alert, executor):
+    alert.executor = executor
+    alert.is_deleted = True
+    alert.done = True
+    alert.execution_date = date.today()
     alert.save()

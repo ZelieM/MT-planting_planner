@@ -1,0 +1,24 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                    class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel"> Supprimer une alerte </h4>
+        </div>
+        <form id="co_pick_type_form" action="{% url 'planner:delete_alert_view' garden.id alert_id %}" name=""
+              role="form" class="" method="post" accept-charset="utf-8">
+            <div class="modal-body">
+                {% csrf_token %}
+                <label><input type="radio" name="deletion_justification" value="useless" checked> L'opération n'est pas
+                    utile dans ce cas </label><br>
+                <label><input type="radio" name="deletion_justification" value="destruction"> La culture a été détruite:
+                    supprimer également toutes les futures opérations relatives à cette culture </label><br>
+{#                <label><input type="text" name="note" value="note"> Ajouter un commentaire éventuel à cette suppression#}
+{#                </label><br>#}
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-success" type="submit" value="Supprimer"/>
+            </div>
+        </form>
+    </div>
+</div>

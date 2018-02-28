@@ -125,7 +125,7 @@ class Alerts(models.Model):
     duration = models.IntegerField(null=True)
     done = models.BooleanField(default=False)
     executor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.area_concerned.label) + " " + str(self.original_cultural_operation)
-

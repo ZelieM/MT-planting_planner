@@ -17,6 +17,9 @@
     <div class="modal fade" id="modal-postpone_alert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
     </div>
+    <div class="modal fade" id="modal-delete_alert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
     <!-- Modal -->
 
     <div class="col-md-8">
@@ -58,8 +61,8 @@
                                        href="{% url 'planner:postpone_alert_view' garden.id current_alert.id %}"
                                        data-target="#modal-postpone_alert" title="Reporter l'action" data-tooltip></a>
                                     <a class="glyphicon glyphicon-remove" data-toggle="modal"
-                                       href=""
-                                       data-target="#modal-done" title="Supprimer l'action" data-tooltip></a>
+                                       href="{% url 'planner:delete_alert_view' garden.id current_alert.id %}"
+                                       data-target="#modal-delete_alert" title="Supprimer l'action" data-tooltip></a>
                                 </td>
                             </tr>
                             </tbody>
@@ -85,7 +88,9 @@
                         {% for op in history %}
                             <tbody>
                             <tr>
-                                <td><b>{{ op.area_concerned.label }} </b> {{ op.original_cultural_operation.name }}</td>
+                                <td><b>
+                                    {{ op.is_deleted }}{{ op.area_concerned.label }} </b> {{ op.original_cultural_operation.name }}
+                                </td>
                                 <td>{{ op.execution_date }}</td>
                             </tr>
                             </tbody>
@@ -108,6 +113,11 @@
             modal.load(link.attr("href"));
         })
         $('#modal-postpone_alert').on('show.bs.modal', function (event) {
+            var modal = $(this)
+            var link = $(event.relatedTarget);
+            modal.load(link.attr("href"));
+        })
+        $('#modal-delete_alert').on('show.bs.modal', function (event) {
             var modal = $(this)
             var link = $(event.relatedTarget);
             modal.load(link.attr("href"));
