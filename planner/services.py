@@ -24,9 +24,7 @@ def get_due_date(alert, alert_history):
     previous operations in history for cultural operations with offset """
     original_operation = CulturalOperation.objects.select_subclasses().get(pk=alert.original_cultural_operation_id)
     postpone = alert.postponement
-    if isinstance(original_operation, COWithDate):
-        return original_operation.get_date() + timedelta(days=postpone)
-    elif isinstance(original_operation, COWithOffset):
+    if isinstance(original_operation, COWithOffset) and alert_history:
         previous_operation = alert_history.get(area_concerned=alert.area_concerned,
                                                original_cultural_operation=original_operation.previous_operation)
         # We check if the previous operation is already done
@@ -34,6 +32,8 @@ def get_due_date(alert, alert_history):
             return previous_operation.execution_date + timedelta(days=original_operation.offset_in_days+postpone)
         else:
             return original_operation.get_date() + timedelta(days=postpone)
+    else:  # Case of an COWithDate operation or an empty alert_history
+        return original_operation.get_date() + timedelta(days=postpone)
 
 
 def mark_alert_as_done(alert_id, execution_date, executor):
