@@ -74,7 +74,7 @@ class CulturalOperation(models.Model):
     objects = InheritanceManager()
     name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name=_('Nom de l\'action'))
     vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE, verbose_name=_('Légume concerné'))
-    duration = models.DurationField(verbose_name=_('Temps nécessaire par m²'))
+    duration = models.DurationField(verbose_name=_('Temps nécessaire par m²'), default=timedelta(seconds=0))
     is_initial = models.BooleanField(default=False)
 
     @transaction.atomic
