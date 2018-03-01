@@ -36,7 +36,7 @@
                                     <tr>
                                         <th>Action</th>
                                         <th>Date ou délai</th>
-                                        <th class="hidden-xs hidden-sm">Durée [h/m²]</th>
+                                        <th class="hidden-xs hidden-sm" >Durée [h/m²]</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -46,7 +46,7 @@
                                             <td>{{ co.name }}</td>
                                             {% load humanize %}
                                             <td>{{ co.get_date|date:"j F"}}</td>
-                                            <td class="hidden-xs hidden-sm">{{ co.duration }}</td>
+                                            <td class="hidden-xs hidden-sm" title="hh:mm:ss">{{ co.duration }}</td>
                                             <td>
 
                                                 <a class="glyphicon glyphicon-pencil" data-toggle="modal"

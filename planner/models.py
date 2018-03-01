@@ -74,7 +74,7 @@ class CulturalOperation(models.Model):
     objects = InheritanceManager()
     name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name=_('Nom de l\'action'))
     vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE, verbose_name=_('Légume concerné'))
-    duration = models.IntegerField(verbose_name=_('Temps nécessaire par m²'))
+    duration = models.DurationField(verbose_name=_('Temps nécessaire par m²'))
     is_initial = models.BooleanField(default=False)
 
     @transaction.atomic
@@ -122,7 +122,7 @@ class Alerts(models.Model):
     original_cultural_operation = models.ForeignKey(CulturalOperation, on_delete=models.CASCADE)
     postponement = models.IntegerField(default=0)
     execution_date = models.DateField(null=True)
-    duration = models.IntegerField(null=True)
+    duration = models.DurationField(null=True)
     done = models.BooleanField(default=False)
     executor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     is_deleted = models.BooleanField(default=False)
