@@ -12,13 +12,22 @@ env:
 
 install:
   - pip install -r requirements.txt
+  - pip install coverage
   - pip install codeclimate-test-reporter
 
-# command to run tests
-script:
-  - export DJANGO_SECRETKEY=secret
-  - coverage run --source=planting_planner manage.py test
-  - python manage.py test
 
-after_script:
-  - codeclimate-test-reporter --file .coverage
+test:
+  pre:
+    - cc-test-reporter before-build
+
+  post:
+    - cc-test-reporter after-build --exit-code $EXIT_CODE
+
+## command to run tests
+#script:
+#  - export DJANGO_SECRETKEY=secret
+#  - coverage run --source=planting_planner manage.py test
+#  - python manage.py test
+#
+#after_script:
+#  - codeclimate-test-reporter --file .coverage
