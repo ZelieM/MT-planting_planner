@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <label for="execution_date">Date de réalisation de l'opération </label>
                     <input id="execution_date" type="date" class="form-control" name="execution_date"
-                           placeholder="date" required>
+                           value="" required>
                 </div>
 {#                <div class="form-group">#}
 {#                    <label for="validation_note"> Commentaire éventuel</label>#}
@@ -28,3 +28,7 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('execution_date').valueAsDate = new Date();
+</script>
