@@ -1,0 +1,20 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                    class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel"> Changer le délai de notification </h4>
+        </div>
+        <form id="edit_notification_delay" action="{% url 'planner:edit_notification_delay' garden.id %}" name=""
+              role="form" class="" method="post" accept-charset="utf-8">
+            <div class="modal-body">
+                {% csrf_token %}
+                <label for="notification_delay"> Délai de notification précédant la date d'échéance des opérations </label><br>
+                <input id="notification_delay" type="number" name="notification_delay" value="{{ garden.notification_delay }}">
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-success" type="submit" value="Editer"/>
+            </div>
+        </form>
+    </div>
+</div>

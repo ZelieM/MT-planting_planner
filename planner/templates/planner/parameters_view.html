@@ -18,32 +18,63 @@
     <div class="modal fade" id="modal-add_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
     </div>
+    <div class="modal fade" id="modal-edit_notification_delay" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
 
 
     <div class="container col-md-6 col-md-offset-3">
-        <h2>Liste des utilisateurs de ce jardin </h2>
-        <ul class="list-group">
-            {% for user in following_users %}
-                <li class="list-group-item list-group-item-action"> {{ user.username }}
-                    <a href="{% url 'planner:delete_user_from_garden' garden.id user.id %}" class="pull-right red">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-        <div>
-            <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
-               href="{% url 'planner:add_user_to_garden_view' garden.id %}"
-               data-target="#modal-add_user" title="add user" data-tooltip>Ajouter un utilisateur</a>
+        <div class="panel panel-default">
+            <div class="panel-heading">Liste des utilisateurs de ce jardin</div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    {% for user in following_users %}
+                        <li class="list-group-item list-group-item-action"> {{ user.username }}
+                            <a href="{% url 'planner:delete_user_from_garden' garden.id user.id %}"
+                               class="pull-right red">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div>
+                    <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
+                       href="{% url 'planner:add_user_to_garden_view' garden.id %}"
+                       data-target="#modal-add_user" title="add user" data-tooltip>Ajouter un utilisateur</a>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Notifications</div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-action">
+                        Délai de notification (en jours) :
+                        <b>{{ garden.notification_delay }} </b>
+                        <a href="{% url 'planner:edit_notification_delay' garden.id %}" class="pull-right"
+                           data-toggle="modal"
+                           data-target="#modal-edit_notification_delay"
+                           title="Editer le nombre de jours précédant la notification" data-tooltip>
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </li>
 
-    <script>
-        $('#modal-add_user').on('show.bs.modal', function (event) {
-            var modal = $(this)
-            var link = $(event.relatedTarget);
-            modal.load(link.attr("href"));
-        })
-    </script>
+                </ul>
+            </div>
+        </div>
+
+        <script>
+            $('#modal-add_user').on('show.bs.modal', function (event) {
+                var modal = $(this)
+                var link = $(event.relatedTarget);
+                modal.load(link.attr("href"));
+            })
+            $('#modal-edit_notification_delay').on('show.bs.modal', function (event) {
+                var modal = $(this)
+                var link = $(event.relatedTarget);
+                modal.load(link.attr("href"));
+            })
+        </script>
 
 {% endblock content %}

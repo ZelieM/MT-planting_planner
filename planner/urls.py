@@ -44,5 +44,7 @@ urlpatterns = [
     # Garden management
     path('<int:garden_id>/settings', views.garden_settings, name='garden_settings_view'),
     path('<int:garden_id>/settings/add_user', views.add_user_to_garden, name='add_user_to_garden_view'),
-    path('<int:garden_id>/settings/delete/<int:user_id>', views.delete_user_from_garden, name='delete_user_from_garden'),
+    path('<int:garden_id>/settings/delete/<int:user_id>', views.delete_user_from_garden,
+         name='delete_user_from_garden'),
+    path('<int:garden_id>/settings/notification_delay', views.edit_notification_delay, name='edit_notification_delay'),
 ]

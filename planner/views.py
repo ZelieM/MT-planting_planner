@@ -303,3 +303,17 @@ def delete_user_from_garden(request, garden_id, user_id):
     success_message = 'Vous ({}) avez supprimé l\'utilisateur \" {} \"'.format(request.user.username, deleted_user)
     messages.add_message(request, messages.SUCCESS, success_message)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def edit_notification_delay(request, garden_id):
+    garden = Garden.objects.get(pk=garden_id)
+    # if this is a POST request we have to change the notification delay of this garden
+    if request.method == 'POST':
+        new_delay = request.POST['notification_delay']
+        garden.notification_delay = new_delay
+        garden.save()
+        success_message = 'Les alertes apparaitront maintenant {} jours avant la date d\'échéance'.format(new_delay)
+        messages.add_message(request, messages.SUCCESS, success_message)
+        return HttpResponseRedirect(reverse('planner:garden_settings_view', kwargs={'garden_id': garden_id}))
+    context = {'garden': garden}
+    return render(request, 'planner/modals/edit_notification_delay_form.html', context)

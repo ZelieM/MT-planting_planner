@@ -12,6 +12,7 @@ NAME_MAX_LENGTH = 100
 class Garden(models.Model):
     name = models.CharField(unique=True, max_length=NAME_MAX_LENGTH, verbose_name="Nom du jardin")
     users = models.ManyToManyField(User)
+    notification_delay = models.IntegerField(default=5)
 
     def __str__(self):
         return "Garden: " + self.name
