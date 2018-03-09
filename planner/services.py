@@ -54,7 +54,7 @@ def mark_alert_as_done(alert_id, execution_date, executor):
     history = get_current_history(garden_id)
     operation_name = alert.original_cultural_operation.name
     Operation.objects.create(execution_date=execution_date, executor=executor, area_concerned=alert.area_concerned,
-                             name=operation_name, history=history, alert_id= alert_id)
+                             name=operation_name, history=history, original_alert_id=alert_id)
 
 
 def postpone_alert(alert_id, postponement):
