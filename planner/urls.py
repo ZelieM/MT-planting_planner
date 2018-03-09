@@ -28,6 +28,8 @@ urlpatterns = [
     path('<int:garden_id>/alerts/<int:alert_id>/validate', views.validate_alert, name='validate_alert_view'),
     path('<int:garden_id>/alerts/<int:alert_id>/postpone', views.postpone_alert, name='postpone_alert_view'),
     path('<int:garden_id>/alerts/<int:alert_id>/delete', views.delete_alert, name='delete_alert_view'),
+    path('<int:garden_id>/alerts/add_punctual_operation', views.add_punctual_operation, name='add_punctual_operation'),
+    path('<int:garden_id>/alerts/add_observation', views.add_observation, name='add_observation'),
 
     # Vegetables view
     path('<int:garden_id>/vegetables', views.vegetables_view, name='vegetables_view'),

@@ -1,11 +1,11 @@
 from django import template
 from django.urls import reverse
 
-from planner import services
+from planner import services, queries
 
 from datetime import date, timedelta
 
-from planner.models import Surface, Operation
+from planner.models import Surface, Operation, ForthcomingOperation
 
 register = template.Library()
 
@@ -37,7 +37,9 @@ def related_to(cultural_operation, vegetableid):
 
 
 @register.simple_tag
-def due_date(alert, alert_history):
+def due_date(alert, garden_id):
+    garden_areas = queries.get_garden_areas(garden_id)
+    alert_history = ForthcomingOperation.objects.filter(area_concerned__in=garden_areas, is_done=True)
     computed_due_date = services.get_due_date(alert, alert_history)
     return computed_due_date
 

@@ -15,6 +15,7 @@ def get_alert_within_notification_period(future_alerts, past_alerts, notificatio
             todo.append(a)
     return todo
 
+
 def get_currently_active_alerts(garden_id):
     """ Return the list of active alerts for the garden with id garden_id.
     An alert is considered as active if it is marked as notdone and the due date is within the notification delay of the garden """
@@ -27,12 +28,11 @@ def get_currently_active_alerts(garden_id):
 
 def done_alerts(garden_id):
     """ Return the list of alerts of this garden that are marked as done """
-    garden_areas = get_garden_areas(garden_id)
-    # return ForthcomingOperation.objects.filter(area_concerned__in=garden_areas, is_done=True).order_by('execution_date')
+    # garden_areas = get_garden_areas(garden_id)
     return HistoryItem.objects.select_subclasses().filter(history=services.get_current_history(garden_id))
-
 
 
 def get_garden_areas(garden_id):
     """ Return the garden's areas of the current production period of the garden """
-    return CultivatedArea.objects.filter(production_period=services.get_current_production_period(garden_id), is_active=True)
+    return CultivatedArea.objects.filter(production_period=services.get_current_production_period(garden_id),
+                                         is_active=True)

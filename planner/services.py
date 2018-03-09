@@ -17,8 +17,8 @@ def add_initial_operation_to_alerts(cultivated_area, date, user):
                                         execution_date=date, is_done=True)
     garden_id = cultivated_area.surface.garden_id
     history = History.objects.get(production_period=get_current_production_period(garden_id))
-    Operation.objects.create(execution_date=date, executor=user, bed=cultivated_area.surface,
-                             name=initial_co.name, vegetable_id=vegetable_seeded, history=history)
+    Operation.objects.create(execution_date=date, executor=user, area_concerned=cultivated_area,
+                             name=initial_co.name, history=history)
 
     # All the operation relative to this vegetable are added to alerts
     for co in CulturalOperation.objects.select_subclasses().filter(vegetable_id=vegetable_seeded, is_initial=False):
@@ -52,11 +52,9 @@ def mark_alert_as_done(alert_id, execution_date, executor):
     #  TODO Add duration and note
     garden_id = alert.area_concerned.surface.garden_id
     history = get_current_history(garden_id)
-    bed = alert.area_concerned.surface
     operation_name = alert.original_cultural_operation.name
-    vegetable = alert.area_concerned.vegetable
-    Operation.objects.create(execution_date=execution_date, executor=executor, bed=bed,
-                             name=operation_name, vegetable=vegetable, history=history)
+    Operation.objects.create(execution_date=execution_date, executor=executor, area_concerned=alert.area_concerned,
+                             name=operation_name, history=history)
 
 
 def postpone_alert(alert_id, postponement):
@@ -80,11 +78,9 @@ def delete_alert(alert_id, executor, reason):
 def mark_alert_as_deleted(alert, executor):
     garden_id = alert.area_concerned.surface.garden_id
     history = History.objects.get(production_period=get_current_production_period(garden_id))
-    bed = alert.area_concerned.surface
     operation_name = alert.original_cultural_operation.name
-    vegetable = alert.area_concerned.vegetable
-    Operation.objects.create(execution_date=date.today(), executor=executor, bed=bed,
-                             name=operation_name, vegetable=vegetable, history=history, is_deletion=True)
+    Operation.objects.create(execution_date=date.today(), executor=executor, area_concerned=alert.area_concerned,
+                             name=operation_name, history=history, is_deletion=True)
 
     alert.is_done = True
     alert.execution_date = date.today()

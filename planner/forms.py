@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.forms import ModelForm, forms, DateField, DateInput
-from .models import Garden, COWithDate, COWithOffset
+from .models import Garden, COWithDate, COWithOffset, Operation, Observation
 from django.utils.translation import gettext_lazy as _
-
+from datetime import date
 
 class DateInput(DateInput):
     """ Class overwriting the DateInput class of django.forms to change the input type of DateFields to date """
@@ -38,3 +38,21 @@ class COOffsetForm(ModelForm):
     class Meta:
         model = COWithOffset
         fields = ['name', 'vegetable', 'previous_operation', 'offset_in_days', 'duration']
+
+
+class OperationForm(ModelForm):
+    class Meta:
+        model = Operation
+        fields = ['execution_date', 'area_concerned', 'name', 'duration', 'note']
+        widgets = {
+            'execution_date': DateInput(),
+        }
+
+
+class ObservationForm(ModelForm):
+    class Meta:
+        model = Observation
+        fields = ['execution_date', 'area_concerned', 'description']
+        widgets = {
+            'execution_date': DateInput(),
+        }

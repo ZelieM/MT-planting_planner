@@ -1,3 +1,4 @@
+from datetime import date
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404
@@ -8,7 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
 
 from planner import queries, services
-from planner.forms import GardenForm, CODateForm, COOffsetForm, DateInput
+from planner.forms import GardenForm, CODateForm, COOffsetForm, DateInput, OperationForm, ObservationForm
 from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
     CultivatedArea, Area, ForthcomingOperation
 
@@ -107,7 +108,7 @@ def alerts_view(request, garden_id):
 @login_required(login_url="/planner/login/")
 def garden_view(request, garden_id):
     garden = get_object_or_404(Garden, pk=garden_id)
-    current_period = queries.get_current_production_period(garden_id)
+    current_period = services.get_current_production_period(garden_id)
     surfaces = garden.surface_set.all().select_subclasses()
     beds = []
     for s in surfaces:
@@ -210,7 +211,7 @@ def add_seed(request, garden_id):
         seeding_date = request.POST['seedingdate']
 
         carea = CultivatedArea.objects.create(
-            production_period=queries.get_current_production_period(garden_id),
+            production_period=services.get_current_production_period(garden_id),
             vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface_id=surface)
         services.add_initial_operation_to_alerts(cultivated_area=carea, date=seeding_date,
                                                  user=request.user)
@@ -319,3 +320,44 @@ def edit_notification_delay(request, garden_id):
         return HttpResponseRedirect(reverse('planner:garden_settings_view', kwargs={'garden_id': garden_id}))
     context = {'garden': garden}
     return render(request, 'planner/modals/edit_notification_delay_form.html', context)
+
+
+def add_punctual_operation(request, garden_id):
+    # if this is a POST request we add an operation to the history
+    if request.method == 'POST':
+        print(request.POST)
+        form = OperationForm(request.POST)
+        if form.is_valid():
+            new_operation = form.save(commit=False)
+            new_operation.executor = request.user
+            new_operation.history = services.get_current_history(garden_id)
+            new_operation.save()
+        # success_message = 'Vous ({}) avez indiqué avoir fait un semis de {} le {}'.format(
+        #     request.user.username, vegetable_concerned, seeding_date)
+        # messages.add_message(request, messages.SUCCESS, success_message)
+
+        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
+    form = OperationForm(initial={'execution_date': date.today()})
+    form.fields["area_concerned"].queryset = queries.get_garden_areas(garden_id)
+    context = {'garden': Garden.objects.get(pk=garden_id), 'form': form}
+    return render(request, 'planner/modals/add_punctual_operation_form.html', context)
+
+def add_observation(request, garden_id):
+    # if this is a POST request we add an operation to the history
+    if request.method == 'POST':
+        print(request.POST)
+        form = ObservationForm(request.POST)
+        if form.is_valid():
+            new_observation = form.save(commit=False)
+            new_observation.executor = request.user
+            new_observation.history = services.get_current_history(garden_id)
+            new_observation.save()
+        # success_message = 'Vous ({}) avez indiqué avoir fait un semis de {} le {}'.format(
+        #     request.user.username, vegetable_concerned, seeding_date)
+        # messages.add_message(request, messages.SUCCESS, success_message)
+
+        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
+    form = ObservationForm(initial={'execution_date': date.today()})
+    form.fields["area_concerned"].queryset = queries.get_garden_areas(garden_id)
+    context = {'garden': Garden.objects.get(pk=garden_id), 'form': form}
+    return render(request, 'planner/modals/add_observation_form.html', context)
