@@ -1,4 +1,4 @@
-from planner.services import get_due_date
+from planner import services
 from planner.models import CulturalOperation, ProductionPeriod, COWithDate, COWithOffset, \
     ForthcomingOperation, CultivatedArea, Garden, History, HistoryItem
 from datetime import datetime, timedelta, date
@@ -12,16 +12,6 @@ def get_currently_active_alerts(garden_id):
     past_alerts = ForthcomingOperation.objects.filter(area_concerned__in=garden_areas, is_done=True)
     notification_delay = Garden.objects.get(pk=garden_id).notification_delay
     return get_alert_within_notification_period(notdone_alerts, past_alerts, notification_delay)
-
-
-def get_current_history(garden_id):
-    production_period = get_current_production_period(garden_id)
-    history = History.objects.get(production_period=production_period)
-    if not history:
-        # If this garden doesn't have an active history, create a new one
-        return History.objects.create(production_period=production_period)
-    else:
-        return history
 
 
 def done_alerts(garden_id):
@@ -38,7 +28,7 @@ def get_alert_within_notification_period(future_alerts, past_alerts, notificatio
     time_delta = date.today() + timedelta(days=notification_delay)
     todo = []
     for a in future_alerts:
-        if get_due_date(a, past_alerts) < time_delta:
+        if services.get_due_date(a, past_alerts) < time_delta:
             todo.append(a)
     return todo
 
@@ -50,6 +40,16 @@ def get_current_production_period(garden_id):
         ProductionPeriod.objects.create(label="first_period", start_date=datetime.today(), garden_id=garden_id)
     # Take the latest production period of this garden, supposed still active
     return ProductionPeriod.objects.filter(garden_id=garden_id).latest('start_date')
+
+
+def get_current_history(garden_id):
+    production_period = get_current_production_period(garden_id)
+    try:
+        history = History.objects.get(production_period=production_period)
+        return history
+    except History.DoesNotExist:
+        # If this garden doesn't have an active history, create a new one
+        return History.objects.create(production_period=production_period)
 
 
 def get_garden_areas(garden_id):

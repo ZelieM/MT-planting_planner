@@ -51,7 +51,7 @@ def mark_alert_as_done(alert_id, execution_date, executor):
     alert.save()
     #  TODO Add duration and note
     garden_id = alert.area_concerned.surface.garden_id
-    history = History.objects.get(production_period=queries.get_current_production_period(garden_id))
+    history = queries.get_current_history(garden_id)
     bed = alert.area_concerned.surface
     operation_name = alert.original_cultural_operation.name
     vegetable = alert.area_concerned.vegetable
@@ -89,4 +89,3 @@ def mark_alert_as_deleted(alert, executor):
     alert.is_done = True
     alert.execution_date = date.today()
     alert.save()
-

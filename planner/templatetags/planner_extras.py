@@ -60,4 +60,3 @@ def estimated_needed_time(alert):
 @register.filter
 def is_operation(history_item):
     return type(history_item) is Operation
-

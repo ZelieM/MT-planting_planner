@@ -131,7 +131,7 @@ class ForthcomingOperation(models.Model):
 
 
 class History(models.Model):
-    production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
+    production_period = models.OneToOneField(ProductionPeriod, on_delete=models.CASCADE)
 
 
 class HistoryItem(models.Model):
@@ -153,6 +153,3 @@ class Operation(HistoryItem):
     note = models.TextField(null=True)
     duration = models.DurationField(null=True)
     is_deletion = models.BooleanField(default=False)
-
-
-

@@ -222,7 +222,7 @@ def add_seed(request, garden_id):
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     vegetables = Vegetable.objects.all()
     surfaces = Bed.objects.filter(garden_id=garden_id)
-    context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables, 'surfaces':surfaces}
+    context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables, 'surfaces': surfaces}
     return render(request, 'planner/modals/add_seeding_form.html', context)
 
 
