@@ -1,7 +1,7 @@
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 
-from planner import queries
-from planner.models import CulturalOperation, ForthcomingOperation, COWithDate, COWithOffset, Operation, History
+from planner.models import CulturalOperation, ForthcomingOperation, COWithDate, COWithOffset, Operation, History, \
+    ProductionPeriod
 from planner.templatetags.planner_extras import register
 
 
@@ -16,7 +16,7 @@ def add_initial_operation_to_alerts(cultivated_area, date, user):
     ForthcomingOperation.objects.create(area_concerned=cultivated_area, original_cultural_operation=initial_co,
                                         execution_date=date, is_done=True)
     garden_id = cultivated_area.surface.garden_id
-    history = History.objects.get(production_period=queries.get_current_production_period(garden_id))
+    history = History.objects.get(production_period=get_current_production_period(garden_id))
     Operation.objects.create(execution_date=date, executor=user, bed=cultivated_area.surface,
                              name=initial_co.name, vegetable_id=vegetable_seeded, history=history)
 
@@ -51,7 +51,7 @@ def mark_alert_as_done(alert_id, execution_date, executor):
     alert.save()
     #  TODO Add duration and note
     garden_id = alert.area_concerned.surface.garden_id
-    history = queries.get_current_history(garden_id)
+    history = get_current_history(garden_id)
     bed = alert.area_concerned.surface
     operation_name = alert.original_cultural_operation.name
     vegetable = alert.area_concerned.vegetable
@@ -79,7 +79,7 @@ def delete_alert(alert_id, executor, reason):
 
 def mark_alert_as_deleted(alert, executor):
     garden_id = alert.area_concerned.surface.garden_id
-    history = History.objects.get(production_period=queries.get_current_production_period(garden_id))
+    history = History.objects.get(production_period=get_current_production_period(garden_id))
     bed = alert.area_concerned.surface
     operation_name = alert.original_cultural_operation.name
     vegetable = alert.area_concerned.vegetable
@@ -89,3 +89,22 @@ def mark_alert_as_deleted(alert, executor):
     alert.is_done = True
     alert.execution_date = date.today()
     alert.save()
+
+
+def get_current_production_period(garden_id):
+    """ Return the current, and thus active, production period of the garden with id garden_id """
+    if not ProductionPeriod.objects.filter(garden_id=garden_id):
+        # If this garden doesn't have an active production period, create a new one starting now
+        ProductionPeriod.objects.create(label="first_period", start_date=datetime.today(), garden_id=garden_id)
+    # Take the latest production period of this garden, supposed still active
+    return ProductionPeriod.objects.filter(garden_id=garden_id).latest('start_date')
+
+
+def get_current_history(garden_id):
+    production_period = get_current_production_period(garden_id)
+    try:
+        history = History.objects.get(production_period=production_period)
+        return history
+    except History.DoesNotExist:
+        # If this garden doesn't have an active history, create a new one
+        return History.objects.create(production_period=production_period)
