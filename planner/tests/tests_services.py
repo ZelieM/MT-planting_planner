@@ -3,7 +3,7 @@ from datetime import datetime, date, timedelta
 from django.test import TestCase
 
 from planner import services, queries
-from planner.models import Garden, Vegetable, COWithDate, Alerts, CultivatedArea, Area, COWithOffset
+from planner.models import Garden, Vegetable, COWithDate, ForthcomingOperation, CultivatedArea, Area, COWithOffset
 
 
 class ServicesTests(TestCase):
@@ -21,61 +21,61 @@ class ServicesTests(TestCase):
 
     def test_get_due_date(self):
         """ Test the function services.get_due_date(alert, alert_history) """
-        alert_history_empty = Alerts.objects.filter(done=True)
-        my_alert1 = Alerts.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
-                                          original_cultural_operation=COWithDate.objects.get(name="FirstOP"))
+        alert_history_empty = ForthcomingOperation.objects.filter(is_done=True)
+        my_alert1 = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
+                                                        original_cultural_operation=COWithDate.objects.get(name="FirstOP"))
         computed_date = services.get_due_date(my_alert1, alert_history_empty)
         supposed_date = date(2017, 12, 6)
         self.assertEqual(computed_date, supposed_date)
-        my_alert2 = Alerts.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
-                                          original_cultural_operation=COWithOffset.objects.get(name="OffsetOp"))
+        my_alert2 = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
+                                                        original_cultural_operation=COWithOffset.objects.get(name="OffsetOp"))
         computed_date = services.get_due_date(my_alert2, alert_history_empty)
         self.assertEqual(computed_date, date(2017, 12, 11))  # offset : 5 days, previous operation : 6/12/2017
         my_alert1.execution_date = date(2017, 12, 12)
-        my_alert1.done = True
+        my_alert1.is_done = True
         my_alert1.save()
-        alert_history_not_empty = Alerts.objects.filter(done=True)
+        alert_history_not_empty = ForthcomingOperation.objects.filter(is_done=True)
         computed_date = services.get_due_date(my_alert2, alert_history_not_empty)
         supposed_date = date(2017, 12, 17)  # offset5 days and execution date : 12/12/2017
         self.assertEqual(computed_date, supposed_date)
 
     def test_mark_alert_as_done(self):
-        alert = Alerts.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
-                                      original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
-        self.assertFalse(alert.done)
+        alert = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
+                                                    original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
+        self.assertFalse(alert.is_done)
         services.mark_alert_as_done(alert_id=alert.id, execution_date=date(2017, 10, 10), executor=None)
-        self.assertTrue(Alerts.objects.get(pk=alert.id).done)
+        self.assertTrue(ForthcomingOperation.objects.get(pk=alert.id).is_done)
 
     def test_postpone_alert(self):
-        alert = Alerts.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
-                                      original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
-        alert_history = Alerts.objects.filter(done=True)
+        alert = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
+                                                    original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
+        alert_history = ForthcomingOperation.objects.filter(is_done=True)
         self.assertEqual(services.get_due_date(alert, alert_history), date(2017, 10, 8))
         services.postpone_alert(alert.id, 8)
-        alert_postponed = Alerts.objects.get(pk=alert.id)
+        alert_postponed = ForthcomingOperation.objects.get(pk=alert.id)
         self.assertEqual(services.get_due_date(alert_postponed, alert_history), date(2017, 10, 16))
 
     def test_mark_alert_as_deleted(self):
-        alert = Alerts.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
-                                      original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
+        alert = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
+                                                    original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
         self.assertFalse(alert.is_deleted)
         services.mark_alert_as_deleted(alert, executor=None)
-        self.assertTrue(Alerts.objects.get(pk=alert.id).is_deleted)
+        self.assertTrue(ForthcomingOperation.objects.get(pk=alert.id).is_deleted)
 
     def test_delete_alert(self):
         # Only one alert is deleted
-        alert = Alerts.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
-                                      original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
+        alert = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
+                                                    original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
         self.assertFalse(alert.is_deleted)
         services.delete_alert(alert.id, executor=None, reason="useless")
-        self.assertTrue(Alerts.objects.get(pk=alert.id).is_deleted)
+        self.assertTrue(ForthcomingOperation.objects.get(pk=alert.id).is_deleted)
         # All subsequent alerts are deleted
-        alert = Alerts.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
-                                      original_cultural_operation=COWithDate.objects.get(name="FirstOP"))
-        Alerts.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
-                              original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
-        Alerts.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
-                              original_cultural_operation=COWithOffset.objects.get(name="OffsetOp"))
+        alert = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
+                                                    original_cultural_operation=COWithDate.objects.get(name="FirstOP"))
+        ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
+                                            original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
+        ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
+                                            original_cultural_operation=COWithOffset.objects.get(name="OffsetOp"))
         services.delete_alert(alert.id, executor=None, reason="destruction")
-        for a in Alerts.objects.filter(area_concerned__label="area1"):
+        for a in ForthcomingOperation.objects.filter(area_concerned__label="area1"):
             self.assertTrue(a.is_deleted)

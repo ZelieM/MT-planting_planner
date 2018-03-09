@@ -87,7 +87,7 @@
                                         <br>
                                         <b> Reporté de : </b> {{ current_alert.postponement }} jours
                                         <br>
-                                        <b> En retard de : </b> {% days_late current_due_date%} jours
+                                        <b> En retard de : </b> {% days_late current_due_date %} jours
                                         <br>
                                         <b> Temps estimé : </b> {% estimated_needed_time current_alert %} heures
                                     </div>
@@ -117,22 +117,28 @@
                             <tbody>
                             <tr data-toggle="collapse" href="#collapse-history{{ op.id }}" class="clickable">
                                 <td><b>
-                                    {% if op.is_deleted %}
-                                        <span class="glyphicon glyphicon-remove red"></span>
+                                    {% load planner_extras %}
+                                    {% if op|is_operation %}
+                                        {% if op.is_deletion %}
+                                            <span class="glyphicon glyphicon-remove red"></span>
+                                        {% else %}
+                                            <span class="glyphicon glyphicon-ok green"></span>
+                                        {% endif %}
+                                        {{ op.bed.name }}
+                                        </b> {{ op.name }}
+                                        </td>
+                                        <td>{{ op.execution_date }}</td>
                                     {% else %}
-                                        <span class="glyphicon glyphicon-ok green"></span>
+                                        je suis une observation
                                     {% endif %}
-                                    {{ op.area_concerned.label }} </b> {{ op.original_cultural_operation.name }}
-                                </td>
-                                <td>{{ op.execution_date }}</td>
                             </tr>
 
                             <tr class="info">
                                 <td colspan="5" class="hiddenRow">
                                     <div class="collapse" id="collapse-history{{ op.id }}">
-                                        <b> Légume : </b> {{ op.area_concerned.vegetable }}
-                                        <br>
-                                        <b> A été reporté de : </b> {{ op.postponement }} jours
+                                        <b> Légume : </b> {{ op.vegetable }}
+                                        {#                                        <br>#}
+                                        {#                                        <b> A été reporté de : </b> {{ op.postponement }} jours#}
                                         <br>
                                         <b> Opération effectuée par : </b> {{ op.executor }}
                                     </div>

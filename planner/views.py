@@ -10,7 +10,7 @@ from django.views.generic import CreateView
 from planner import queries, services
 from planner.forms import GardenForm, CODateForm, COOffsetForm, DateInput
 from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
-    CultivatedArea, Area, Alerts
+    CultivatedArea, Area, ForthcomingOperation
 
 from django.contrib.auth import logout
 
@@ -205,12 +205,13 @@ def add_seed(request, garden_id):
     # if this is a POST request we add the initial operation of the vegetable selected in the history
     if request.method == 'POST':
         # TODO create a cultivated area with the vegetable, the surface sowed and and the label
-        surface = Area.objects.create(area_surface=request.POST['surface_seeded'], garden_id=garden_id)
+        surface = request.POST['surface_selection']
         vegetable_id = request.POST['vegetable_selection']
         seeding_date = request.POST['seedingdate']
+
         carea = CultivatedArea.objects.create(
             production_period=queries.get_current_production_period(garden_id),
-            vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface=surface)
+            vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface_id=surface)
         services.add_initial_operation_to_alerts(cultivated_area=carea, date=seeding_date,
                                                  user=request.user)
         vegetable_concerned = Vegetable.objects.get(pk=vegetable_id).name
@@ -220,7 +221,8 @@ def add_seed(request, garden_id):
 
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     vegetables = Vegetable.objects.all()
-    context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables}
+    surfaces = Bed.objects.filter(garden_id=garden_id)
+    context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables, 'surfaces':surfaces}
     return render(request, 'planner/modals/add_seeding_form.html', context)
 
 
@@ -256,7 +258,7 @@ def validate_alert(request, garden_id, alert_id):
         executor = request.user.id
         execution_date = request.POST['execution_date']
         services.mark_alert_as_done(alert_id, execution_date, executor)
-        alert_name = Alerts.objects.get(pk=alert_id)
+        alert_name = ForthcomingOperation.objects.get(pk=alert_id)
         success_message = 'Vous ({}) avez indiqué avoir effectué l\'opération \" {} \" le {}'.format(
             request.user.username, alert_name, execution_date)
         messages.add_message(request, messages.SUCCESS, success_message)
@@ -272,7 +274,7 @@ def postpone_alert(request, garden_id, alert_id):
     if request.method == 'POST':
         postponement = request.POST['postponement_in_days']
         services.postpone_alert(alert_id, postponement)
-        alert_name = Alerts.objects.get(pk=alert_id)
+        alert_name = ForthcomingOperation.objects.get(pk=alert_id)
         success_message = 'Vous avez bien reporté l\'opération \" {} \" de {} jours'.format(alert_name, postponement)
         messages.add_message(request, messages.SUCCESS, success_message)
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
@@ -288,7 +290,7 @@ def delete_alert(request, garden_id, alert_id):
         reason = request.POST['deletion_justification']
         executor = request.user
         services.delete_alert(alert_id, executor, reason)
-        alert_name = Alerts.objects.get(pk=alert_id)
+        alert_name = ForthcomingOperation.objects.get(pk=alert_id)
         success_message = 'Vous ({}) avez supprimé l\'opération \" {} \"'.format(request.user.username, alert_name)
         messages.add_message(request, messages.SUCCESS, success_message)
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))

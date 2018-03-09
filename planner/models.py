@@ -116,17 +116,43 @@ class CultivatedArea(models.Model):
     production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
     surface = models.ForeignKey(Surface, on_delete=models.CASCADE)
     label = models.TextField()
+    is_active = models.BooleanField(default=True)
 
 
-class Alerts(models.Model):
+class ForthcomingOperation(models.Model):
     area_concerned = models.ForeignKey(CultivatedArea, on_delete=models.CASCADE)
     original_cultural_operation = models.ForeignKey(CulturalOperation, on_delete=models.CASCADE)
     postponement = models.IntegerField(default=0)
     execution_date = models.DateField(null=True)
-    duration = models.DurationField(null=True)
-    done = models.BooleanField(default=False)
-    executor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    is_deleted = models.BooleanField(default=False)
+    is_done = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.area_concerned.label) + " " + str(self.original_cultural_operation)
+
+
+class History(models.Model):
+    production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
+
+
+class HistoryItem(models.Model):
+    objects = InheritanceManager()
+    history = models.ForeignKey(History, on_delete=models.CASCADE)
+    execution_date = models.DateField()
+    vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE)
+    executor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+
+class Observation(HistoryItem):
+    bed = models.ForeignKey(Surface, null=True, on_delete=models.SET_NULL)
+    description = models.TextField()
+
+
+class Operation(HistoryItem):
+    bed = models.ForeignKey(Surface, on_delete=models.SET_NULL, null=True)
+    name = models.TextField(max_length=NAME_MAX_LENGTH)
+    note = models.TextField(null=True)
+    duration = models.DurationField(null=True)
+    is_deletion = models.BooleanField(default=False)
+
+
+

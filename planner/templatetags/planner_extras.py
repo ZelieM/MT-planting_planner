@@ -5,7 +5,7 @@ from planner import services
 
 from datetime import date, timedelta
 
-from planner.models import Surface
+from planner.models import Surface, Operation
 
 register = template.Library()
 
@@ -55,3 +55,9 @@ def estimated_needed_time(alert):
     area_size = Surface.objects.select_subclasses().get(pk=area)
     unitary_time_needed = alert.original_cultural_operation.duration
     return area_size.get_area() * unitary_time_needed
+
+
+@register.filter
+def is_operation(history_item):
+    return type(history_item) is Operation
+

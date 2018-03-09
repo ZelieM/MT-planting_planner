@@ -1,5 +1,7 @@
 from datetime import timedelta, date
-from planner.models import CulturalOperation, Alerts, COWithDate, COWithOffset
+
+from planner import queries
+from planner.models import CulturalOperation, ForthcomingOperation, COWithDate, COWithOffset, Operation, History
 from planner.templatetags.planner_extras import register
 
 
@@ -11,11 +13,16 @@ def add_initial_operation_to_alerts(cultivated_area, date, user):
     initial_co = CulturalOperation.objects.select_subclasses().get(vegetable_id=vegetable_seeded, is_initial=True)
     # TODO take duration into account
     # Add the initial operation as "done"
-    Alerts.objects.create(area_concerned=cultivated_area, original_cultural_operation=initial_co, execution_date=date,
-                          done=True, executor=user)
+    ForthcomingOperation.objects.create(area_concerned=cultivated_area, original_cultural_operation=initial_co,
+                                        execution_date=date, is_done=True)
+    garden_id = cultivated_area.surface.garden_id
+    history = History.objects.get(production_period=queries.get_current_production_period(garden_id))
+    Operation.objects.create(execution_date=date, executor=user, bed=cultivated_area.surface,
+                             name=initial_co.name, vegetable_id=vegetable_seeded, history=history)
+
     # All the operation relative to this vegetable are added to alerts
     for co in CulturalOperation.objects.select_subclasses().filter(vegetable_id=vegetable_seeded, is_initial=False):
-        Alerts.objects.create(area_concerned=cultivated_area, original_cultural_operation=co)
+        ForthcomingOperation.objects.create(area_concerned=cultivated_area, original_cultural_operation=co)
 
 
 @register.filter
@@ -29,7 +36,7 @@ def get_due_date(alert, alert_history):
                                                original_cultural_operation=original_operation.previous_operation)
         # We check if the previous operation is already done
         if previous_operation:
-            return previous_operation.execution_date + timedelta(days=original_operation.offset_in_days+postpone)
+            return previous_operation.execution_date + timedelta(days=original_operation.offset_in_days + postpone)
         else:
             return original_operation.get_date() + timedelta(days=postpone)
     else:  # Case of an COWithDate operation or an empty alert_history
@@ -38,25 +45,32 @@ def get_due_date(alert, alert_history):
 
 def mark_alert_as_done(alert_id, execution_date, executor):
     """ Mark an alert as done with and execution date and an executor """
-    alert = Alerts.objects.get(pk=alert_id)
+    alert = ForthcomingOperation.objects.get(pk=alert_id)
     alert.execution_date = execution_date
-    alert.executor_id = executor
-    alert.done = True
+    alert.is_done = True
     alert.save()
+    #  TODO Add duration and note
+    garden_id = alert.area_concerned.surface.garden_id
+    history = History.objects.get(production_period=queries.get_current_production_period(garden_id))
+    bed = alert.area_concerned.surface
+    operation_name = alert.original_cultural_operation.name
+    vegetable = alert.area_concerned.vegetable
+    Operation.objects.create(execution_date=execution_date, executor=executor, bed=bed,
+                             name=operation_name, vegetable=vegetable, history=history)
 
 
 def postpone_alert(alert_id, postponement):
     """ Postpone an alert by the number of days passed as argument """
-    alert = Alerts.objects.get(pk=alert_id)
+    alert = ForthcomingOperation.objects.get(pk=alert_id)
     alert.postponement = alert.postponement + int(postponement)
     alert.save()
 
 
 def delete_alert(alert_id, executor, reason):
     """ Delete an alert and eventually all the futures alerts relative to this cultivated_area"""
-    alert = Alerts.objects.get(pk=alert_id)
+    alert = ForthcomingOperation.objects.get(pk=alert_id)
     if reason == "destruction":
-        alerts_to_delete = Alerts.objects.filter(area_concerned=alert.area_concerned, done=False, is_deleted=False)
+        alerts_to_delete = ForthcomingOperation.objects.filter(area_concerned=alert.area_concerned, is_done=False)
         for a in alerts_to_delete:
             mark_alert_as_deleted(a, executor)
     else:
@@ -64,8 +78,15 @@ def delete_alert(alert_id, executor, reason):
 
 
 def mark_alert_as_deleted(alert, executor):
-    alert.executor = executor
-    alert.is_deleted = True
-    alert.done = True
+    garden_id = alert.area_concerned.surface.garden_id
+    history = History.objects.get(production_period=queries.get_current_production_period(garden_id))
+    bed = alert.area_concerned.surface
+    operation_name = alert.original_cultural_operation.name
+    vegetable = alert.area_concerned.vegetable
+    Operation.objects.create(execution_date=date.today(), executor=executor, bed=bed,
+                             name=operation_name, vegetable=vegetable, history=history, is_deletion=True)
+
+    alert.is_done = True
     alert.execution_date = date.today()
     alert.save()
+

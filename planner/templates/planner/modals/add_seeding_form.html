@@ -26,9 +26,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="surface_seeded">Quelle surface avez-vous semé? </label>
-                    <input id="surface_seeded" type="integer" class="form-control" name="surface_seeded"
-                           placeholder="00" required>
+                    <label for="surface_selection">Sur quelle surface avez-vous semé? </label>
+                    <select class="form-control" id="surface_selection" name="surface_selection" required>
+                        {% for s in surfaces %}
+                            <option id="surface_seeded" name="surface_seeded"
+                                    value="{{ s.id }}">{{ s.name }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <br>
 
