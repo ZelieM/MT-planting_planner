@@ -64,17 +64,7 @@
             </div>
         </div>
 
-        <script>
-            $('#modal-add_user').on('show.bs.modal', function (event) {
-                var modal = $(this)
-                var link = $(event.relatedTarget);
-                modal.load(link.attr("href"));
-            })
-            $('#modal-edit_notification_delay').on('show.bs.modal', function (event) {
-                var modal = $(this)
-                var link = $(event.relatedTarget);
-                modal.load(link.attr("href"));
-            })
-        </script>
+    {% load static %}
+    <script src="{% static 'planner/js/activate_modal.js' %}"></script>
 
 {% endblock content %}

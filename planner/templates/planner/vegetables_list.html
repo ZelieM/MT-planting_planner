@@ -61,10 +61,9 @@
                                     {% endfor %}
                                 </table>
 
-                                    <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
+                                    <a class="glyphicon glyphicon-plus btn btn-success margin-button" data-toggle="modal"
                                        href="{% url 'planner:pick_co_type' garden.id v.id %}"
-                                       data-target="#modal-pick-type" title="add item" data-tooltip>Ajouter une
-                                        opération </a>
+                                       data-target="#modal-pick-type" title="add item" data-tooltip> Ajouter une opération </a>
 
                             </div>
                         </div>
@@ -77,19 +76,7 @@
         <h2> Pas de légumes dans ce jardin, ajouter un légume ? </h2>
     {% endif %}
 
-
-    <script>
-        $('#modal-edit').on('show.bs.modal', function (event) {
-            var modal = $(this)
-            var link = $(event.relatedTarget);
-            modal.load(link.attr("href"));
-        })
-        $('#modal-pick-type').on('show.bs.modal', function (event) {
-            var modal = $(this)
-            var link = $(event.relatedTarget);
-            modal.load(link.attr("href"));
-        })
-
-    </script>
+    {% load static %}
+    <script src="{% static 'planner/js/activate_modal.js' %}"></script>
 
 {% endblock content %}

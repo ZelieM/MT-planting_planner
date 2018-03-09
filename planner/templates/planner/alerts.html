@@ -134,35 +134,37 @@
                         {% for op in history %}
                             <tbody>
                             <tr data-toggle="collapse" href="#collapse-history{{ op.id }}" class="clickable">
-                                <td><b>
-
-                                    {% if op|is_operation %}
+                                {% if op|is_operation %}
+                                    <td><b>
                                         {% if op.is_deletion %}
                                             <span class="glyphicon glyphicon-remove red"></span>
                                         {% else %}
                                             <span class="glyphicon glyphicon-ok green"></span>
                                         {% endif %}
                                         {{ op.area_concerned.label }}
-                                        </b> {{ op.name }}
-                                        </td>
-                                        <td>{{ op.execution_date }}</td>
-                                    {% else %}
-                                        <span class="glyphicon glyphicon-eye-open blue"></span>
+                                    </b> {{ op.name }}
+                                    </td>
+                                    <td>{{ op.execution_date }}</td>
+                                {% else %}
+                                    <td>
+                                        <span class="glyphicon glyphicon-eye-open blue-icon"></span>
                                         <b> Observation - </b> {{ op.area_concerned }}
-                                    {% endif %}
+                                    </td>
+                                    <td>{{ op.execution_date }}</td>
+                                {% endif %}
                             </tr>
 
                             <tr class="info">
                                 <td colspan="5" class="hiddenRow">
                                     <div class="collapse" id="collapse-history{{ op.id }}">
                                         {% if op|is_operation %}
-                                        <b> Légume : </b> {{ op.area_concerned.vegetable }}
-                                        {#                                        <br>#}
-                                        {#                                        <b> A été reporté de : </b> {{ op.postponement }} jours#}
-                                        <br>
-                                        <b> Opération effectuée par : </b> {{ op.executor }}
-                                        <br>
-                                        <b> Commentaire éventuel : </b> {{ op.note }}
+                                            <b> Légume : </b> {{ op.area_concerned.vegetable }}
+                                            {#                                        <br>#}
+                                            {#                                        <b> A été reporté de : </b> {{ op.postponement }} jours#}
+                                            <br>
+                                            <b> Opération effectuée par : </b> {{ op.executor }}
+                                            <br>
+                                            <b> Commentaire éventuel : </b> {{ op.note }}
                                         {% else %}
                                             <b> Description : </b> {{ op.description }}
                                         {% endif %}
@@ -177,36 +179,6 @@
         </div>
     </div>
 
-    <script>
-        $('#modal-add_seed').on('show.bs.modal', function (event) {
-            var modal = $(this)
-            var link = $(event.relatedTarget);
-            modal.load(link.attr("href"));
-        })
-        $('#modal-validate_alert').on('show.bs.modal', function (event) {
-            var modal = $(this)
-            var link = $(event.relatedTarget);
-            modal.load(link.attr("href"));
-        })
-        $('#modal-postpone_alert').on('show.bs.modal', function (event) {
-            var modal = $(this)
-            var link = $(event.relatedTarget);
-            modal.load(link.attr("href"));
-        })
-        $('#modal-delete_alert').on('show.bs.modal', function (event) {
-            var modal = $(this)
-            var link = $(event.relatedTarget);
-            modal.load(link.attr("href"));
-        })
-        $('#modal-add_observation').on('show.bs.modal', function (event) {
-            var modal = $(this)
-            var link = $(event.relatedTarget);
-            modal.load(link.attr("href"));
-        })
-        $('#modal-add_punctual_operation').on('show.bs.modal', function (event) {
-            var modal = $(this)
-            var link = $(event.relatedTarget);
-            modal.load(link.attr("href"));
-        })
-    </script>
+    <script src="{% static 'planner/js/activate_modal.js' %}"></script>
+
 {% endblock content %}

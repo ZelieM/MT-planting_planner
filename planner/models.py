@@ -154,3 +154,4 @@ class Operation(HistoryItem):
     note = models.TextField(null=True)
     duration = models.DurationField(null=True)
     is_deletion = models.BooleanField(default=False)
+    original_alert = models.ForeignKey(ForthcomingOperation, on_delete=models.SET_NULL, null=True)

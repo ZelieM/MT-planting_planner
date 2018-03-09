@@ -325,7 +325,6 @@ def edit_notification_delay(request, garden_id):
 def add_punctual_operation(request, garden_id):
     # if this is a POST request we add an operation to the history
     if request.method == 'POST':
-        print(request.POST)
         form = OperationForm(request.POST)
         if form.is_valid():
             new_operation = form.save(commit=False)
@@ -342,10 +341,10 @@ def add_punctual_operation(request, garden_id):
     context = {'garden': Garden.objects.get(pk=garden_id), 'form': form}
     return render(request, 'planner/modals/add_punctual_operation_form.html', context)
 
+
 def add_observation(request, garden_id):
-    # if this is a POST request we add an operation to the history
+    # if this is a POST request we add an observation to the history
     if request.method == 'POST':
-        print(request.POST)
         form = ObservationForm(request.POST)
         if form.is_valid():
             new_observation = form.save(commit=False)

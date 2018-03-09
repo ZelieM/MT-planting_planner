@@ -27,10 +27,14 @@ footer {
     color: red;
 }
 
-.blue {
-    color: blue;
+.blue-icon {
+    color: #103bff;
 }
 
 .hiddenRow {
     padding: 0 !important;
+}
+
+.margin-button{
+    margin: 10px;
 }
