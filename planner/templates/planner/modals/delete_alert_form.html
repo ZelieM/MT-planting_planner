@@ -13,8 +13,10 @@
                     utile dans ce cas </label><br>
                 <label><input type="radio" name="deletion_justification" value="destruction"> La culture a été détruite:
                     supprimer également toutes les futures opérations relatives à cette culture </label><br>
-{#                <label><input type="text" name="note" value="note"> Ajouter un commentaire éventuel à cette suppression#}
-{#                </label><br>#}
+
+                <label for="deletion_note">Ajouter un commentaire éventuel à cette suppression :</label>
+                <textarea class="form-control" type="text" name="note" placeholder="Note ou commentaires" id="deletion_note"></textarea>
+                <br>
             </div>
             <div class="modal-footer">
                 <input class="btn btn-success" type="submit" value="Supprimer"/>

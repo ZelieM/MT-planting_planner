@@ -29,7 +29,7 @@ def get_currently_active_alerts(garden_id):
 def done_alerts(garden_id):
     """ Return the list of alerts of this garden that are marked as done """
     # garden_areas = get_garden_areas(garden_id)
-    history = HistoryItem.objects.order_by('execution_date').select_subclasses().filter(
+    history = HistoryItem.objects.order_by('-execution_date').select_subclasses().filter(
         history=services.get_current_history(garden_id))
     return history
 
@@ -38,3 +38,4 @@ def get_garden_areas(garden_id):
     """ Return the garden's areas of the current production period of the garden """
     return CultivatedArea.objects.filter(production_period=services.get_current_production_period(garden_id),
                                          is_active=True)
+

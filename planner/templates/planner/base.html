@@ -52,7 +52,8 @@
                         href="{% url 'planner:garden_view' garden.id %}">Mes planches</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'planner:garden_settings_view' garden.id %}"><span class="glyphicon glyphicon glyphicon-cog"></span> </a></li>
+                <li><a href="{% url 'planner:garden_export_view' garden.id %}"><span class="glyphicon glyphicon-export"></span> </a></li>
+                <li><a href="{% url 'planner:garden_settings_view' garden.id %}"><span class="glyphicon glyphicon-cog"></span> </a></li>
                 <li><a href="{% url 'planner:log_out' %}"><span
                         class="glyphicon glyphicon-log-out"></span> </a></li>
             </ul>

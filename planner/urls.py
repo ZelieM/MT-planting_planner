@@ -49,4 +49,9 @@ urlpatterns = [
     path('<int:garden_id>/settings/delete/<int:user_id>', views.delete_user_from_garden,
          name='delete_user_from_garden'),
     path('<int:garden_id>/settings/notification_delay', views.edit_notification_delay, name='edit_notification_delay'),
+
+    # Export pages
+    path('<int:garden_id>/export', views.garden_export, name='garden_export_view'),
+    path('<int:garden_id>/export/history', views.export_garden_history, name='export_garden_history'),
+
 ]

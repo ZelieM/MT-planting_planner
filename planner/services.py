@@ -1,7 +1,7 @@
 from datetime import timedelta, date, datetime
 
 from planner.models import CulturalOperation, ForthcomingOperation, COWithDate, COWithOffset, Operation, History, \
-    ProductionPeriod
+    ProductionPeriod, HistoryItem
 from planner.templatetags.planner_extras import register
 
 
@@ -43,18 +43,18 @@ def get_due_date(alert, alert_history):
         return original_operation.get_date() + timedelta(days=postpone)
 
 
-def mark_alert_as_done(alert_id, execution_date, executor):
+def mark_alert_as_done(alert_id, execution_date, executor, note):
     """ Mark an alert as done with and execution date and an executor """
     alert = ForthcomingOperation.objects.get(pk=alert_id)
     alert.execution_date = execution_date
     alert.is_done = True
     alert.save()
-    #  TODO Add duration and note
+    #  TODO Add duration
     garden_id = alert.area_concerned.surface.garden_id
     history = get_current_history(garden_id)
     operation_name = alert.original_cultural_operation.name
     Operation.objects.create(execution_date=execution_date, executor=executor, area_concerned=alert.area_concerned,
-                             name=operation_name, history=history, original_alert_id=alert_id)
+                             name=operation_name, history=history, original_alert_id=alert_id, note=note)
 
 
 def postpone_alert(alert_id, postponement):
@@ -64,23 +64,23 @@ def postpone_alert(alert_id, postponement):
     alert.save()
 
 
-def delete_alert(alert_id, executor, reason):
+def delete_alert(alert_id, executor, reason, note):
     """ Delete an alert and eventually all the futures alerts relative to this cultivated_area"""
     alert = ForthcomingOperation.objects.get(pk=alert_id)
     if reason == "destruction":
         alerts_to_delete = ForthcomingOperation.objects.filter(area_concerned=alert.area_concerned, is_done=False)
         for a in alerts_to_delete:
-            mark_alert_as_deleted(a, executor)
+            mark_alert_as_deleted(a, executor, note)
     else:
-        mark_alert_as_deleted(alert, executor)
+        mark_alert_as_deleted(alert, executor, note)
 
 
-def mark_alert_as_deleted(alert, executor):
+def mark_alert_as_deleted(alert, executor, note):
     garden_id = alert.area_concerned.surface.garden_id
     history = History.objects.get(production_period=get_current_production_period(garden_id))
     operation_name = alert.original_cultural_operation.name
     Operation.objects.create(execution_date=date.today(), executor=executor, area_concerned=alert.area_concerned,
-                             name=operation_name, history=history, is_deletion=True, original_alert=alert)
+                             name=operation_name, history=history, is_deletion=True, original_alert=alert, note=note)
 
     alert.is_done = True
     alert.execution_date = date.today()
@@ -104,3 +104,11 @@ def get_current_history(garden_id):
     except History.DoesNotExist:
         # If this garden doesn't have an active history, create a new one
         return History.objects.create(production_period=production_period)
+
+
+def get_history_items(history_id):
+    return HistoryItem.objects.select_subclasses().filter(history_id=history_id)
+
+
+def get_history_operations(history_id):
+    return Operation.objects.filter(history_id=history_id, area_concerned__isnull=False)

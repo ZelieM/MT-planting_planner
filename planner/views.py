@@ -2,11 +2,12 @@ from datetime import date
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
+import csv
 
 from planner import queries, services
 from planner.forms import GardenForm, CODateForm, COOffsetForm, DateInput, OperationForm, ObservationForm
@@ -256,9 +257,10 @@ def validate_alert(request, garden_id, alert_id):
     garden = Garden.objects.get(pk=garden_id)
     # if this is a POST request we have to mark the alert as done, else we show a modal to validate
     if request.method == 'POST':
-        executor = request.user.id
+        executor = request.user
         execution_date = request.POST['execution_date']
-        services.mark_alert_as_done(alert_id, execution_date, executor)
+        note = request.POST['validation_note']
+        services.mark_alert_as_done(alert_id, execution_date, executor, note)
         alert_name = ForthcomingOperation.objects.get(pk=alert_id)
         success_message = 'Vous ({}) avez indiqué avoir effectué l\'opération \" {} \" le {}'.format(
             request.user.username, alert_name, execution_date)
@@ -289,8 +291,9 @@ def delete_alert(request, garden_id, alert_id):
     # if this is a POST request we have to postpone the alert by the number of days encoded
     if request.method == 'POST':
         reason = request.POST['deletion_justification']
+        note = request.POST['note']
         executor = request.user
-        services.delete_alert(alert_id, executor, reason)
+        services.delete_alert(alert_id, executor, reason, note)
         alert_name = ForthcomingOperation.objects.get(pk=alert_id)
         success_message = 'Vous ({}) avez supprimé l\'opération \" {} \"'.format(request.user.username, alert_name)
         messages.add_message(request, messages.SUCCESS, success_message)
@@ -299,6 +302,7 @@ def delete_alert(request, garden_id, alert_id):
     return render(request, 'planner/modals/delete_alert_form.html', context)
 
 
+@login_required(login_url="/planner/login/")
 def delete_user_from_garden(request, garden_id, user_id):
     deleted_user = User.objects.get(pk=user_id)
     garden = Garden.objects.get(pk=garden_id)
@@ -308,6 +312,7 @@ def delete_user_from_garden(request, garden_id, user_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+@login_required(login_url="/planner/login/")
 def edit_notification_delay(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
     # if this is a POST request we have to change the notification delay of this garden
@@ -322,6 +327,7 @@ def edit_notification_delay(request, garden_id):
     return render(request, 'planner/modals/edit_notification_delay_form.html', context)
 
 
+@login_required(login_url="/planner/login/")
 def add_punctual_operation(request, garden_id):
     # if this is a POST request we add an operation to the history
     if request.method == 'POST':
@@ -342,6 +348,7 @@ def add_punctual_operation(request, garden_id):
     return render(request, 'planner/modals/add_punctual_operation_form.html', context)
 
 
+@login_required(login_url="/planner/login/")
 def add_observation(request, garden_id):
     # if this is a POST request we add an observation to the history
     if request.method == 'POST':
@@ -360,3 +367,25 @@ def add_observation(request, garden_id):
     form.fields["area_concerned"].queryset = queries.get_garden_areas(garden_id)
     context = {'garden': Garden.objects.get(pk=garden_id), 'form': form}
     return render(request, 'planner/modals/add_observation_form.html', context)
+
+
+@login_required(login_url="/planner/login/")
+def garden_export(request, garden_id):
+    garden = Garden.objects.get(pk=garden_id)
+    return render(request, 'planner/export_view.html', {'garden': garden})
+
+
+@login_required(login_url="/planner/login/")
+def export_garden_history(request, garden_id):
+    history = services.get_current_history(garden_id)
+    items = services.get_history_items(history.id)
+    items = services.get_history_operations(history.id)
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['Date', 'Utilisateur', 'Nom de l\'operation', 'Légume', 'Durée', 'Note'])
+    for h in items:
+        writer.writerow(
+            [h.execution_date, h.executor.username, h.name, h.area_concerned.vegetable, h.duration, h.note])
+    return response

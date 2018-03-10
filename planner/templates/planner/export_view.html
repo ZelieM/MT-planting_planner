@@ -1,0 +1,31 @@
+{% extends "planner/base.html" %}
+
+
+{% block content %}
+
+    {% if messages %}
+        <div class="col-md-6 col-md-offset-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    <div class="container col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">Exporter l'historique de ce jardin</div>
+            <div class="panel-body">
+                <div>
+                    <a class="glyphicon glyphicon-plus btn btn-success"
+                       href="{% url 'planner:export_garden_history' garden.id %}"
+                       title="Exporter">Exporter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
