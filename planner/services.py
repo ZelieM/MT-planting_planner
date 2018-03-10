@@ -112,3 +112,12 @@ def get_history_items(history_id):
 
 def get_history_operations(history_id):
     return Operation.objects.filter(history_id=history_id, area_concerned__isnull=False)
+
+
+def add_new_operation_to_alerts(operation):
+    vegetable_concerned = operation.vegetable
+    areas_concerned = ForthcomingOperation.objects.filter(area_concerned__vegetable=vegetable_concerned,
+                                                          area_concerned__is_active=True).values('area_concerned').distinct('area_concerned')
+    for a in areas_concerned:
+        area_id = a.get('area_concerned')
+        ForthcomingOperation.objects.create(original_cultural_operation=operation, area_concerned_id=area_id)

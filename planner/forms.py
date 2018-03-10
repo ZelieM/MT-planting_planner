@@ -1,12 +1,16 @@
 from django.contrib.auth.models import User
-from django.forms import ModelForm, forms, DateField, DateInput
+from django.forms import ModelForm, forms, DateInput, TimeInput
 from .models import Garden, COWithDate, COWithOffset, Operation, Observation
-from django.utils.translation import gettext_lazy as _
-from datetime import date
 
-class DateInput(DateInput):
+
+class CustomDateInput(DateInput):
     """ Class overwriting the DateInput class of django.forms to change the input type of DateFields to date """
     input_type = 'date'
+
+
+class CustomTimeInput(TimeInput):
+    """ Class overwriting the TimeInput class of django.forms to change the input type of DurationField to time """
+    input_type = 'time'
 
 
 class UserForm(ModelForm):
@@ -29,7 +33,10 @@ class CODateForm(ModelForm):
         model = COWithDate
         fields = ['name', 'vegetable', 'absoluteDate', 'duration']
         widgets = {
-            'absoluteDate': DateInput(),
+            'absoluteDate': CustomDateInput(),
+            # Show seconds for duration input field
+            # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time#Using_the_step_attribute
+            'duration': CustomTimeInput(attrs={'step': 1}),
         }
 
 
@@ -45,7 +52,7 @@ class OperationForm(ModelForm):
         model = Operation
         fields = ['execution_date', 'area_concerned', 'name', 'duration', 'note']
         widgets = {
-            'execution_date': DateInput(),
+            'execution_date': CustomDateInput(),
         }
 
 
@@ -54,5 +61,5 @@ class ObservationForm(ModelForm):
         model = Observation
         fields = ['execution_date', 'area_concerned', 'description']
         widgets = {
-            'execution_date': DateInput(),
+            'execution_date': CustomDateInput(),
         }

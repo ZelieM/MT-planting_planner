@@ -10,7 +10,8 @@ from django.views.generic import CreateView
 import csv
 
 from planner import queries, services
-from planner.forms import GardenForm, CODateForm, COOffsetForm, DateInput, OperationForm, ObservationForm
+from planner.forms import GardenForm, COOffsetForm, CustomDateInput, OperationForm, ObservationForm, \
+    CustomTimeInput, CODateForm
 from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
     CultivatedArea, Area, ForthcomingOperation
 
@@ -19,6 +20,11 @@ from django.contrib.auth import logout
 
 class CulturalOperationCreate(CreateView):
     template_name = "planner/create_co_form.html"
+
+    def form_valid(self, form):
+        response = super(CulturalOperationCreate, self).form_valid(form)
+        services.add_new_operation_to_alerts(self.object)
+        return response
 
     def get_initial(self):
         return {'vegetable': self.kwargs['vegetable_id']}
@@ -45,7 +51,10 @@ class CulturalOperationWithDateCreate(CulturalOperationCreate):
         if form_class is None:
             form_class = self.get_form_class()
         form = super(CulturalOperationWithDateCreate, self).get_form(form_class)
-        form.fields['absoluteDate'].widget = DateInput()
+        form.fields['absoluteDate'].widget = CustomDateInput()
+        # Show seconds for duration input field
+        # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time#Using_the_step_attribute
+        form.fields['duration'].widget = CustomTimeInput(attrs={'step': 1})
         return form
 
 

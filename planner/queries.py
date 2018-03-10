@@ -38,4 +38,3 @@ def get_garden_areas(garden_id):
     """ Return the garden's areas of the current production period of the garden """
     return CultivatedArea.objects.filter(production_period=services.get_current_production_period(garden_id),
                                          is_active=True)
-
