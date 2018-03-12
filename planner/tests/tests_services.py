@@ -43,7 +43,7 @@ class ServicesTests(TestCase):
         alert = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
                                                     original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
         self.assertFalse(alert.is_done)
-        queries.services.mark_alert_as_done(alert_id=alert.id, execution_date=date(2017, 10, 10), executor=None, note=None)
+        queries.services.mark_alert_as_done(alert_id=alert.id, execution_date=date(2017, 10, 10), executor=None, note=None, duration=None)
         self.assertTrue(ForthcomingOperation.objects.get(pk=alert.id).is_done)
 
     def test_postpone_alert(self):
