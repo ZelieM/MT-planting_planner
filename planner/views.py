@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, FormView
 import csv
 
 from planner import queries, services
@@ -339,46 +339,34 @@ def edit_notification_delay(request, garden_id):
     return render(request, 'planner/modals/edit_notification_delay_form.html', context)
 
 
-@login_required(login_url="/planner/login/")
-def add_punctual_operation(request, garden_id):
-    # if this is a POST request we add an operation to the history
-    if request.method == 'POST':
-        form = OperationForm(request.POST)
-        if form.is_valid():
-            new_operation = form.save(commit=False)
-            new_operation.executor = request.user
-            new_operation.history = services.get_current_history(garden_id)
-            new_operation.save()
-        # success_message = 'Vous ({}) avez indiqué avoir fait un semis de {} le {}'.format(
-        #     request.user.username, vegetable_concerned, seeding_date)
-        # messages.add_message(request, messages.SUCCESS, success_message)
+class AddHistoryItemView(FormView):
 
-        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
-    form = OperationForm(initial={'execution_date': date.today()})
-    form.fields["area_concerned"].queryset = queries.get_garden_areas(garden_id)
-    context = {'garden': Garden.objects.get(pk=garden_id), 'form': form}
-    return render(request, 'planner/modals/add_punctual_operation_form.html', context)
+    def get(self, request, **kwargs):
+        form = self.form_class(initial={'execution_date': date.today()})
+        garden_id = kwargs['garden_id']
+        form.fields["area_concerned"].queryset = queries.get_garden_areas(garden_id)
+        context = {'garden': Garden.objects.get(pk=garden_id), 'form': form}
+        return render(request, self.template_name, context)
+
+    def get_success_url(self):
+        return reverse_lazy('planner:alerts_view', kwargs=self.kwargs)
+
+    def form_valid(self, form):
+        new_history_item = form.save(commit=False)
+        new_history_item.executor = self.request.user
+        new_history_item.history = services.get_current_history(self.kwargs['garden_id'])
+        new_history_item.save()
+        return super().form_valid(form)
 
 
-@login_required(login_url="/planner/login/")
-def add_observation(request, garden_id):
-    # if this is a POST request we add an observation to the history
-    if request.method == 'POST':
-        form = ObservationForm(request.POST)
-        if form.is_valid():
-            new_observation = form.save(commit=False)
-            new_observation.executor = request.user
-            new_observation.history = services.get_current_history(garden_id)
-            new_observation.save()
-        # success_message = 'Vous ({}) avez indiqué avoir fait un semis de {} le {}'.format(
-        #     request.user.username, vegetable_concerned, seeding_date)
-        # messages.add_message(request, messages.SUCCESS, success_message)
+class AddPunctualOperationView(AddHistoryItemView):
+    template_name = 'planner/modals/add_punctual_operation_form.html'
+    form_class = OperationForm
 
-        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
-    form = ObservationForm(initial={'execution_date': date.today()})
-    form.fields["area_concerned"].queryset = queries.get_garden_areas(garden_id)
-    context = {'garden': Garden.objects.get(pk=garden_id), 'form': form}
-    return render(request, 'planner/modals/add_observation_form.html', context)
+
+class AddObservationView(AddHistoryItemView):
+    template_name = 'planner/modals/add_observation_form.html'
+    form_class = ObservationForm
 
 
 @login_required(login_url="/planner/login/")

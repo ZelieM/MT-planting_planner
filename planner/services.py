@@ -35,7 +35,7 @@ def get_due_date(alert, alert_history):
         try:
             # We check if the previous operation is already done
             previous_operation = alert_history.get(area_concerned=alert.area_concerned,
-                                               original_cultural_operation=original_operation.previous_operation)
+                                                   original_cultural_operation=original_operation.previous_operation)
             return previous_operation.execution_date + timedelta(days=original_operation.offset_in_days + postpone)
 
         except ForthcomingOperation.DoesNotExist:
