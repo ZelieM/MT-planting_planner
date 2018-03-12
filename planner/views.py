@@ -6,7 +6,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView
+from django.views import View
+from django.views.generic import CreateView, TemplateView
 import csv
 
 from planner import queries, services
@@ -87,32 +88,36 @@ def signup(request):
         return render(request, 'planner/signup.html')
 
 
-@login_required(login_url="/planner/login/")
-def garden_selection(request):
-    current_user = request.user
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
+class GardenSelectionView(View):
+    template_name = 'planner/garden_selection.html'
+    form_class = GardenForm
+
+    def get(self, request):
+        form = self.form_class()
+        gardens_followed = Garden.objects.filter(users=request.user)
+        context = {'form': form, 'gardens_followed': gardens_followed}
+        return render(request, self.template_name, context)
+
+    def post(self, request):
         # create a form instance and populate it with data from the request:
-        form = GardenForm(request.POST)
+        form = self.form_class(request.POST)
         # check whether it's valid:
         if form.is_valid():
             new_garden = form.save()
-            new_garden.users.add(current_user)
+            new_garden.users.add(request.user)
             nextpage = new_garden.get_absolute_url()
             return HttpResponseRedirect(nextpage)
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = GardenForm()
-    gardens_followed = Garden.objects.filter(users=current_user)
-    return render(request, 'planner/garden_selection.html', {'form': form, 'gardens_followed': gardens_followed})
 
 
-@login_required(login_url="/planner/login/")
-def alerts_view(request, garden_id):
-    alerts = queries.get_currently_active_alerts(garden_id)
-    history = queries.done_alerts(garden_id)
-    context = {'garden': Garden.objects.get(pk=garden_id), 'alerts': alerts, 'history': history}
-    return render(request, 'planner/alerts.html', context)
+class AlertView(TemplateView):
+    template_name = 'planner/alerts.html'
+
+    def get(self, request, **kwargs):
+        garden_id = kwargs['garden_id']
+        alerts = queries.get_currently_active_alerts(garden_id)
+        history = queries.done_alerts(garden_id)
+        context = {'garden': Garden.objects.get(pk=garden_id), 'alerts': alerts, 'history': history}
+        return render(request, self.template_name, context)
 
 
 @login_required(login_url="/planner/login/")
@@ -161,12 +166,21 @@ def vegetables_view(request, garden_id):
     return render(request, 'planner/vegetables_list.html', context=context)
 
 
-@login_required(login_url="/planner/login/")
-def edit_co_view(request, garden_id, co_id):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
+class EditCulturalOperationView(View):
+    template_name = 'planner/modals/edit_co_form.html'
+
+    def get(self, request, **kwargs):
+        co = CulturalOperation.objects.select_subclasses().get(pk=kwargs['co_id'])
+        if isinstance(co, COWithDate):
+            form = CODateForm(instance=co)
+        else:
+            form = COOffsetForm(instance=co)
+        context = {'form': form, 'garden': Garden.objects.get(pk=kwargs['garden_id'])}
+        return render(request, self.template_name, context)
+
+    def post(self, request, **kwargs):
         # create a form instance and populate it with data from the request:
-        co = CulturalOperation.objects.select_subclasses().get(pk=co_id)
+        co = CulturalOperation.objects.select_subclasses().get(pk=kwargs['co_id'])
         if isinstance(co, COWithDate):
             form = CODateForm(request.POST, instance=co)
         else:
@@ -175,16 +189,6 @@ def edit_co_view(request, garden_id, co_id):
         if form.is_valid():
             form.save()
             return render(request, 'planner/modals/co_form_success.html', {'co': co})
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        co = CulturalOperation.objects.select_subclasses().get(pk=co_id)
-        if isinstance(co, COWithDate):
-            form = CODateForm(instance=co)
-        else:
-            form = COOffsetForm(instance=co)
-
-    return render(request, 'planner/modals/edit_co_form.html',
-                  {'form': form, 'garden': Garden.objects.get(pk=garden_id)})
 
 
 @login_required(login_url="/planner/login/")
@@ -215,11 +219,9 @@ def log_out(request):
 def add_seed(request, garden_id):
     # if this is a POST request we add the initial operation of the vegetable selected in the history
     if request.method == 'POST':
-        # TODO create a cultivated area with the vegetable, the surface sowed and and the label
         surface = request.POST['surface_selection']
         vegetable_id = request.POST['vegetable_selection']
         seeding_date = request.POST['seedingdate']
-
         carea = CultivatedArea.objects.create(
             production_period=services.get_current_production_period(garden_id),
             vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface_id=surface)
@@ -269,7 +271,8 @@ def validate_alert(request, garden_id, alert_id):
         executor = request.user
         execution_date = request.POST['execution_date']
         note = request.POST['validation_note']
-        services.mark_alert_as_done(alert_id, execution_date, executor, note)
+        duration = request.POST['duration']
+        services.mark_alert_as_done(alert_id, execution_date, executor, note, duration)
         alert_name = ForthcomingOperation.objects.get(pk=alert_id)
         success_message = 'Vous ({}) avez indiqué avoir effectué l\'opération \" {} \" le {}'.format(
             request.user.username, alert_name, execution_date)
@@ -387,7 +390,6 @@ def garden_export(request, garden_id):
 @login_required(login_url="/planner/login/")
 def export_garden_history(request, garden_id):
     history = services.get_current_history(garden_id)
-    items = services.get_history_items(history.id)
     items = services.get_history_operations(history.id)
     # Create the HttpResponse object with the appropriate CSV header.
     response = HttpResponse(content_type='text/csv')

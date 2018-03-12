@@ -45,6 +45,9 @@ class COOffsetForm(ModelForm):
     class Meta:
         model = COWithOffset
         fields = ['name', 'vegetable', 'previous_operation', 'offset_in_days', 'duration']
+        widgets = {
+            'duration': CustomTimeInput(attrs={'step': 1}),
+        }
 
 
 class OperationForm(ModelForm):
@@ -53,6 +56,7 @@ class OperationForm(ModelForm):
         fields = ['execution_date', 'area_concerned', 'name', 'duration', 'note']
         widgets = {
             'execution_date': CustomDateInput(),
+            'duration': CustomTimeInput(attrs={'step': 1}),
         }
 
 

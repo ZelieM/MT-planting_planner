@@ -5,7 +5,7 @@ from planner.models import CulturalOperation, ForthcomingOperation, COWithDate, 
 from planner.templatetags.planner_extras import register
 
 
-def add_initial_operation_to_alerts(cultivated_area, date, user):
+def add_initial_operation_to_alerts(cultivated_area, execution_date, user):
     """ Add the initial operation of the vegetable seeded in cultivated_area to the list of alerts.
     The initial operation is marked as done with execution_date=date.
     The list of operations related to the same vegetable are added as undone to the list of alerts """
@@ -14,10 +14,10 @@ def add_initial_operation_to_alerts(cultivated_area, date, user):
     # TODO take duration into account
     # Add the initial operation as "done"
     ForthcomingOperation.objects.create(area_concerned=cultivated_area, original_cultural_operation=initial_co,
-                                        execution_date=date, is_done=True)
+                                        execution_date=execution_date, is_done=True)
     garden_id = cultivated_area.surface.garden_id
     history = History.objects.get(production_period=get_current_production_period(garden_id))
-    Operation.objects.create(execution_date=date, executor=user, area_concerned=cultivated_area,
+    Operation.objects.create(execution_date=execution_date, executor=user, area_concerned=cultivated_area,
                              name=initial_co.name, history=history)
 
     # All the operation relative to this vegetable are added to alerts
@@ -32,29 +32,30 @@ def get_due_date(alert, alert_history):
     original_operation = CulturalOperation.objects.select_subclasses().get(pk=alert.original_cultural_operation_id)
     postpone = alert.postponement
     if isinstance(original_operation, COWithOffset) and alert_history:
-        previous_operation = alert_history.get(area_concerned=alert.area_concerned,
+        try:
+            # We check if the previous operation is already done
+            previous_operation = alert_history.get(area_concerned=alert.area_concerned,
                                                original_cultural_operation=original_operation.previous_operation)
-        # We check if the previous operation is already done
-        if previous_operation:
             return previous_operation.execution_date + timedelta(days=original_operation.offset_in_days + postpone)
-        else:
+
+        except ForthcomingOperation.DoesNotExist:
             return original_operation.get_date() + timedelta(days=postpone)
     else:  # Case of an COWithDate operation or an empty alert_history
         return original_operation.get_date() + timedelta(days=postpone)
 
 
-def mark_alert_as_done(alert_id, execution_date, executor, note):
+def mark_alert_as_done(alert_id, execution_date, executor, note, duration):
     """ Mark an alert as done with and execution date and an executor """
     alert = ForthcomingOperation.objects.get(pk=alert_id)
     alert.execution_date = execution_date
     alert.is_done = True
     alert.save()
-    #  TODO Add duration
     garden_id = alert.area_concerned.surface.garden_id
     history = get_current_history(garden_id)
     operation_name = alert.original_cultural_operation.name
     Operation.objects.create(execution_date=execution_date, executor=executor, area_concerned=alert.area_concerned,
-                             name=operation_name, history=history, original_alert_id=alert_id, note=note)
+                             name=operation_name, history=history, original_alert_id=alert_id, note=note,
+                             duration=duration)
 
 
 def postpone_alert(alert_id, postponement):
@@ -117,7 +118,8 @@ def get_history_operations(history_id):
 def add_new_operation_to_alerts(operation):
     vegetable_concerned = operation.vegetable
     areas_concerned = ForthcomingOperation.objects.filter(area_concerned__vegetable=vegetable_concerned,
-                                                          area_concerned__is_active=True).values('area_concerned').distinct('area_concerned')
+                                                          area_concerned__is_active=True).values(
+        'area_concerned').distinct('area_concerned')
     for a in areas_concerned:
         area_id = a.get('area_concerned')
         ForthcomingOperation.objects.create(original_cultural_operation=operation, area_concerned_id=area_id)
