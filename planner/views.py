@@ -160,7 +160,7 @@ def delete_bed(request, bedid):
 @login_required(login_url="/planner/login/")
 def vegetables_view(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
-    vegetables = Vegetable.objects.values()
+    vegetables = Vegetable.objects.filter(garden=garden)
     cultural_operations = CulturalOperation.objects.select_subclasses()
     context = {'garden': garden, 'vegetables': vegetables, "cultural_operations": cultural_operations}
     return render(request, 'planner/vegetables_list.html', context=context)
