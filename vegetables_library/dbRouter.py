@@ -13,7 +13,6 @@ class VegetablesLibraryDBRouter(object):
 
     def db_for_write(self, model, **hints):
         "Point all operations on vegetables_library models to 'db_vegetables_library'"
-        print('for write : ' + model._meta.app_label)
         if model._meta.app_label == 'vegetables_library':
             return 'db_vegetables_library'
         return None
@@ -30,14 +29,3 @@ class VegetablesLibraryDBRouter(object):
         if app_label == 'vegetables_library':
             return db == 'db_vegetables_library'
         return db == 'default'
-
-    # def allow_migrate(self, db, model):
-    #
-    #     from django.conf import settings
-    #     if 'db_vegetables_library' not in settings.DATABASES:
-    #         return None
-    #     if db == 'db_vegetables_library':
-    #         return model._meta.app_label == 'vegetables_library'
-    #     elif model._meta.app_label == 'vegetables_library':
-    #         return False
-    #     return None

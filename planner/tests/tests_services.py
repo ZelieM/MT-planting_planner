@@ -11,7 +11,7 @@ class ServicesTests(TestCase):
     def setUp(self):
         garden = Garden.objects.create(name="MyGarden")
         surface1 = Area.objects.create(garden=garden, area_surface=200)
-        v1 = Vegetable.objects.create(name="Carrots")
+        v1 = Vegetable.objects.create(name="Carrots", garden=garden)
         # v2 = Vegetable.objects.create(name="Cucumber")
         op1 = COWithDate.objects.create(name="FirstOP", vegetable=v1, absoluteDate=date(2017, 12, 6))
         COWithDate.objects.create(name="SecondOP", vegetable=v1, absoluteDate=date(2017, 10, 8))
