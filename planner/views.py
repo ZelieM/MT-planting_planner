@@ -205,6 +205,7 @@ def pick_co_type(request, garden_id, v_id):
     return render(request, 'planner/modals/pick_co_type_form.html', context)
 
 
+@login_required(login_url="/planner/login/")
 def delete_co(request, co_id):
     CulturalOperation.objects.select_subclasses().get(pk=co_id).delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -285,7 +286,7 @@ def validate_alert(request, garden_id, alert_id):
 @login_required(login_url="/planner/login/")
 def postpone_alert(request, garden_id, alert_id):
     garden = Garden.objects.get(pk=garden_id)
-    # if this is a POST request we have to postpone the alert by the number of days encoded
+     # if this is a POST request we have to postpone the alert by the number of days encoded
     if request.method == 'POST':
         postponement = request.POST['postponement_in_days']
         services.postpone_alert(alert_id, postponement)

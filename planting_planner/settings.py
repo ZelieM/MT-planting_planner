@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django.contrib.humanize',
     'planner.apps.PlannerConfig',
+    'vegetables_library.apps.VegetablesLibraryConfig',
 
 ]
 
@@ -80,6 +81,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'planting_planner_db',
+        'USER': 'postgres',
+        'PASSWORD': 'azerty',
+        'HOST': '',
+        'PORT': '5432'
+    },
+    'db_vegetables_library': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'vegetable_library_db',
         'USER': 'postgres',
         'PASSWORD': 'azerty',
         'HOST': '',
@@ -130,3 +139,7 @@ GRAPH_MODELS = {
     'all_applications': True,
     'group_models': True,
 }
+
+
+DATABASE_ROUTERS = ['vegetables_library.dbRouter.VegetablesLibraryDBRouter']
+

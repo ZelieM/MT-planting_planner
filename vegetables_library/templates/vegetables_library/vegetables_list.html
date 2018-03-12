@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vous etes bien sur la page détaillée d'un jardin</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static "planner/css/style.css" %}">
+    {#    <link rel="stylesheet" href="{% static "planner/css/bootstrap-sandstone.css" %}">#}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://malsup.github.io/jquery.form.js"></script>
+
+    {% block extra_js %}{% endblock extra_js %}
+
+</head>
+<body>
+
+{% load planner_extras %}
+
+
+<div class="jumbotron">
+    <div class="container text-center">
+        <h1> App name</h1>
+        <p>{% now "D d F Y" %}</p>
+    </div>
+</div>
+
+
+<div class="container">
+
+    {% if vegetables %}
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+        </div>
+        <div class="modal fade" id="modal-pick-type" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+        </div><!-- /.modal -->
+
+
+        {% load planner_extras %}
+        <div class="container">
+            <h2>Liste des légumes ainsi que de leurs opérations</h2>
+            <div class="panel-group">
+                <div class="panel panel-primary">
+                    {% for v in vegetables.all %}
+                        <div class="panel-heading">
+                            <div class="checkbox">
+
+
+                                <h4 class="panel-title">
+
+                                    <span>
+                                        <label><input type="checkbox" value=""> {{ v.name }} </label>
+
+                                </span>
+                                </h4>
+                            </div>
+                            <span class="pull-right glyphicon glyphicon-chevron-down clickable"
+                                  data-toggle="collapse" href="#collapse-v{{ v.id }}"></span>
+
+                        </div>
+                        <div id="collapse-v{{ v.id }}" class="panel-collapse collapse">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Date ou délai</th>
+                                        <th class="hidden-xs hidden-sm">Durée [h/m²]</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    {% for co in cultural_operations|related_to:v.id %}
+                                        <tbody>
+                                        <tr>
+                                            <td>{{ co.name }}</td>
+                                            {% load humanize %}
+                                            <td>{{ co.get_date|date:"j F" }}</td>
+                                            <td class="hidden-xs hidden-sm" title="hh:mm:ss">{{ co.duration }}</td>
+                                            <td>
+
+                                                {#                                                <a class="glyphicon glyphicon-pencil" data-toggle="modal"#}
+                                                {#                                                   href="{% url 'planner:edit_co_view' garden.id co.id %}"#}
+                                                {#                                                   data-target="#modal-edit" title="edit item" data-tooltip></a>#}
+                                                {#                                                <a href="{% url 'planner:delete_co' co.id %}">#}
+                                                {#                                                    <span class="glyphicon glyphicon-remove"></span>#}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    {% endfor %}
+                                </table>
+
+                                {#                                    <a class="glyphicon glyphicon-plus btn btn-success margin-button" data-toggle="modal"#}
+                                {#                                       href="{% url 'planner:pick_co_type' garden.id v.id %}"#}
+                                {#                                       data-target="#modal-pick-type" title="add item" data-tooltip> Ajouter une opération </a>#}
+
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <h2> Pas de légumes dans ce jardin, ajouter un légume ? </h2>
+    {% endif %}
+
+    {% load static %}
+    <script src="{% static 'planner/js/activate_modal.js' %}"></script>
+
+
+</div>
+</body>
+</html>
+
