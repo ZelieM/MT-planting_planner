@@ -12,7 +12,7 @@ import csv
 
 from planner import queries, services
 from planner.forms import GardenForm, COOffsetForm, CustomDateInput, OperationForm, ObservationForm, \
-    CustomTimeInput, CODateForm
+    CustomTimeInput, CODateForm, VegetableForm
 from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
     CultivatedArea, Area, ForthcomingOperation
 
@@ -368,6 +368,26 @@ class AddPunctualOperationView(AddHistoryItemView):
 class AddObservationView(AddHistoryItemView):
     template_name = 'planner/modals/add_observation_form.html'
     form_class = ObservationForm
+
+
+class AddVegetableView(FormView):
+    template_name = 'planner/modals/add_vegetable_to_garden_form.html'
+    form_class = VegetableForm
+
+    def get(self, request, **kwargs):
+        form = self.form_class()
+        garden = Garden.objects.get(pk=kwargs['garden_id'])
+        context = {'garden': garden, 'form': form}
+        return render(request, self.template_name, context)
+
+    def get_success_url(self):
+        return reverse_lazy('planner:vegetables_view', kwargs=self.kwargs)
+
+    def form_valid(self, form):
+        new_vegetable = form.save(commit=False)
+        new_vegetable.garden_id = self.kwargs['garden_id']
+        new_vegetable.save()
+        return super().form_valid(form)
 
 
 @login_required(login_url="/planner/login/")

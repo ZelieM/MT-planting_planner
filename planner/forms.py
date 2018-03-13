@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.forms import ModelForm, forms, DateInput, TimeInput
-from .models import Garden, COWithDate, COWithOffset, Operation, Observation
+from .models import Garden, COWithDate, COWithOffset, Operation, Observation, Vegetable
 
 
 class CustomDateInput(DateInput):
@@ -24,6 +24,13 @@ class GardenForm(ModelForm):
     """ Model form based on the Garden model """
     class Meta:
         model = Garden
+        fields = ['name']
+
+
+class VegetableForm(ModelForm):
+    """ Model form based on the Vegetable model """
+    class Meta:
+        model = Vegetable
         fields = ['name']
 
 

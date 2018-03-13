@@ -6,20 +6,35 @@
 
 {% block content %}
 
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
+    <div class="modal fade" id="modal-pick-type" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
+    <div class="modal fade" id="modal-add_vegetable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
+
+    <div class="container">
+        <a class="glyphicon glyphicon-plus btn btn-success margin-button" data-toggle="modal"
+           href="{% url 'planner:add_vegetable_to_garden_view' garden.id %}"
+           data-target="#modal-add_vegetable" title="Ajouter un légume" data-tooltip>Ajouter un légume</a>
+
+    </div>
+
+    <!-- /.modal -->
+
+
     {% if vegetables %}
 
-        <!-- Modal -->
-        <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-             aria-hidden="true">
-        </div>
-            <div class="modal fade" id="modal-pick-type" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-             aria-hidden="true">
-        </div><!-- /.modal -->
+
 
 
         {% load planner_extras %}
         <div class="container">
-            <h2>Liste des légumes ainsi que de leurs opérations</h2>
             <div class="panel-group">
                 <div class="panel panel-primary">
                     {% for v in vegetables.all %}
@@ -36,7 +51,7 @@
                                     <tr>
                                         <th>Action</th>
                                         <th>Date ou délai</th>
-                                        <th class="hidden-xs hidden-sm" >Durée [h/m²]</th>
+                                        <th class="hidden-xs hidden-sm">Durée [h/m²]</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -45,7 +60,7 @@
                                         <tr>
                                             <td>{{ co.name }}</td>
                                             {% load humanize %}
-                                            <td>{{ co.get_date|date:"j F"}}</td>
+                                            <td>{{ co.get_date|date:"j F" }}</td>
                                             <td class="hidden-xs hidden-sm" title="hh:mm:ss">{{ co.duration }}</td>
                                             <td>
 
@@ -61,9 +76,10 @@
                                     {% endfor %}
                                 </table>
 
-                                    <a class="glyphicon glyphicon-plus btn btn-success margin-button" data-toggle="modal"
-                                       href="{% url 'planner:pick_co_type' garden.id v.id %}"
-                                       data-target="#modal-pick-type" title="add item" data-tooltip> Ajouter une opération </a>
+                                <a class="glyphicon glyphicon-plus btn btn-success margin-button" data-toggle="modal"
+                                   href="{% url 'planner:pick_co_type' garden.id v.id %}"
+                                   data-target="#modal-pick-type" title="add item" data-tooltip> Ajouter une
+                                    opération </a>
 
                             </div>
                         </div>
@@ -72,8 +88,6 @@
             </div>
         </div>
 
-    {% else %}
-        <h2> Pas de légumes dans ce jardin, ajouter un légume ? </h2>
     {% endif %}
 
     {% load static %}

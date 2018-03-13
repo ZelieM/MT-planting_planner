@@ -6,7 +6,7 @@ from django.contrib.auth import views as auth_views
 
 from . import views
 from .views import CulturalOperationWithDateCreate, CulturalOperationWithOffsetCreate, AlertView, GardenSelectionView, \
-    EditCulturalOperationView, AddObservationView, AddPunctualOperationView
+    EditCulturalOperationView, AddObservationView, AddPunctualOperationView, AddVegetableView
 
 app_name = 'planner'
 urlpatterns = [
@@ -39,6 +39,7 @@ urlpatterns = [
 
     # Vegetables view
     path('<int:garden_id>/vegetables', views.vegetables_view, name='vegetables_view'),
+    path('<int:garden_id>/vegetables/new', login_required(AddVegetableView.as_view()), name='add_vegetable_to_garden_view'),
 
     # Cultural operations management
     path('vegetables/delete_co/<int:co_id>', views.delete_co, name='delete_co'),
