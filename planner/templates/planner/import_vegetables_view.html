@@ -1,0 +1,78 @@
+{% extends 'planner/base.html' %}
+
+{% block content %}
+
+    {% load planner_extras %}
+
+
+    {% if messages %}
+        <div class="container">
+
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+        </div>
+    {% endif %}
+
+    {% if vegetables_from_library %}
+        <div class="modal fade" id="modal-import_vegetables" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+        </div>
+        <div class="container">
+
+            <div class="panel-group">
+                <div class="panel panel-primary">
+                    {% for v in vegetables_from_library.all %}
+                        <div class="panel-heading">
+                            <h4 data-toggle="collapse" href="#collapse-v{{ v.id }}" class="panel-title clickable">
+                                <span>{{ v.name }}
+                                    <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+                                </span>
+                            </h4>
+
+                        </div>
+                        <div id="collapse-v{{ v.id }}" class="panel-collapse collapse">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Date ou délai</th>
+                                        <th class="hidden-xs hidden-sm">Durée [h/m²]</th>
+                                    </tr>
+                                    </thead>
+                                    {% for co in operations_from_library|related_to:v.id %}
+                                        <tbody>
+                                        <tr>
+                                            <td>{{ co.name }}</td>
+                                            {% load humanize %}
+                                            <td>{{ co.get_date|date:"j F" }}</td>
+                                            <td class="hidden-xs hidden-sm" title="hh:mm:ss">{{ co.duration }}</td>
+                                        </tr>
+                                        </tbody>
+                                    {% endfor %}
+                                </table>
+
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <a class="btn btn-success margin-button" data-toggle="modal"
+               href="{% url 'planner:select_vegetables_to_import_view' garden.id %}"
+               data-target="#modal-import_vegetables" title="Sélectionner des légumes à importer" data-tooltip>Sélectionner
+                des légumes à importer</a>
+
+        </div>
+
+    {% endif %}
+
+    {% load static %}
+    <script src="{% static 'planner/js/activate_modal.js' %}"></script>
+
+{% endblock content %}

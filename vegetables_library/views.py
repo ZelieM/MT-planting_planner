@@ -30,7 +30,6 @@ class AddVegetableView(FormView):
 
     def form_valid(self, form):
         new_vege = form.save()
-        print(new_vege)
         return super().form_valid(form)
 
 

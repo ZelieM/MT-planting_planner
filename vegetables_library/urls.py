@@ -6,8 +6,6 @@ from vegetables_library.views import AddVegetableView, EditCulturalOperationView
 
 app_name = 'vegetables_library'
 
-
-
 urlpatterns = [
 
     path('', views.index, name='index'),

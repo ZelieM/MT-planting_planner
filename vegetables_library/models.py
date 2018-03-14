@@ -52,4 +52,3 @@ class COWithDate(CulturalOperation):
 
     def get_date(self):
         return self.absoluteDate
-

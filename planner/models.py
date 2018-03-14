@@ -24,7 +24,7 @@ class Garden(models.Model):
 
 
 class Vegetable(models.Model):
-    name = models.CharField(unique=True, max_length=100)
+    name = models.CharField(max_length=100)
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE, default=1)
 
     def __str__(self):

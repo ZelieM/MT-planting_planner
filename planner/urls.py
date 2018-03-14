@@ -6,10 +6,10 @@ from django.contrib.auth import views as auth_views
 
 from . import views
 from .views import CulturalOperationWithDateCreate, CulturalOperationWithOffsetCreate, AlertView, GardenSelectionView, \
-    EditCulturalOperationView, AddObservationView, AddPunctualOperationView, AddVegetableView, GardenStatisticsView
+    EditCulturalOperationView, AddObservationView, AddPunctualOperationView, AddVegetableView, GardenStatisticsView, \
+    ImportVegetablesView, SelectVegetablesToImportView
 
 app_name = 'planner'
-
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -35,13 +35,16 @@ urlpatterns = [
     path('<int:garden_id>/alerts/<int:alert_id>/postpone', views.postpone_alert, name='postpone_alert_view'),
     path('<int:garden_id>/alerts/<int:alert_id>/delete', views.delete_alert, name='delete_alert_view'),
     # path('<int:garden_id>/alerts/add_punctual_operation', views.add_punctual_operation, name='add_punctual_operation'),
-    path('<int:garden_id>/alerts/add_punctual_operation', login_required(AddPunctualOperationView.as_view()), name='add_punctual_operation'),
+    path('<int:garden_id>/alerts/add_punctual_operation', login_required(AddPunctualOperationView.as_view()),
+         name='add_punctual_operation'),
     # path('<int:garden_id>/alerts/add_observation', views.add_observation, name='add_observation'),
-    path('<int:garden_id>/alerts/add_observation', login_required(AddObservationView.as_view()), name='add_observation'),
+    path('<int:garden_id>/alerts/add_observation', login_required(AddObservationView.as_view()),
+         name='add_observation'),
 
     # Vegetables view
     path('<int:garden_id>/vegetables', views.vegetables_view, name='vegetables_view'),
-    path('<int:garden_id>/vegetables/new', login_required(AddVegetableView.as_view()), name='add_vegetable_to_garden_view'),
+    path('<int:garden_id>/vegetables/new', login_required(AddVegetableView.as_view()),
+         name='add_vegetable_to_garden_view'),
 
     # Cultural operations management
     path('vegetables/delete_co/<int:co_id>', views.delete_co, name='delete_co'),
@@ -49,7 +52,8 @@ urlpatterns = [
     path('<int:garden_id>/pick_co/<int:v_id>', views.pick_co_type, name='pick_co_type'),
     path('<int:garden_id>/<int:vegetable_id>/add_date_co', login_required(CulturalOperationWithDateCreate.as_view()),
          name='add_date_co_view'),
-    path('<int:garden_id>/<int:vegetable_id>/add_offset_co', login_required(CulturalOperationWithOffsetCreate.as_view()),
+    path('<int:garden_id>/<int:vegetable_id>/add_offset_co',
+         login_required(CulturalOperationWithOffsetCreate.as_view()),
          name='add_offset_co_view'),
 
     # Garden management
@@ -65,5 +69,11 @@ urlpatterns = [
 
     # Statistics page
     path('<int:garden_id>/statistics', login_required(GardenStatisticsView.as_view()), name='garden_statistics_view'),
+
+    # Import from library view
+    path('<int:garden_id>/import_vegetables', login_required(ImportVegetablesView.as_view()),
+         name='garden_import_vegetables_view'),
+    path('<int:garden_id>/import_vegetables/select', login_required(SelectVegetablesToImportView.as_view()),
+         name='select_vegetables_to_import_view'),
 
 ]
