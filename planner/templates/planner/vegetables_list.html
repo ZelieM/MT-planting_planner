@@ -21,7 +21,10 @@
     <div class="container">
         <a class="glyphicon glyphicon-plus btn btn-success margin-button" data-toggle="modal"
            href="{% url 'planner:add_vegetable_to_garden_view' garden.id %}"
-           data-target="#modal-add_vegetable" title="Ajouter un légume" data-tooltip>Ajouter un légume</a>
+           data-target="#modal-add_vegetable" title="Ajouter un légume" data-tooltip> Ajouter un légume</a>
+        <a class="glyphicon glyphicon-import btn btn-success margin-button"
+           href="{% url 'planner:garden_import_vegetables_view' garden.id %}" title="Importer un légume depuis la librairie" data-tooltip>
+           Importer un légume depuis la librairie</a>
 
     </div>
 
