@@ -11,8 +11,6 @@ from .views import CulturalOperationWithDateCreate, CulturalOperationWithOffsetC
 app_name = 'planner'
 
 
-
-
 urlpatterns = [
     path('', views.index, name='index'),
 
