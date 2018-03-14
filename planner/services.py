@@ -1,7 +1,7 @@
 from datetime import timedelta, date, datetime
 
 from planner.models import CulturalOperation, ForthcomingOperation, COWithDate, COWithOffset, Operation, History, \
-    ProductionPeriod, HistoryItem
+    ProductionPeriod, HistoryItem, Surface
 from planner.templatetags.planner_extras import register
 
 
@@ -123,3 +123,10 @@ def add_new_operation_to_alerts(operation):
     for a in areas_concerned:
         area_id = a.get('area_concerned')
         ForthcomingOperation.objects.create(original_cultural_operation=operation, area_concerned_id=area_id)
+
+
+def get_expected_duration(operation):
+    area = operation.area_concerned.surface.id
+    area_size = Surface.objects.select_subclasses().get(pk=area)
+    unitary_time_needed = operation.original_cultural_operation.duration
+    return area_size.get_area() * unitary_time_needed

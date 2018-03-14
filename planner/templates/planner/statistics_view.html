@@ -1,0 +1,91 @@
+{% extends "planner/base.html" %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock extra_js %}
+
+
+{% block content %}
+
+    {% if messages %}
+        <div class="col-md-6 col-md-offset-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    <div class="container col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">Heures de travail par semaine</div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    {% for week,hours in data.items %}
+                        <li class="list-group-item list-group-item-action">
+                            {{ week }}
+                            {{ hours }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container col-md-6 col-md-offset-3">
+        <div id="chart_div"></div>
+    </div>
+
+    <script>
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawBasic);
+
+        function drawBasic() {
+
+            {#var data = new google.visualization.DataTable();#}
+            {#data.addColumn('number', 'X');#}
+            {#data.addColumn('number', 'Heures');#}
+            {##}
+            {#data.addRows([#}
+            {#    {% for week,hours in data.items %}#}
+            {#        [{{ week }}, {{ hours }}],#}
+            {#    {% endfor %}#}
+            {#]);#}
+
+            var data = google.visualization.arrayToDataTable([
+                ['Semaine', 'Heures'],
+                {% for week,hours in data.items %}
+                    [{{ week }}, {{ hours }}],
+                {% endfor %}
+            ]);
+
+            var options = {
+                hAxis: {
+                    title: 'Semaines',
+                    ticks: [
+                        {% for week,hours in data.items %}
+                            {{ week }},
+                        {% endfor %}
+                    ],
+                    legend: {
+                        position: 'none'
+                    }
+                },
+                vAxis: {
+                    title: 'Temps en heures',
+                    legend: {
+                        position: 'none'
+                    }
+                }
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+            chart.draw(data, options);
+        }
+    </script>
+
+{% endblock content %}

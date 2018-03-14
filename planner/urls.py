@@ -6,9 +6,13 @@ from django.contrib.auth import views as auth_views
 
 from . import views
 from .views import CulturalOperationWithDateCreate, CulturalOperationWithOffsetCreate, AlertView, GardenSelectionView, \
-    EditCulturalOperationView, AddObservationView, AddPunctualOperationView, AddVegetableView
+    EditCulturalOperationView, AddObservationView, AddPunctualOperationView, AddVegetableView, GardenStatisticsView
 
 app_name = 'planner'
+
+
+
+
 urlpatterns = [
     path('', views.index, name='index'),
 
@@ -60,5 +64,8 @@ urlpatterns = [
     # Export pages
     path('<int:garden_id>/export', views.garden_export, name='garden_export_view'),
     path('<int:garden_id>/export/history', views.export_garden_history, name='export_garden_history'),
+
+    # Statistics page
+    path('<int:garden_id>/statistics', login_required(GardenStatisticsView.as_view()), name='garden_statistics_view'),
 
 ]

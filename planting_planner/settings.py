@@ -140,6 +140,4 @@ GRAPH_MODELS = {
     'group_models': True,
 }
 
-
 DATABASE_ROUTERS = ['vegetables_library.dbRouter.VegetablesLibraryDBRouter']
-

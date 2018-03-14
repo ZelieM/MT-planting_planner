@@ -19,6 +19,8 @@ class ServicesTests(TestCase):
                                       label='area1', surface=surface1)
         COWithOffset.objects.create(name="OffsetOp", vegetable=v1, previous_operation=op1, offset_in_days=5)
 
+
+
     def test_get_due_date(self):
         """ Test the function services.get_due_date(alert, alert_history) """
         alert_history_empty = ForthcomingOperation.objects.filter(is_done=True)
@@ -54,6 +56,10 @@ class ServicesTests(TestCase):
         queries.services.postpone_alert(alert.id, 8)
         alert_postponed = ForthcomingOperation.objects.get(pk=alert.id)
         self.assertEqual(queries.services.get_due_date(alert_postponed, alert_history), date(2017, 10, 16))
+
+
+
+
 
     # def test_mark_alert_as_deleted(self):
     #     alert = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),

@@ -10,7 +10,7 @@ from django.views import View
 from django.views.generic import CreateView, TemplateView, FormView
 import csv
 
-from planner import queries, services
+from planner import queries, services, compute_statistics
 from planner.forms import GardenForm, COOffsetForm, CustomDateInput, OperationForm, ObservationForm, \
     CustomTimeInput, CODateForm, VegetableForm
 from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
@@ -226,7 +226,7 @@ def add_seed(request, garden_id):
         carea = CultivatedArea.objects.create(
             production_period=services.get_current_production_period(garden_id),
             vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface_id=surface)
-        services.add_initial_operation_to_alerts(cultivated_area=carea, date=seeding_date,
+        services.add_initial_operation_to_alerts(cultivated_area=carea, execution_date=seeding_date,
                                                  user=request.user)
         vegetable_concerned = Vegetable.objects.get(pk=vegetable_id).name
         success_message = 'Vous ({}) avez indiqué avoir fait un semis de {} le {}'.format(
@@ -286,7 +286,7 @@ def validate_alert(request, garden_id, alert_id):
 @login_required(login_url="/planner/login/")
 def postpone_alert(request, garden_id, alert_id):
     garden = Garden.objects.get(pk=garden_id)
-     # if this is a POST request we have to postpone the alert by the number of days encoded
+    # if this is a POST request we have to postpone the alert by the number of days encoded
     if request.method == 'POST':
         postponement = request.POST['postponement_in_days']
         services.postpone_alert(alert_id, postponement)
@@ -409,3 +409,13 @@ def export_garden_history(request, garden_id):
         writer.writerow(
             [h.execution_date, h.executor.username, h.name, h.area_concerned.vegetable, h.duration, h.note])
     return response
+
+
+class GardenStatisticsView(TemplateView):
+    template_name = 'planner/statistics_view.html'
+
+    def get(self, request, **kwargs):
+        garden_id = kwargs['garden_id']
+        data = compute_statistics.get_work_hours_by_week(garden_id)
+        context = {'garden': Garden.objects.get(pk=garden_id), 'data': data}
+        return render(request, self.template_name, context)

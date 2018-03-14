@@ -19,11 +19,18 @@ def get_alert_within_notification_period(future_alerts, past_alerts, notificatio
 def get_currently_active_alerts(garden_id):
     """ Return the list of active alerts for the garden with id garden_id.
     An alert is considered as active if it is marked as notdone and the due date is within the notification delay of the garden """
-    garden_areas = get_garden_areas(garden_id)
-    notdone_alerts = ForthcomingOperation.objects.filter(area_concerned__in=garden_areas, is_done=False)
-    past_alerts = ForthcomingOperation.objects.filter(area_concerned__in=garden_areas, is_done=True)
+    notdone_alerts = get_future_alerts(garden_id)
+    past_alerts = get_past_alerts(garden_id)
     notification_delay = Garden.objects.get(pk=garden_id).notification_delay
     return get_alert_within_notification_period(notdone_alerts, past_alerts, notification_delay)
+
+
+def get_past_alerts(garden_id):
+    return ForthcomingOperation.objects.filter(area_concerned__in=get_garden_areas(garden_id), is_done=True)
+
+
+def get_future_alerts(garden_id):
+    return ForthcomingOperation.objects.filter(area_concerned__in=get_garden_areas(garden_id), is_done=False)
 
 
 def done_alerts(garden_id):

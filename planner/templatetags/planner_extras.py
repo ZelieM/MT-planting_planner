@@ -53,10 +53,10 @@ def days_late(due_date):
 
 @register.simple_tag
 def estimated_needed_time(alert):
-    area = alert.area_concerned.surface.id
-    area_size = Surface.objects.select_subclasses().get(pk=area)
-    unitary_time_needed = alert.original_cultural_operation.duration
-    return area_size.get_area() * unitary_time_needed
+    # area = alert.area_concerned.surface.id
+    # area_size = Surface.objects.select_subclasses().get(pk=area)
+    # unitary_time_needed = alert.original_cultural_operation.duration
+    return services.get_expected_duration(alert)
 
 
 @register.filter
