@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from planner import services, queries
 
 
-def get_work_hours_by_week(garden_id):
+def get_future_work_hours_by_week(garden_id):
     """ Compute the estimated number of hours to work by week on the garden with id garden_id """
     past_operations = queries.get_past_alerts(garden_id)
     future_operations = queries.get_future_alerts(garden_id)
@@ -13,7 +13,6 @@ def get_work_hours_by_week(garden_id):
         if not weeks.get(str(op_week)):
             weeks[str(op_week)] = 0.0
         weeks[str(op_week)] += from_timedelta_to_hours(services.get_expected_duration(fop))
-    print(weeks)
     return weeks
 
 
