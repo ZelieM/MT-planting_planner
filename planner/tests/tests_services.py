@@ -1,10 +1,11 @@
 from datetime import datetime, date, timedelta
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from planner import queries
 from planner.models import Garden, Vegetable, COWithDate, ForthcomingOperation, CultivatedArea, Area, COWithOffset, \
-    Operation
+    Operation, Bed
 
 
 class ServicesTests(TestCase):
@@ -13,7 +14,6 @@ class ServicesTests(TestCase):
         garden = Garden.objects.create(name="MyGarden")
         surface1 = Area.objects.create(garden=garden, area_surface=200)
         v1 = Vegetable.objects.create(name="Carrots", garden=garden)
-        # v2 = Vegetable.objects.create(name="Cucumber")
         op1 = COWithDate.objects.create(name="FirstOP", vegetable=v1, absoluteDate=date(2017, 12, 6))
         COWithDate.objects.create(name="SecondOP", vegetable=v1, absoluteDate=date(2017, 10, 8))
         CultivatedArea.objects.create(vegetable=v1,
@@ -99,3 +99,28 @@ class ServicesTests(TestCase):
         for a in ForthcomingOperation.objects.filter(area_concerned=area):
             self.assertTrue(a.is_done)
             self.assertTrue(Operation.objects.get(original_alert=a).is_deletion)
+
+    def test_add_initial_operation_to_alerts(self):
+        vegetable = self.create_vegetable_with_alerts()
+        surface = Bed.objects.create(name="MySurface", garden_id=vegetable.garden_id, length=150, width=250)
+        area = CultivatedArea.objects.create(vegetable=vegetable,
+                                      production_period=queries.services.get_current_production_period(vegetable.garden_id),
+                                      label='area2', surface=surface)
+        with self.assertRaises(ForthcomingOperation.DoesNotExist):
+            ForthcomingOperation.objects.get(area_concerned=area)
+        user = User.objects.create(username="SuperUser", email="super@super.com", password="azerty")
+        user.garden_set.add(vegetable.garden)
+        queries.services.add_initial_operation_to_alerts(area, execution_date=date.today(), user=user)
+        self.assertEqual(len(ForthcomingOperation.objects.filter(area_concerned=area)), 3)
+        self.assertTrue(ForthcomingOperation.objects.get(original_cultural_operation=COWithDate.objects.get(name="Seeding")).is_done)
+        self.assertFalse(ForthcomingOperation.objects.get(
+            original_cultural_operation=COWithDate.objects.get(name="Work")).is_done)
+        self.assertFalse(ForthcomingOperation.objects.get(
+            original_cultural_operation=COWithOffset.objects.get(name="Next")).is_done)
+
+    def create_vegetable_with_alerts(self):
+        v2 = Vegetable.objects.create(name="Cucumber", garden=Garden.objects.get(name="MyGarden"))
+        COWithDate.objects.create(vegetable=v2, absoluteDate=date(2018, 2, 15), is_initial=True, name="Seeding")
+        second = COWithDate.objects.create(vegetable=v2, absoluteDate=date(2018, 4, 15), name="Work")
+        COWithOffset.objects.create(vegetable=v2, name="Next", previous_operation=second, offset_in_days=15)
+        return v2

@@ -16,7 +16,7 @@ def add_initial_operation_to_alerts(cultivated_area, execution_date, user):
     ForthcomingOperation.objects.create(area_concerned=cultivated_area, original_cultural_operation=initial_co,
                                         execution_date=execution_date, is_done=True)
     garden_id = cultivated_area.surface.garden_id
-    history = History.objects.get(production_period=get_current_production_period(garden_id))
+    history = get_current_history(garden_id)
     Operation.objects.create(execution_date=execution_date, executor=user, area_concerned=cultivated_area,
                              name=initial_co.name, history=history)
 
@@ -44,7 +44,7 @@ def get_due_date(alert, alert_history):
         return original_operation.get_date() + timedelta(days=postpone)
 
 
-def mark_alert_as_done(alert_id, execution_date, executor, duration,  note=None):
+def mark_alert_as_done(alert_id, execution_date, executor, duration, note=None):
     """ Mark an alert as done with and execution date and an executor """
     alert = ForthcomingOperation.objects.get(pk=alert_id)
     alert.execution_date = execution_date
@@ -116,6 +116,8 @@ def get_history_operations(history_id):
 
 
 def add_new_operation_to_alerts(operation):
+    """ In the case a new operation is added to a vegetable, this operation must be added to all the
+    currently active CultivatedArea that have this vegetable seeded """
     vegetable_concerned = operation.vegetable
     areas_concerned = ForthcomingOperation.objects.filter(area_concerned__vegetable=vegetable_concerned,
                                                           area_concerned__is_active=True).values(
@@ -126,6 +128,7 @@ def add_new_operation_to_alerts(operation):
 
 
 def get_expected_duration(operation):
+    """ Get the expected duration of an operation based on the data of the model"""
     area = operation.area_concerned.surface.id
     area_size = Surface.objects.select_subclasses().get(pk=area)
     unitary_time_needed = operation.original_cultural_operation.duration
@@ -150,7 +153,8 @@ def copy_vegetable(garden_id, vegetable_from_library):
         if type(op) is library_co_with_date:
             co = COWithDate.objects.create(vegetable_id=copied_vegetable.id, name=op.name, duration=op.duration,
                                            is_initial=op.is_initial, absoluteDate=op.absoluteDate)
-            co_with_offset_to_copy = library_co_with_offset.objects.filter(vegetable=vegetable_from_library, previous_operation=op)
+            co_with_offset_to_copy = library_co_with_offset.objects.filter(vegetable=vegetable_from_library,
+                                                                           previous_operation=op)
             copy_with_recursion_co_with_offset(copied_vegetable.id, co_with_offset_to_copy, op, co)
 
 
