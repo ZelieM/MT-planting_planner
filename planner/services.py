@@ -44,7 +44,7 @@ def get_due_date(alert, alert_history):
         return original_operation.get_date() + timedelta(days=postpone)
 
 
-def mark_alert_as_done(alert_id, execution_date, executor, note, duration):
+def mark_alert_as_done(alert_id, execution_date, executor, duration,  note=None):
     """ Mark an alert as done with and execution date and an executor """
     alert = ForthcomingOperation.objects.get(pk=alert_id)
     alert.execution_date = execution_date
@@ -65,7 +65,7 @@ def postpone_alert(alert_id, postponement):
     alert.save()
 
 
-def delete_alert(alert_id, executor, reason, note):
+def delete_alert(alert_id, executor, reason, note=None):
     """ Delete an alert and eventually all the futures alerts relative to this cultivated_area"""
     alert = ForthcomingOperation.objects.get(pk=alert_id)
     if reason == "destruction":
@@ -76,9 +76,9 @@ def delete_alert(alert_id, executor, reason, note):
         mark_alert_as_deleted(alert, executor, note)
 
 
-def mark_alert_as_deleted(alert, executor, note):
+def mark_alert_as_deleted(alert, executor, note=None):
     garden_id = alert.area_concerned.surface.garden_id
-    history = History.objects.get(production_period=get_current_production_period(garden_id))
+    history = get_current_history(garden_id)
     operation_name = alert.original_cultural_operation.name
     Operation.objects.create(execution_date=date.today(), executor=executor, area_concerned=alert.area_concerned,
                              name=operation_name, history=history, is_deletion=True, original_alert=alert, note=note)
@@ -136,7 +136,6 @@ def import_vegetables_to_garden(garden_id, vegetables_selected):
     from vegetables_library.models import Vegetable as library_vegetable
     for v in vegetables_selected:
         current_vegetable = library_vegetable.objects.get(pk=v)
-        print(current_vegetable.name)
         copy_vegetable(garden_id, current_vegetable)
 
 
