@@ -107,11 +107,11 @@ def get_current_history(garden_id):
         return History.objects.create(production_period=production_period)
 
 
-def get_history_items(history_id):
+def get_history_items(history_id):  # pragma: no cover
     return HistoryItem.objects.select_subclasses().filter(history_id=history_id)
 
 
-def get_history_operations(history_id):
+def get_history_operations(history_id):  # pragma: no cover
     return Operation.objects.filter(history_id=history_id, area_concerned__isnull=False)
 
 

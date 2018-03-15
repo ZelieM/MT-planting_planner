@@ -1,0 +1,11 @@
+# .coveragerc to control coverage.py
+[run]
+omit =
+     # omit anything in the migrations directory
+    */migrations/*
+    # omit files in planting_planner : mainly settings files
+    planting_planner/*
+    # omit init files
+    */__init__.py
+    # omit specific files
+    manage.py
