@@ -5,7 +5,7 @@ from planner import services, queries
 
 from datetime import date, timedelta
 
-from planner.models import Surface, Operation, ForthcomingOperation
+from planner.models import Operation, ForthcomingOperation
 
 register = template.Library()
 
@@ -53,9 +53,6 @@ def days_late(due_date):
 
 @register.simple_tag
 def estimated_needed_time(alert):
-    # area = alert.area_concerned.surface.id
-    # area_size = Surface.objects.select_subclasses().get(pk=area)
-    # unitary_time_needed = alert.original_cultural_operation.duration
     return services.get_expected_duration(alert)
 
 

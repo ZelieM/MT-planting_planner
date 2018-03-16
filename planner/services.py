@@ -1,7 +1,7 @@
 from datetime import timedelta, date, datetime
 
 from planner.models import CulturalOperation, ForthcomingOperation, COWithDate, COWithOffset, Operation, History, \
-    ProductionPeriod, HistoryItem, Surface, Vegetable
+    ProductionPeriod, HistoryItem, Vegetable, Bed
 from planner.templatetags.planner_extras import register
 
 
@@ -130,9 +130,9 @@ def add_new_operation_to_alerts(operation):
 def get_expected_duration(operation):
     """ Get the expected duration of an operation based on the data of the model"""
     area = operation.area_concerned.surface.id
-    area_size = Surface.objects.select_subclasses().get(pk=area)
+    area_size = Bed.objects.get(pk=area).get_area
     unitary_time_needed = operation.original_cultural_operation.duration
-    return area_size.get_area() * unitary_time_needed
+    return area_size * unitary_time_needed
 
 
 def import_vegetables_to_garden(garden_id, vegetables_selected):

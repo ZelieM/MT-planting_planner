@@ -5,14 +5,14 @@ from django.test import TestCase
 
 from planner import queries
 from planner.compute_statistics import from_timedelta_to_hours, get_future_work_hours_by_week
-from planner.models import Garden, Area, Vegetable, COWithDate, CultivatedArea, COWithOffset
+from planner.models import Garden, Vegetable, COWithDate, CultivatedArea, COWithOffset, Bed
 
 
 class ComputeStatisticsTests(TestCase):
 
     def setUp(self):
         garden = Garden.objects.create(name="MyGarden")
-        surface1 = Area.objects.create(garden=garden, area_surface=200)
+        surface1 = Bed.objects.create(garden=garden, width=10, length=20)
         v1 = Vegetable.objects.create(name="Carrots", garden=garden)
         op1 = COWithDate.objects.create(name="OP1", vegetable=v1, absoluteDate=date(2018, 3, 12),
                                         duration=timedelta(minutes=2), is_initial=True)

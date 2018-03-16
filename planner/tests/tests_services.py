@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from planner import queries
-from planner.models import Garden, Vegetable, COWithDate, ForthcomingOperation, CultivatedArea, Area, COWithOffset, \
+from planner.models import Garden, Vegetable, COWithDate, ForthcomingOperation, CultivatedArea, Bed, COWithOffset, \
     Operation, Bed
 
 
@@ -12,7 +12,7 @@ class ServicesTests(TestCase):
 
     def setUp(self):
         garden = Garden.objects.create(name="MyGarden")
-        surface1 = Area.objects.create(garden=garden, area_surface=200)
+        surface1 = Bed.objects.create(garden=garden, width=10, length=20)
         v1 = Vegetable.objects.create(name="Carrots", garden=garden)
         op1 = COWithDate.objects.create(name="FirstOP", vegetable=v1, absoluteDate=date(2017, 12, 6))
         COWithDate.objects.create(name="SecondOP", vegetable=v1, absoluteDate=date(2017, 10, 8))

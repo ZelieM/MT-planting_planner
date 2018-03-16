@@ -16,8 +16,8 @@ from vegetables_library.models import CulturalOperation as library_operation
 from planner import queries, services, compute_statistics
 from planner.forms import GardenForm, COOffsetForm, CustomDateInput, OperationForm, ObservationForm, \
     CustomTimeInput, CODateForm, VegetableForm
-from .models import Garden, Surface, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
-    CultivatedArea, Area, ForthcomingOperation
+from .models import Garden,  Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
+    CultivatedArea, ForthcomingOperation
 
 from django.contrib.auth import logout
 
@@ -127,7 +127,7 @@ class AlertView(TemplateView):
 def garden_view(request, garden_id):
     garden = get_object_or_404(Garden, pk=garden_id)
     current_period = services.get_current_production_period(garden_id)
-    surfaces = garden.surface_set.all().select_subclasses()
+    surfaces = garden.bed_set.all()
     beds = []
     for s in surfaces:
         if isinstance(s, Bed):
@@ -156,7 +156,7 @@ def add_bed(request, garden_id):
 
 @login_required(login_url="/planner/login/")
 def delete_bed(request, bedid):
-    Surface.objects.get(pk=bedid).delete()
+    Bed.objects.get(pk=bedid).delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

@@ -17,7 +17,7 @@ class VegetableForm(ModelForm):
     """ Model form based on the Vegetable model """
     class Meta:
         model = Vegetable
-        fields = ['name']
+        fields = ['name', 'variety']
 
 
 class CODateForm(ModelForm):

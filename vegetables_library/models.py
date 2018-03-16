@@ -9,9 +9,13 @@ NAME_MAX_LENGTH = 100
 
 class Vegetable(models.Model):
     name = models.CharField(unique=True, max_length=100)
+    variety = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        if self.variety:
+            return self.name + " - " + self.variety
+        else:
+            return self.name
 
 
 class CulturalOperation(models.Model):

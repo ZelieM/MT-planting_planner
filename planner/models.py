@@ -23,12 +23,21 @@ class Garden(models.Model):
         return reverse('planner:alerts_view', kwargs={'garden_id': self.id})
 
 
+class GardenDetails(models.Model):
+    garden = models.OneToOneField(Garden, on_delete=models.CASCADE, default=1)
+    comment = models.TextField()
+
+
 class Vegetable(models.Model):
     name = models.CharField(max_length=100)
-    garden = models.ForeignKey(Garden, on_delete=models.CASCADE, default=1)
+    variety = models.CharField(max_length=100, null=True, blank=True)
+    garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        if self.variety:
+            return self.name + " - " + self.variety
+        else:
+            return self.name
 
 
 class CulturalOperation(models.Model):
@@ -82,24 +91,13 @@ class ProductionPeriod(models.Model):
         return "Production period starting :" + str(self.start_date)
 
 
-class Surface(models.Model):
-    """ A garden has a set of surfaces where the farmer can cultivate vegetables"""
-    objects = InheritanceManager()
-    garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
-
-    @property
-    def get_area(self):
-        raise NotImplementedError()
-
-    def __str__(self):
-        return "Surface with area : " + str(self.get_area())
-
-
-class Bed(Surface):
+class Bed(models.Model):
+    garden = models.ForeignKey(Garden, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=NAME_MAX_LENGTH)
     length = models.IntegerField()
     width = models.IntegerField()
 
+    @property
     def get_area(self):
         return self.length * self.width
 
@@ -107,17 +105,10 @@ class Bed(Surface):
         return self.name + " : " + str(self.length) + "x" + str(self.width)
 
 
-class Area(Surface):
-    area_surface = models.IntegerField()
-
-    def get_area(self):
-        return self.area_surface
-
-
 class CultivatedArea(models.Model):
     vegetable = models.ForeignKey(Vegetable, null=True, on_delete=models.SET_NULL)
     production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
-    surface = models.ForeignKey(Surface, on_delete=models.CASCADE)
+    surface = models.ForeignKey(Bed, on_delete=models.CASCADE)
     label = models.TextField()
     is_active = models.BooleanField(default=True)
 
