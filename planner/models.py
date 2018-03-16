@@ -24,7 +24,7 @@ class Garden(models.Model):
 
 
 class GardenDetails(models.Model):
-    garden = models.OneToOneField(Garden, on_delete=models.CASCADE, default=1)
+    garden = models.OneToOneField(Garden, on_delete=models.CASCADE)
     comment = models.TextField()
 
 
@@ -92,7 +92,7 @@ class ProductionPeriod(models.Model):
 
 
 class Bed(models.Model):
-    garden = models.ForeignKey(Garden, on_delete=models.CASCADE, default=1)
+    garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
     name = models.CharField(max_length=NAME_MAX_LENGTH)
     length = models.IntegerField()
     width = models.IntegerField()
