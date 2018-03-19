@@ -110,9 +110,9 @@ class ServicesTests(TestCase):
             ForthcomingOperation.objects.get(area_concerned=area)
         user = User.objects.create(username="SuperUser", email="super@super.com", password="azerty")
         user.garden_set.add(vegetable.garden)
-        queries.services.add_initial_operation_to_alerts(area, execution_date=date.today(), user=user)
+        queries.services.add_new_plantation_to_alerts(area, user=user)
         self.assertEqual(len(ForthcomingOperation.objects.filter(area_concerned=area)), 3)
-        self.assertTrue(ForthcomingOperation.objects.get(original_cultural_operation=COWithDate.objects.get(name="Seeding")).is_done)
+        self.assertFalse(ForthcomingOperation.objects.get(original_cultural_operation=COWithDate.objects.get(name="Seeding")).is_done)
         self.assertFalse(ForthcomingOperation.objects.get(
             original_cultural_operation=COWithDate.objects.get(name="Work")).is_done)
         self.assertFalse(ForthcomingOperation.objects.get(
@@ -120,7 +120,7 @@ class ServicesTests(TestCase):
 
     def create_vegetable_with_alerts(self):
         v2 = Vegetable.objects.create(name="Cucumber", garden=Garden.objects.get(name="MyGarden"))
-        COWithDate.objects.create(vegetable=v2, absoluteDate=date(2018, 2, 15), is_initial=True, name="Seeding")
+        COWithDate.objects.create(vegetable=v2, absoluteDate=date(2018, 2, 15), name="Seeding")
         second = COWithDate.objects.create(vegetable=v2, absoluteDate=date(2018, 4, 15), name="Work")
         COWithOffset.objects.create(vegetable=v2, name="Next", previous_operation=second, offset_in_days=15)
         return v2

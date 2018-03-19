@@ -45,14 +45,14 @@ class CulturalOperation(models.Model):
     name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name=_('Nom de l\'action'))
     vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE, verbose_name=_('Légume concerné'))
     duration = models.DurationField(verbose_name=_('Temps nécessaire par m²'), default=timedelta(seconds=0))
-    is_initial = models.BooleanField(default=False)
+    # is_initial = models.BooleanField(default=False)
 
-    @transaction.atomic
-    def save(self, *args, **kwargs):
-        """  Ensure there is only one initial operation by vegetable """""
-        if self.is_initial:
-            CulturalOperation.objects.filter(vegetable_id=self.vegetable_id, is_initial=True).update(is_initial=False)
-        super(CulturalOperation, self).save(*args, **kwargs)
+    # @transaction.atomic
+    # def save(self, *args, **kwargs):
+    #     """  Ensure there is only one initial operation by vegetable """""
+    #     if self.is_initial:
+    #         CulturalOperation.objects.filter(vegetable_id=self.vegetable_id, is_initial=True).update(is_initial=False)
+    #     super(CulturalOperation, self).save(*args, **kwargs)
 
     def get_date(self):
         pass

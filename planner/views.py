@@ -226,15 +226,13 @@ def add_seed(request, garden_id):
     if request.method == 'POST':
         surface = request.POST['surface_selection']
         vegetable_id = request.POST['vegetable_selection']
-        seeding_date = request.POST['seedingdate']
         carea = CultivatedArea.objects.create(
             production_period=services.get_current_production_period(garden_id),
             vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface_id=surface)
-        services.add_initial_operation_to_alerts(cultivated_area=carea, execution_date=seeding_date,
-                                                 user=request.user)
+        services.add_new_plantation_to_alerts(cultivated_area=carea, user=request.user)
         vegetable_concerned = Vegetable.objects.get(pk=vegetable_id).name
-        success_message = 'Vous ({}) avez indiqué avoir fait un semis de {} le {}'.format(
-            request.user.username, vegetable_concerned, seeding_date)
+        success_message = 'Vous ({}) avez ajouté une plantation de {} sur la planche '.format(
+            request.user.username, vegetable_concerned)
         messages.add_message(request, messages.SUCCESS, success_message)
 
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))

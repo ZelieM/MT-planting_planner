@@ -5,23 +5,14 @@ from planner.models import CulturalOperation, ForthcomingOperation, COWithDate, 
 from planner.templatetags.planner_extras import register
 
 
-def add_initial_operation_to_alerts(cultivated_area, execution_date, user):
+def add_new_plantation_to_alerts(cultivated_area, user):
     """ Add the initial operation of the vegetable seeded in cultivated_area to the list of alerts.
     The initial operation is marked as done with execution_date=date.
     The list of operations related to the same vegetable are added as undone to the list of alerts """
     vegetable_seeded = cultivated_area.vegetable_id
-    initial_co = CulturalOperation.objects.select_subclasses().get(vegetable_id=vegetable_seeded, is_initial=True)
     # TODO take duration into account
-    # Add the initial operation as "done"
-    ForthcomingOperation.objects.create(area_concerned=cultivated_area, original_cultural_operation=initial_co,
-                                        execution_date=execution_date, is_done=True)
-    garden_id = cultivated_area.surface.garden_id
-    history = get_current_history(garden_id)
-    Operation.objects.create(execution_date=execution_date, executor=user, area_concerned=cultivated_area,
-                             name=initial_co.name, history=history)
-
     # All the operation relative to this vegetable are added to alerts
-    for co in CulturalOperation.objects.select_subclasses().filter(vegetable_id=vegetable_seeded, is_initial=False):
+    for co in CulturalOperation.objects.select_subclasses().filter(vegetable_id=vegetable_seeded):
         ForthcomingOperation.objects.create(area_concerned=cultivated_area, original_cultural_operation=co)
 
 
@@ -151,8 +142,7 @@ def copy_vegetable(garden_id, vegetable_from_library):
     operations_to_copy = library_operation.objects.select_subclasses().filter(vegetable_id=vegetable_from_library.id)
     for op in operations_to_copy:
         if type(op) is library_co_with_date:
-            co = COWithDate.objects.create(vegetable_id=copied_vegetable.id, name=op.name, duration=op.duration,
-                                           is_initial=op.is_initial, absoluteDate=op.absoluteDate)
+            co = COWithDate.objects.create(vegetable_id=copied_vegetable.id, name=op.name, duration=op.duration, absoluteDate=op.absoluteDate)
             co_with_offset_to_copy = library_co_with_offset.objects.filter(vegetable=vegetable_from_library,
                                                                            previous_operation=op)
             copy_with_recursion_co_with_offset(copied_vegetable.id, co_with_offset_to_copy, op, co)
@@ -174,6 +164,5 @@ def copy_with_recursion_co_with_offset(vegetable_concerned_id, operations_from_l
 def copy_co_with_offset(vegetable_concerned_id, operation_to_copy, parent_co):
     """ Copy a cultural operation with offset from the library to a vegetable belonging to the garden"""
     return COWithOffset.objects.create(vegetable_id=vegetable_concerned_id, name=operation_to_copy.name,
-                                       duration=operation_to_copy.duration,
-                                       is_initial=operation_to_copy.is_initial, previous_operation=parent_co,
+                                       duration=operation_to_copy.duration, previous_operation=parent_co,
                                        offset_in_days=operation_to_copy.offset_in_days)
