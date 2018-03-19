@@ -456,13 +456,18 @@ class SelectVegetablesToImportView(FormView):
 
 
 class UserUpdate(UpdateView):
-    # model = User
+    model = User
     fields = ['email']
     template_name = 'planner/modals/user_update_email_form.html'
 
-    def get_queryset(self):
-        print("-------------------------Appel a get_qieryset")
-        return User.objects.get(pk=self.request.user.id)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
+        return context
+
+    def get_object(self, queryset=None):
+        obj = User.objects.get(pk=self.request.user.id)
+        return obj
 
     def get_success_url(self):
         return reverse_lazy('planner:garden_settings_view', kwargs={'garden_id': self.kwargs['garden_id']})

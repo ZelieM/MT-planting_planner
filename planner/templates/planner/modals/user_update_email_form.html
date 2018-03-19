@@ -6,7 +6,7 @@
                     class="sr-only">Close</span></button>
             <h4 class="modal-title" id="myModalLabel"> Modification d'une opération </h4>
         </div>
-        <form id="co_update_form" action="" name=""
+        <form id="co_update_form" action="{% url 'planner:edit_user_email' garden.id %}" name=""
               role="form" class="" method="post" accept-charset="utf-8">
             <div class="modal-body">
                 {% csrf_token %}

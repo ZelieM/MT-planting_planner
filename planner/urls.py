@@ -59,7 +59,7 @@ urlpatterns = [
     path('<int:garden_id>/settings/delete/<int:user_id>', views.delete_user_from_garden,
          name='delete_user_from_garden'),
     path('<int:garden_id>/settings/notification_delay', views.edit_notification_delay, name='edit_notification_delay'),
-    path('<int:garden_id>/settings/edit_email', custom_login_required(views.UpdateView.as_view()), name='edit_user_email'),
+    path('<int:garden_id>/settings/edit_email', custom_login_required(views.UserUpdate.as_view()), name='edit_user_email'),
 
     # Export pages
     path('<int:garden_id>/export', views.garden_export, name='garden_export_view'),
