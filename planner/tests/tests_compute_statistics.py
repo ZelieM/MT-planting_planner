@@ -26,7 +26,7 @@ class ComputeStatisticsTests(TestCase):
                                                  garden.id),
                                              label='area1', surface=surface1)
         user = User.objects.create(username="SuperUser", email="super@super.com", password="azerty")
-        queries.services.add_initial_operation_to_alerts(cultivated_area=area, execution_date=date.today(), user=user)
+        queries.services.add_initial_operation_to_alerts(cultivated_area=area, execution_date=date(2018, 3, 12), user=user)
 
     def test_get_hours_from_timedelta(self):
         delta1 = timedelta(days=3, hours=2)
