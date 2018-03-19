@@ -18,6 +18,9 @@
     <div class="modal fade" id="modal-add_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
     </div>
+    <div class="modal fade" id="modal-edit_email_address" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
     <div class="modal fade" id="modal-edit_notification_delay" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel"
          aria-hidden="true">
@@ -63,6 +66,25 @@
                 </ul>
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Informations personnelles</div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-action">
+                        Adresse email :
+                        <b>{{ user.email }} </b>
+                        <a href="{% url 'planner:edit_user_email' garden.id %}" class="pull-right"
+                           data-toggle="modal"
+                           data-target="#modal-edit_email_address"
+                           title="Editer l'adresse mail" data-tooltip>
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
     </div>
     {% load static %}
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>

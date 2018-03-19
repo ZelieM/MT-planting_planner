@@ -1,5 +1,4 @@
 from datetime import date
-from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
@@ -7,9 +6,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, TemplateView, FormView
+from django.views.generic import CreateView, TemplateView, FormView, UpdateView
 import csv
 
+from planner.custom_decorators import custom_login_required
 from vegetables_library.models import Vegetable as library_vegetable
 from vegetables_library.models import CulturalOperation as library_operation
 
@@ -94,6 +94,7 @@ def signup(request):
 class GardenSelectionView(View):
     template_name = 'planner/garden_selection.html'
     form_class = GardenForm
+    login_required = True
 
     def get(self, request):
         form = self.form_class()
@@ -123,7 +124,7 @@ class AlertView(TemplateView):
         return render(request, self.template_name, context)
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def garden_view(request, garden_id):
     garden = get_object_or_404(Garden, pk=garden_id)
     current_period = services.get_current_production_period(garden_id)
@@ -136,7 +137,7 @@ def garden_view(request, garden_id):
     return render(request, 'planner/bed_list.html', context=c)
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def join_garden(request):
     current_user = request.user
     garden = get_object_or_404(Garden, name=request.POST['gardenname'])
@@ -145,7 +146,7 @@ def join_garden(request):
     return HttpResponseRedirect(nextpage)
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def add_bed(request, garden_id):
     bname = request.POST['bedname']
     blength = request.POST['bedlength']
@@ -154,13 +155,13 @@ def add_bed(request, garden_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def delete_bed(request, bedid):
     Bed.objects.get(pk=bedid).delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def vegetables_view(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
     vegetables = Vegetable.objects.filter(garden=garden)
@@ -194,7 +195,7 @@ class EditCulturalOperationView(View):
             return render(request, 'planner/modals/co_form_success.html', {'co': co})
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def pick_co_type(request, garden_id, v_id):
     # if this is a POST request we need to redirect to a form to create the new operation
     if request.method == 'POST':
@@ -208,7 +209,7 @@ def pick_co_type(request, garden_id, v_id):
     return render(request, 'planner/modals/pick_co_type_form.html', context)
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def delete_co(request, co_id):
     CulturalOperation.objects.select_subclasses().get(pk=co_id).delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -219,7 +220,7 @@ def log_out(request):
     return HttpResponseRedirect("/planner/login/")
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def add_seed(request, garden_id):
     # if this is a POST request we add the initial operation of the vegetable selected in the history
     if request.method == 'POST':
@@ -243,7 +244,7 @@ def add_seed(request, garden_id):
     return render(request, 'planner/modals/add_seeding_form.html', context)
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def add_user_to_garden(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
     # if this is a POST request we add the user to the current garden
@@ -260,14 +261,14 @@ def add_user_to_garden(request, garden_id):
     return render(request, 'planner/modals/add_user_to_garden_form.html', context)
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def garden_settings(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
     following_users = garden.users.all()
     return render(request, 'planner/parameters_view.html', {'garden': garden, 'following_users': following_users})
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def validate_alert(request, garden_id, alert_id):
     garden = Garden.objects.get(pk=garden_id)
     # if this is a POST request we have to mark the alert as done, else we show a modal to validate
@@ -286,7 +287,7 @@ def validate_alert(request, garden_id, alert_id):
     return render(request, 'planner/modals/validate_alert_form.html', context)
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def postpone_alert(request, garden_id, alert_id):
     garden = Garden.objects.get(pk=garden_id)
     # if this is a POST request we have to postpone the alert by the number of days encoded
@@ -301,7 +302,7 @@ def postpone_alert(request, garden_id, alert_id):
     return render(request, 'planner/modals/postpone_alert_form.html', context)
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def delete_alert(request, garden_id, alert_id):
     garden = Garden.objects.get(pk=garden_id)
     # if this is a POST request we have to postpone the alert by the number of days encoded
@@ -318,7 +319,7 @@ def delete_alert(request, garden_id, alert_id):
     return render(request, 'planner/modals/delete_alert_form.html', context)
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def delete_user_from_garden(request, garden_id, user_id):
     deleted_user = User.objects.get(pk=user_id)
     garden = Garden.objects.get(pk=garden_id)
@@ -328,7 +329,7 @@ def delete_user_from_garden(request, garden_id, user_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def edit_notification_delay(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
     # if this is a POST request we have to change the notification delay of this garden
@@ -393,13 +394,13 @@ class AddVegetableView(FormView):
         return super().form_valid(form)
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def garden_export(request, garden_id):
     garden = Garden.objects.get(pk=garden_id)
     return render(request, 'planner/export_view.html', {'garden': garden})
 
 
-@login_required(login_url="/planner/login/")
+@custom_login_required
 def export_garden_history(request, garden_id):
     history = services.get_current_history(garden_id)
     items = services.get_history_operations(history.id)
@@ -450,7 +451,18 @@ class SelectVegetablesToImportView(FormView):
 
     def post(self, request, *args, **kwargs):
         vegetables_selected = request.POST.getlist('vegetables_id')
-        print(vegetables_selected)
         services.import_vegetables_to_garden(kwargs['garden_id'], vegetables_selected)
         return HttpResponseRedirect(self.get_success_url())
 
+
+class UserUpdate(UpdateView):
+    # model = User
+    fields = ['email']
+    template_name = 'planner/modals/user_update_email_form.html'
+
+    def get_queryset(self):
+        print("-------------------------Appel a get_qieryset")
+        return User.objects.get(pk=self.request.user.id)
+
+    def get_success_url(self):
+        return reverse_lazy('planner:garden_settings_view', kwargs={'garden_id': self.kwargs['garden_id']})
