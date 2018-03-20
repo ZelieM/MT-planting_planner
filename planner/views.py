@@ -16,7 +16,7 @@ from vegetables_library.models import CulturalOperation as library_operation
 from planner import queries, services, compute_statistics
 from planner.forms import GardenForm, COOffsetForm, CustomDateInput, OperationForm, ObservationForm, \
     CustomTimeInput, CODateForm, VegetableForm
-from .models import Garden,  Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
+from .models import Garden, Bed, ProductionPeriod, Vegetable, CulturalOperation, COWithOffset, COWithDate, \
     CultivatedArea, ForthcomingOperation
 
 from django.contrib.auth import logout
@@ -226,14 +226,19 @@ def add_seed(request, garden_id):
     if request.method == 'POST':
         surface = request.POST['surface_selection']
         vegetable_id = request.POST['vegetable_selection']
-        carea = CultivatedArea.objects.create(
-            production_period=services.get_current_production_period(garden_id),
-            vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface_id=surface)
-        services.add_new_plantation_to_alerts(cultivated_area=carea, user=request.user)
+        # carea = CultivatedArea.objects.create(
+        #     production_period=services.get_current_production_period(garden_id),
+        #     vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface_id=surface)
         vegetable_concerned = Vegetable.objects.get(pk=vegetable_id).name
-        success_message = 'Vous ({}) avez ajouté une plantation de {} sur la planche '.format(
-            request.user.username, vegetable_concerned)
-        messages.add_message(request, messages.SUCCESS, success_message)
+        if services.add_new_plantation_to_alerts(production_period=services.get_current_production_period(garden_id),
+            vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface_id=surface):
+            success_message = 'Vous ({}) avez ajouté une plantation de {} '.format(
+                request.user.username, vegetable_concerned)
+            messages.add_message(request, messages.SUCCESS, success_message)
+        else:
+            warning_message = 'Cette planche a déjà une plantation de {} active, avec le même label '.format(
+                vegetable_concerned)
+            messages.add_message(request, messages.WARNING, warning_message)
 
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     vegetables = Vegetable.objects.filter(garden_id=garden_id)
@@ -275,7 +280,7 @@ def validate_alert(request, garden_id, alert_id):
         execution_date = request.POST['execution_date']
         note = request.POST['validation_note']
         duration = request.POST['duration']
-        services.mark_alert_as_done(alert_id, execution_date, executor, note, duration)
+        services.mark_operation_as_done(alert_id, execution_date, executor, note, duration)
         alert_name = ForthcomingOperation.objects.get(pk=alert_id)
         success_message = 'Vous ({}) avez indiqué avoir effectué l\'opération \" {} \" le {}'.format(
             request.user.username, alert_name, execution_date)
@@ -308,7 +313,7 @@ def delete_alert(request, garden_id, alert_id):
         reason = request.POST['deletion_justification']
         note = request.POST['note']
         executor = request.user
-        services.delete_alert(alert_id, executor, reason, note)
+        services.delete_operation_with_reason(alert_id, executor, reason, note)
         alert_name = ForthcomingOperation.objects.get(pk=alert_id)
         success_message = 'Vous ({}) avez supprimé l\'opération \" {} \"'.format(request.user.username, alert_name)
         messages.add_message(request, messages.SUCCESS, success_message)
@@ -469,3 +474,20 @@ class UserUpdate(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('planner:garden_settings_view', kwargs={'garden_id': self.kwargs['garden_id']})
+
+
+class DeactivateCultivatedArea(FormView):
+    template_name = 'planner/modals/delete_confirmation_form.html'
+    confirmation_text = "Êtes-vous sur de vouloir marquer cette plantation comme inactive? "
+
+    def get(self, request, *args, **kwargs):
+        garden = Garden.objects.get(pk=self.kwargs["garden_id"])
+        context = {'garden': garden, 'confirmation_text': self.confirmation_text, 'area_id': self.kwargs['area_id']}
+        return render(request, self.template_name, context)
+
+    def post(self, request, **kwargs):
+        services.deactivate_cultivated_area(self.kwargs['area_id'], request.user)
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})

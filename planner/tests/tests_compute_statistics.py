@@ -21,12 +21,8 @@ class ComputeStatisticsTests(TestCase):
         op3 = COWithDate.objects.create(name="OP3", vegetable=v1, absoluteDate=date(2018, 10, 8),
                                         duration=timedelta(seconds=72))
 
-        area = CultivatedArea.objects.create(vegetable=v1,
-                                             production_period=queries.services.get_current_production_period(
-                                                 garden.id),
-                                             label='area1', surface=surface1)
-        user = User.objects.create(username="SuperUser", email="super@super.com", password="azerty")
-        queries.services.add_new_plantation_to_alerts(cultivated_area=area, user=user)
+        queries.services.add_new_plantation_to_alerts(production_period=queries.services.get_current_production_period(
+                                                 garden.id), label='area1', surface_id=surface1.id, vegetable_id=v1.id)
 
     def test_get_hours_from_timedelta(self):
         delta1 = timedelta(days=3, hours=2)

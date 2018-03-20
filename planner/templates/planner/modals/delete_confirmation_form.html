@@ -1,0 +1,21 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                    class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel"> Modification d'une opération </h4>
+        </div>
+        <form id="co_update_form" action="{% url 'planner:deactivate_cultivated_area_view' garden.id area_id %}" name=""
+              role="form" class="" method="post" accept-charset="utf-8">
+            <div class="modal-body">
+                {% csrf_token %}
+                {{ confirmation_text }}
+
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-success" type="submit" value="Continuer"/>
+                <button class="btn btn-danger" data-dismiss="modal"> Annuler </button>
+            </div>
+        </form>
+    </div>
+</div>

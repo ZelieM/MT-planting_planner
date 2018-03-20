@@ -47,8 +47,8 @@ class ServicesTests(TestCase):
         alert = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
                                                     original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
         self.assertFalse(alert.is_done)
-        queries.services.mark_alert_as_done(alert_id=alert.id, execution_date=date(2017, 10, 10), executor=None,
-                                            note=None, duration=None)
+        queries.services.mark_operation_as_done(operation_id=alert.id, execution_date=date(2017, 10, 10), executor=None,
+                                                duration=None, note=None)
         self.assertTrue(ForthcomingOperation.objects.get(pk=alert.id).is_done)
 
     def test_postpone_alert(self):
@@ -64,7 +64,7 @@ class ServicesTests(TestCase):
         alert = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
                                                     original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
         self.assertFalse(alert.is_done)
-        queries.services.mark_alert_as_deleted(alert, executor=None)
+        queries.services.mark_operation_as_deleted(alert, executor=None)
         self.assertTrue(ForthcomingOperation.objects.get(pk=alert.id).is_done)
         self.assertEqual(alert.execution_date, date.today())
         operation_in_history = Operation.objects.get(original_alert=alert)
@@ -77,7 +77,7 @@ class ServicesTests(TestCase):
         alert = ForthcomingOperation.objects.create(area_concerned=CultivatedArea.objects.get(label="area1"),
                                                     original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
         self.assertFalse(alert.is_done)
-        queries.services.delete_alert(alert.id, executor=None, reason="useless")
+        queries.services.delete_operation_with_reason(alert.id, executor=None, reason="useless")
         self.assertTrue(ForthcomingOperation.objects.get(pk=alert.id).is_done)
         operation_in_history = Operation.objects.get(original_alert=alert)
         self.assertTrue(operation_in_history.is_deletion)
@@ -90,12 +90,12 @@ class ServicesTests(TestCase):
         alert = ForthcomingOperation.objects.create(area_concerned=area,
                                                     original_cultural_operation=COWithDate.objects.get(name="FirstOP"))
         ForthcomingOperation.objects.create(area_concerned=area,
-                                                        original_cultural_operation=COWithDate.objects.get(
-                                                            name="SecondOP"))
+                                            original_cultural_operation=COWithDate.objects.get(
+                                                name="SecondOP"))
         ForthcomingOperation.objects.create(area_concerned=area,
-                                                        original_cultural_operation=COWithOffset.objects.get(
-                                                            name="OffsetOp"))
-        queries.services.delete_alert(alert.id, executor=None, reason="destruction")
+                                            original_cultural_operation=COWithOffset.objects.get(
+                                                name="OffsetOp"))
+        queries.services.delete_operation_with_reason(alert.id, executor=None, reason="destruction")
         for a in ForthcomingOperation.objects.filter(area_concerned=area):
             self.assertTrue(a.is_done)
             self.assertTrue(Operation.objects.get(original_alert=a).is_deletion)
@@ -103,16 +103,19 @@ class ServicesTests(TestCase):
     def test_add_initial_operation_to_alerts(self):
         vegetable = self.create_vegetable_with_alerts()
         surface = Bed.objects.create(name="MySurface", garden_id=vegetable.garden_id, length=150, width=250)
-        area = CultivatedArea.objects.create(vegetable=vegetable,
-                                      production_period=queries.services.get_current_production_period(vegetable.garden_id),
-                                      label='area2', surface=surface)
-        with self.assertRaises(ForthcomingOperation.DoesNotExist):
-            ForthcomingOperation.objects.get(area_concerned=area)
-        user = User.objects.create(username="SuperUser", email="super@super.com", password="azerty")
-        user.garden_set.add(vegetable.garden)
-        queries.services.add_new_plantation_to_alerts(area, user=user)
-        self.assertEqual(len(ForthcomingOperation.objects.filter(area_concerned=area)), 3)
-        self.assertFalse(ForthcomingOperation.objects.get(original_cultural_operation=COWithDate.objects.get(name="Seeding")).is_done)
+        # area = CultivatedArea.objects.create(vegetable=vegetable,
+        #                                      production_period=queries.services.get_current_production_period(
+        #                                          vegetable.garden_id),
+        #                                      label='area2', surface=surface)
+        with self.assertRaises(CultivatedArea.DoesNotExist):
+            CultivatedArea.objects.get(label="area2")
+        queries.services.add_new_plantation_to_alerts(
+            production_period=queries.services.get_current_production_period(vegetable.garden_id),
+            vegetable_id=vegetable.id,
+            label="area2", surface_id=surface.id)
+        self.assertEqual(len(ForthcomingOperation.objects.filter(area_concerned=CultivatedArea.objects.get(label="area2"))), 3)
+        self.assertFalse(ForthcomingOperation.objects.get(
+            original_cultural_operation=COWithDate.objects.get(name="Seeding")).is_done)
         self.assertFalse(ForthcomingOperation.objects.get(
             original_cultural_operation=COWithDate.objects.get(name="Work")).is_done)
         self.assertFalse(ForthcomingOperation.objects.get(

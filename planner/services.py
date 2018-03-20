@@ -1,19 +1,26 @@
 from datetime import timedelta, date, datetime
 
 from planner.models import CulturalOperation, ForthcomingOperation, COWithDate, COWithOffset, Operation, History, \
-    ProductionPeriod, HistoryItem, Vegetable, Bed
+    ProductionPeriod, HistoryItem, Vegetable, Bed, CultivatedArea
 from planner.templatetags.planner_extras import register
 
 
-def add_new_plantation_to_alerts(cultivated_area, user):
-    """ Add the initial operation of the vegetable seeded in cultivated_area to the list of alerts.
-    The initial operation is marked as done with execution_date=date.
-    The list of operations related to the same vegetable are added as undone to the list of alerts """
-    vegetable_seeded = cultivated_area.vegetable_id
-    # TODO take duration into account
-    # All the operation relative to this vegetable are added to alerts
-    for co in CulturalOperation.objects.select_subclasses().filter(vegetable_id=vegetable_seeded):
-        ForthcomingOperation.objects.create(area_concerned=cultivated_area, original_cultural_operation=co)
+def add_new_plantation_to_alerts(production_period, vegetable_id, label, surface_id):
+    """ Create a cultivated area on the surface surface_id with the vegetable vegetable_id and with a label.
+    The list of operations related to this vegetable are added as undone to the list of alerts
+    Return true if the plantation has been added successfully and False if an existing plantation already existed on
+    the same surface and with the same label and vegetable """
+
+    if CultivatedArea.objects.filter(vegetable_id=vegetable_id, label=label, surface_id=surface_id, is_active=True):
+        return False  # There is already a cultivated area with all the same properties
+    else:
+        cultivated_area = CultivatedArea.objects.create(production_period=production_period, vegetable_id=vegetable_id,
+                                                        label=label, surface_id=surface_id)
+        vegetable_seeded = cultivated_area.vegetable_id
+        # All the operation relative to this vegetable are added to alerts
+        for co in CulturalOperation.objects.select_subclasses().filter(vegetable_id=vegetable_seeded):
+            ForthcomingOperation.objects.create(area_concerned=cultivated_area, original_cultural_operation=co)
+        return True
 
 
 @register.filter
@@ -35,9 +42,9 @@ def get_due_date(alert, alert_history):
         return original_operation.get_date() + timedelta(days=postpone)
 
 
-def mark_alert_as_done(alert_id, execution_date, executor, duration, note=None):
+def mark_operation_as_done(operation_id, execution_date, executor, duration, note=None):
     """ Mark an alert as done with and execution date and an executor """
-    alert = ForthcomingOperation.objects.get(pk=alert_id)
+    alert = ForthcomingOperation.objects.get(pk=operation_id)
     alert.execution_date = execution_date
     alert.is_done = True
     alert.save()
@@ -45,7 +52,7 @@ def mark_alert_as_done(alert_id, execution_date, executor, duration, note=None):
     history = get_current_history(garden_id)
     operation_name = alert.original_cultural_operation.name
     Operation.objects.create(execution_date=execution_date, executor=executor, area_concerned=alert.area_concerned,
-                             name=operation_name, history=history, original_alert_id=alert_id, note=note,
+                             name=operation_name, history=history, original_alert_id=operation_id, note=note,
                              duration=duration)
 
 
@@ -56,27 +63,27 @@ def postpone_alert(alert_id, postponement):
     alert.save()
 
 
-def delete_alert(alert_id, executor, reason, note=None):
+def delete_operation_with_reason(operation_id, executor, reason, note=None):
     """ Delete an alert and eventually all the futures alerts relative to this cultivated_area"""
-    alert = ForthcomingOperation.objects.get(pk=alert_id)
+    alert = ForthcomingOperation.objects.get(pk=operation_id)
     if reason == "destruction":
         alerts_to_delete = ForthcomingOperation.objects.filter(area_concerned=alert.area_concerned, is_done=False)
         for a in alerts_to_delete:
-            mark_alert_as_deleted(a, executor, note)
+            mark_operation_as_deleted(a, executor, note)
     else:
-        mark_alert_as_deleted(alert, executor, note)
+        mark_operation_as_deleted(alert, executor, note)
 
 
-def mark_alert_as_deleted(alert, executor, note=None):
-    garden_id = alert.area_concerned.surface.garden_id
+def mark_operation_as_deleted(operation, executor, note=None):
+    garden_id = operation.area_concerned.surface.garden_id
     history = get_current_history(garden_id)
-    operation_name = alert.original_cultural_operation.name
-    Operation.objects.create(execution_date=date.today(), executor=executor, area_concerned=alert.area_concerned,
-                             name=operation_name, history=history, is_deletion=True, original_alert=alert, note=note)
+    operation_name = operation.original_cultural_operation.name
+    Operation.objects.create(execution_date=date.today(), executor=executor, area_concerned=operation.area_concerned,
+                             name=operation_name, history=history, is_deletion=True, original_alert=operation, note=note)
 
-    alert.is_done = True
-    alert.execution_date = date.today()
-    alert.save()
+    operation.is_done = True
+    operation.execution_date = date.today()
+    operation.save()
 
 
 def get_current_production_period(garden_id):
@@ -142,7 +149,8 @@ def copy_vegetable(garden_id, vegetable_from_library):
     operations_to_copy = library_operation.objects.select_subclasses().filter(vegetable_id=vegetable_from_library.id)
     for op in operations_to_copy:
         if type(op) is library_co_with_date:
-            co = COWithDate.objects.create(vegetable_id=copied_vegetable.id, name=op.name, duration=op.duration, absoluteDate=op.absoluteDate)
+            co = COWithDate.objects.create(vegetable_id=copied_vegetable.id, name=op.name, duration=op.duration,
+                                           absoluteDate=op.absoluteDate)
             co_with_offset_to_copy = library_co_with_offset.objects.filter(vegetable=vegetable_from_library,
                                                                            previous_operation=op)
             copy_with_recursion_co_with_offset(copied_vegetable.id, co_with_offset_to_copy, op, co)
@@ -166,3 +174,12 @@ def copy_co_with_offset(vegetable_concerned_id, operation_to_copy, parent_co):
     return COWithOffset.objects.create(vegetable_id=vegetable_concerned_id, name=operation_to_copy.name,
                                        duration=operation_to_copy.duration, previous_operation=parent_co,
                                        offset_in_days=operation_to_copy.offset_in_days)
+
+
+def deactivate_cultivated_area(area_id, user):
+    area_concerned = CultivatedArea.objects.get(pk=area_id)
+    area_concerned.is_active=False
+    area_concerned.save()
+    note = "La culture a été marquée comme terminée avant que cette opération ne soit réalisée"
+    for op in ForthcomingOperation.objects.filter(area_concerned=area_concerned, is_done=False):
+        mark_operation_as_deleted(op, user, note=note)

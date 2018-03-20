@@ -26,6 +26,8 @@ urlpatterns = [
     path('<int:garden_id>/add_bed', views.add_bed, name='add_bed'),
     path('<int:bedid>/delete_bed', views.delete_bed, name='delete_bed'),
     path('<int:garden_id>/', views.garden_view, name='garden_view'),
+    path('<int:garden_id>/<int:area_id>/terminate_cropping', custom_login_required(views.DeactivateCultivatedArea.as_view()),
+         name='deactivate_cultivated_area_view'),
 
     # Alerts views
     path('<int:garden_id>/alerts', custom_login_required(AlertView.as_view()), name='alerts_view'),
@@ -45,9 +47,11 @@ urlpatterns = [
 
     # Cultural operations management
     path('vegetables/delete_co/<int:co_id>', views.delete_co, name='delete_co'),
-    path('<int:garden_id>/co/<int:co_id>', custom_login_required(EditCulturalOperationView.as_view()), name='edit_co_view'),
+    path('<int:garden_id>/co/<int:co_id>', custom_login_required(EditCulturalOperationView.as_view()),
+         name='edit_co_view'),
     path('<int:garden_id>/pick_co/<int:v_id>', views.pick_co_type, name='pick_co_type'),
-    path('<int:garden_id>/<int:vegetable_id>/add_date_co', custom_login_required(CulturalOperationWithDateCreate.as_view()),
+    path('<int:garden_id>/<int:vegetable_id>/add_date_co',
+         custom_login_required(CulturalOperationWithDateCreate.as_view()),
          name='add_date_co_view'),
     path('<int:garden_id>/<int:vegetable_id>/add_offset_co',
          custom_login_required(CulturalOperationWithOffsetCreate.as_view()),
@@ -59,14 +63,16 @@ urlpatterns = [
     path('<int:garden_id>/settings/delete/<int:user_id>', views.delete_user_from_garden,
          name='delete_user_from_garden'),
     path('<int:garden_id>/settings/notification_delay', views.edit_notification_delay, name='edit_notification_delay'),
-    path('<int:garden_id>/settings/edit_email', custom_login_required(views.UserUpdate.as_view()), name='edit_user_email'),
+    path('<int:garden_id>/settings/edit_email', custom_login_required(views.UserUpdate.as_view()),
+         name='edit_user_email'),
 
     # Export pages
     path('<int:garden_id>/export', views.garden_export, name='garden_export_view'),
     path('<int:garden_id>/export/history', views.export_garden_history, name='export_garden_history'),
 
     # Statistics page
-    path('<int:garden_id>/statistics', custom_login_required(GardenStatisticsView.as_view()), name='garden_statistics_view'),
+    path('<int:garden_id>/statistics', custom_login_required(GardenStatisticsView.as_view()),
+         name='garden_statistics_view'),
 
     # Import from library view
     path('<int:garden_id>/import_vegetables', custom_login_required(ImportVegetablesView.as_view()),
