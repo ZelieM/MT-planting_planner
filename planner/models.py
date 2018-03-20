@@ -9,12 +9,17 @@ from django.utils.translation import gettext_lazy as _
 from vegetables_library import models as library_models
 
 NAME_MAX_LENGTH = 100
+TYPE_MAX_LENGTH = 100
 
 
 class Garden(models.Model):
     name = models.CharField(unique=True, max_length=NAME_MAX_LENGTH, verbose_name="Nom du jardin")
     users = models.ManyToManyField(User)
     notification_delay = models.IntegerField(default=5)
+    comment = models.TextField(blank=True, default="", verbose_name="Description libre du jardin")
+    soil_type = models.CharField(max_length=TYPE_MAX_LENGTH, blank=True, default="", verbose_name='Type de sol')
+    culture_type = models.CharField(max_length=TYPE_MAX_LENGTH, blank=True, default="",
+                                    verbose_name='Type d\'agriculture pratiquée sur ce jardin')
 
     def __str__(self):
         return "Garden: " + self.name
@@ -23,14 +28,9 @@ class Garden(models.Model):
         return reverse('planner:alerts_view', kwargs={'garden_id': self.id})
 
 
-class GardenDetails(models.Model):
-    garden = models.OneToOneField(Garden, on_delete=models.CASCADE)
-    comment = models.TextField()
-
-
 class Vegetable(models.Model):
     name = models.CharField(max_length=100)
-    variety = models.CharField(max_length=100, null=True, blank=True)
+    variety = models.CharField(max_length=100, blank=True, default="")
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -45,6 +45,7 @@ class CulturalOperation(models.Model):
     name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name=_('Nom de l\'action'))
     vegetable = models.ForeignKey(Vegetable, on_delete=models.CASCADE, verbose_name=_('Légume concerné'))
     duration = models.DurationField(verbose_name=_('Temps nécessaire par m²'), default=timedelta(seconds=0))
+
     # is_initial = models.BooleanField(default=False)
 
     # @transaction.atomic
@@ -83,7 +84,7 @@ class COWithDate(CulturalOperation):
 class ProductionPeriod(models.Model):
     """ A garden has a set of production period.s A production period can be a calendar year, but not only"""
     start_date = models.DateField()
-    end_date = models.DateField(null=True)
+    end_date = models.DateField(blank=True, null=True)
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE, unique_for_date=start_date)
     label = models.CharField(max_length=100)
 
@@ -97,16 +98,40 @@ class Bed(models.Model):
     length = models.IntegerField()
     width = models.IntegerField()
 
+    comment = models.TextField(blank=True, default="")
+    soil_type = models.CharField(max_length=TYPE_MAX_LENGTH, blank=True, default="")
+
+    NORTH = 'N'
+    SOUTH = 'S'
+    WEST = 'O'
+    EAST = 'E'
+    NE = 'NE'
+    SE = 'SE'
+    SW = 'SO'
+    NW = 'NO'
+    EXPOSITION_CHOICES = (
+        (NORTH, 'Nord'),
+        (SOUTH, 'Sud'),
+        (WEST, 'Ouest'),
+        (EAST, 'Est'),
+        (NE, 'Nord-Est'),
+        (SE, 'Sud-Est'),
+        (SW, 'Sud-Ouest'),
+        (NW, 'Nord-Ouest')
+    )
+
+    exposition = models.CharField(max_length=2, choices=EXPOSITION_CHOICES, default=NORTH)
+
     @property
     def get_area(self):
-        return self.length * self.width
+        return (self.length * self.width)/10000  # Division to have m² instead of cm²
 
     def __str__(self):
         return self.name + " : " + str(self.length) + "x" + str(self.width)
 
 
 class CultivatedArea(models.Model):
-    vegetable = models.ForeignKey(Vegetable, null=True, on_delete=models.SET_NULL)
+    vegetable = models.ForeignKey(Vegetable, blank=True, null=True, on_delete=models.SET_NULL)
     production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
     surface = models.ForeignKey(Bed, on_delete=models.CASCADE)
     label = models.TextField()
@@ -120,7 +145,7 @@ class ForthcomingOperation(models.Model):
     area_concerned = models.ForeignKey(CultivatedArea, on_delete=models.CASCADE)
     original_cultural_operation = models.ForeignKey(CulturalOperation, on_delete=models.CASCADE)
     postponement = models.IntegerField(default=0)
-    execution_date = models.DateField(null=True)
+    execution_date = models.DateField(blank=True, null=True)
     is_done = models.BooleanField(default=False)
 
     def __str__(self):
@@ -135,8 +160,8 @@ class HistoryItem(models.Model):
     objects = InheritanceManager()
     history = models.ForeignKey(History, on_delete=models.CASCADE)
     execution_date = models.DateField()
-    executor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    area_concerned = models.ForeignKey(CultivatedArea, on_delete=models.SET_NULL, null=True)
+    executor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    area_concerned = models.ForeignKey(CultivatedArea, on_delete=models.SET_NULL, blank=True, null=True)
 
 
 class Observation(HistoryItem):
@@ -145,7 +170,7 @@ class Observation(HistoryItem):
 
 class Operation(HistoryItem):
     name = models.CharField(max_length=NAME_MAX_LENGTH)
-    note = models.TextField(null=True)
-    duration = models.DurationField(null=True)
+    note = models.TextField(blank=True, default="")
+    duration = models.DurationField(blank=True, null=True)
     is_deletion = models.BooleanField(default=False)
-    original_alert = models.ForeignKey(ForthcomingOperation, on_delete=models.SET_NULL, null=True)
+    original_alert = models.ForeignKey(ForthcomingOperation, on_delete=models.SET_NULL, blank=True, null=True)

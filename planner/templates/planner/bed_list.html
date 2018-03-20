@@ -5,50 +5,110 @@
     {% if beds %}
 
         {% load planner_extras %}
+        <div class="modal fade" id="modal-deactivate_cultivated_area" tabindex="-1" role="dialog" aria-hidden="true">
+        </div>
+        <div class="modal fade" id="modal-create_bed" tabindex="-1" role="dialog" aria-hidden="true">
+        </div>
+        <div class="modal fade" id="modal-update_bed" tabindex="-1" role="dialog" aria-hidden="true">
+        </div>
+        <div class="modal fade" id="modal-delete_bed" tabindex="-1" role="dialog" aria-hidden="true">
+        </div>
 
         <table class="table table-hover table-bordered table-responsive ">
             <tr>
-                <th>Nom de la planche</th>
-                <th>Longueur [cm]</th>
-                <th>Largeur [cm]</th>
-                <th></th>
+                <th>Planche
+                    <a href="{% url 'planner:create_bed' garden.id %}"
+                       class="pull-right red"
+                       data-toggle="modal"
+                       data-target="#modal-create_bed" title="Ajouter une planche" data-tooltip>
+                        <span class="glyphicon glyphicon-plus green"></span>
+                    </a>
+                </th>
+                <th>Dimensions</th>
+
+                <th> Détails</th>
             </tr>
             {% for b in beds %}
                 <tr>
-                    <td class="col-md-3">{{ b.name }}</td>
-                    <td class="col-md-3">{{ b.length }}</td>
-                    <td class="col-md-3">{{ b.width }} </td>
-                    <form action="{% url 'planner:delete_bed' b.id %}" name="deletebed" role="form"
-                          class="form-horizontal" method="post" accept-charset="utf-8">
-                        {% csrf_token %}
-                        <td class="col-md-3"><input class="btn btn-danger" type="submit" value="Supprimer"/></td>
-                    </form>
+                    <td class="col-md-3">
+                        {{ b.name }}
+                        <a href="{% url 'planner:delete_bed' garden.id b.id %}"
+                           class="pull-right red"
+                           data-toggle="modal"
+                           data-target="#modal-delete_bed" title="Supprimer cette planche" data-tooltip>
+                            <span class="glyphicon glyphicon-remove red"></span>
+                        </a>
+                        <a href="{% url 'planner:update_bed' garden.id b.id %}"
+                           class="pull-right blue"
+                           data-toggle="modal"
+                           data-target="#modal-update_bed" title="Editer cette planche" data-tooltip>
+                            <span class="glyphicon glyphicon-pencil blue"></span>
+                        </a>
+
+                        {#                            <input class="glyphicon glyphicon-remove" type="submit" value="Supprimer"/>#}
+
+                    </td>
+                    <td class="col-md-3">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-action">
+                                <b> Longueur [cm] : </b>
+                                {{ b.length }}
+
+                            </li>
+                            <li class="list-group-item list-group-item-action">
+                                <b> Largeur [cm] : </b>
+                                {{ b.width }}
+                            </li>
+                            <li class="list-group-item list-group-item-action">
+                                <b> Surface [m²] : </b>
+                                {{ b.get_area }}
+                            </li>
+
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-action">
+                                <b>Description : </b>
+                                {{ b.comment }}
+
+                            </li>
+                            <li class="list-group-item list-group-item-action">
+                                <b>Type de sol : </b>
+                                {{ b.soil_type }}
+                            </li>
+                            <li class="list-group-item list-group-item-action">
+                                <b> Exposition : </b>
+                                {{ b.exposition }}
+                            </li>
+
+                        </ul>
+                    </td>
                 </tr>
             {% endfor %}
 
-            <form action="{% url 'planner:add_bed' garden.id %}" name="addbed" role="form" class="form-horizontal"
-                  method="post" accept-charset="utf-8">
-                {% csrf_token %}
-                <div class="form-group">
-                    <tr>
-                        <td class="col-md-3"><input name="bedname" placeholder="Nom de la planche" class="form-control"
-                                                    type="text" id="BedName"/></td>
-                        <td class="col-md-3"><input name="bedlength" placeholder="Longueur de la planche"
-                                                    class="form-control" type="number" id="BedLength" maxlength="15"/>
-                        </td>
-                        <td class="col-md-3"><input name="bedwidth" placeholder="Largeur de la planche"
-                                                    class="form-control" type="number" id="BedWidth" maxlength="15"/>
-                        </td>
-                        <td class="col-md-3"><input class="btn btn-success" type="submit" value="Ajouter"/></td>
-                    </tr>
-                </div>
-            </form>
+            {#            <form action="{% url 'planner:add_bed' garden.id %}" name="addbed" role="form" class="form-horizontal"#}
+            {#                  method="post" accept-charset="utf-8">#}
+            {#                {% csrf_token %}#}
+            {#                <div class="form-group">#}
+            {#                    <tr>#}
+            {#                        <td class="col-md-3"><input name="bedname" placeholder="Nom de la planche" class="form-control"#}
+            {#                                                    type="text" id="BedName"/></td>#}
+            {#                        <td class="col-md-3"><input name="bedlength" placeholder="Longueur de la planche"#}
+            {#                                                    class="form-control" type="number" id="BedLength" maxlength="15"/>#}
+            {#                        </td>#}
+            {#                        <td class="col-md-3"><input name="bedwidth" placeholder="Largeur de la planche"#}
+            {#                                                    class="form-control" type="number" id="BedWidth" maxlength="15"/>#}
+            {#                        </td>#}
+            {#                        <td class="col-md-3"><input class="btn btn-success" type="submit" value="Ajouter"/></td>#}
+            {#                    </tr>#}
+            {#                </div>#}
+            {#            </form>#}
         </table>
 
 
 
-        <div class="modal fade" id="modal-deactivate_cultivated_area" tabindex="-1" role="dialog" aria-hidden="true">
-        </div>
+
 
         {% for b in beds %}
             <div class="panel panel-success ">
@@ -60,7 +120,8 @@
                             {% for ca in cultivated_areas %}
                                 <li class="list-group-item list-group-item-action">
                                     {{ ca.label }} : {{ ca.vegetable }}
-                                    <a href="{% url 'planner:deactivate_cultivated_area_view' garden.id ca.id%}" class="pull-right red"
+                                    <a href="{% url 'planner:deactivate_cultivated_area_view' garden.id ca.id %}"
+                                       class="pull-right red"
                                        data-toggle="modal"
                                        data-target="#modal-deactivate_cultivated_area"
                                        title="Désactiver cette plantation" data-tooltip>

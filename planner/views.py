@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, TemplateView, FormView, UpdateView
+from django.views.generic import CreateView, TemplateView, FormView, UpdateView, DeleteView
 import csv
 
 from planner.custom_decorators import custom_login_required
@@ -491,3 +491,69 @@ class DeactivateCultivatedArea(FormView):
 
     def get_success_url(self):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
+
+
+class GardenDetailsUpdate(UpdateView):
+    model = Garden
+    fields = ['comment', 'soil_type', 'culture_type']
+    template_name = 'planner/modals/garden_update_details_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
+        return context
+
+    def get_object(self, queryset=None):
+        obj = Garden.objects.get(pk=self.kwargs["garden_id"])
+        return obj
+
+    def get_success_url(self):
+        return reverse_lazy('planner:garden_settings_view', kwargs={'garden_id': self.kwargs['garden_id']})
+
+
+class BedCreateView(CreateView):
+    model = Bed
+    fields = ['name', 'length', 'width', 'comment', 'soil_type', 'exposition']
+    template_name = 'planner/modals/bed_create_with_details_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
+        return context
+
+    def form_valid(self, form):
+        new_bed = form.save(commit=False)
+        new_bed.garden = Garden.objects.get(pk=self.kwargs["garden_id"])
+        new_bed.save()
+        return super().form_valid(form)
+
+
+class BedUpdateView(UpdateView):
+    model = Bed
+    fields = ['name', 'length', 'width', 'comment', 'soil_type', 'exposition']
+    template_name = 'planner/modals/bed_update_with_details_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
+        return context
+
+
+class BedDelete(DeleteView):
+    model = Bed
+    template_name = 'planner/modals/bed_confirm_delete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
+

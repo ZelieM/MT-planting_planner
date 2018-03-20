@@ -42,7 +42,7 @@ def get_due_date(alert, alert_history):
         return original_operation.get_date() + timedelta(days=postpone)
 
 
-def mark_operation_as_done(operation_id, execution_date, executor, duration, note=None):
+def mark_operation_as_done(operation_id, execution_date, executor, duration, note=""):
     """ Mark an alert as done with and execution date and an executor """
     alert = ForthcomingOperation.objects.get(pk=operation_id)
     alert.execution_date = execution_date
@@ -63,7 +63,7 @@ def postpone_alert(alert_id, postponement):
     alert.save()
 
 
-def delete_operation_with_reason(operation_id, executor, reason, note=None):
+def delete_operation_with_reason(operation_id, executor, reason, note=""):
     """ Delete an alert and eventually all the futures alerts relative to this cultivated_area"""
     alert = ForthcomingOperation.objects.get(pk=operation_id)
     if reason == "destruction":
@@ -74,13 +74,13 @@ def delete_operation_with_reason(operation_id, executor, reason, note=None):
         mark_operation_as_deleted(alert, executor, note)
 
 
-def mark_operation_as_deleted(operation, executor, note=None):
+def mark_operation_as_deleted(operation, executor, note=""):
     garden_id = operation.area_concerned.surface.garden_id
     history = get_current_history(garden_id)
     operation_name = operation.original_cultural_operation.name
     Operation.objects.create(execution_date=date.today(), executor=executor, area_concerned=operation.area_concerned,
-                             name=operation_name, history=history, is_deletion=True, original_alert=operation, note=note)
-
+                             name=operation_name, history=history, is_deletion=True, original_alert=operation,
+                             note=note)
     operation.is_done = True
     operation.execution_date = date.today()
     operation.save()
@@ -178,7 +178,7 @@ def copy_co_with_offset(vegetable_concerned_id, operation_to_copy, parent_co):
 
 def deactivate_cultivated_area(area_id, user):
     area_concerned = CultivatedArea.objects.get(pk=area_id)
-    area_concerned.is_active=False
+    area_concerned.is_active = False
     area_concerned.save()
     note = "La culture a été marquée comme terminée avant que cette opération ne soit réalisée"
     for op in ForthcomingOperation.objects.filter(area_concerned=area_concerned, is_done=False):

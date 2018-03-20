@@ -48,7 +48,7 @@ class ServicesTests(TestCase):
                                                     original_cultural_operation=COWithDate.objects.get(name="SecondOP"))
         self.assertFalse(alert.is_done)
         queries.services.mark_operation_as_done(operation_id=alert.id, execution_date=date(2017, 10, 10), executor=None,
-                                                duration=None, note=None)
+                                                duration=None, note="")
         self.assertTrue(ForthcomingOperation.objects.get(pk=alert.id).is_done)
 
     def test_postpone_alert(self):

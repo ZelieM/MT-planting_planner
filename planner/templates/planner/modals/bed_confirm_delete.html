@@ -3,19 +3,17 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                     class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel"> Désactivation d'une surface cultivée </h4>
+            <h4 class="modal-title" id="myModalLabel"> Suppression d'une planche </h4>
         </div>
-        <form id="deactivate_cultivated_area_confirmation"
-              action="{% url 'planner:deactivate_cultivated_area_view' garden.id area_id %}" name=""
+        <form id="bed_delete_form" action="{% url 'planner:delete_bed' garden.id object.id %}" name=""
               role="form" class="" method="post" accept-charset="utf-8">
             <div class="modal-body">
                 {% csrf_token %}
-                {{ confirmation_text }}
-
+                <p> Êtes-vous sur de vouloir supprimer la planche {{ object }}</p>
             </div>
             <div class="modal-footer">
-                <input class="btn btn-success" type="submit" value="Continuer"/>
-                <button class="btn btn-danger" data-dismiss="modal"> Annuler</button>
+                <input class="btn btn-success" type="submit" value="Confirmer"/>
+                <button class="btn btn-danger" data-dismiss="modal"> Annuler </button>
             </div>
         </form>
     </div>

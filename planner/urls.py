@@ -24,9 +24,15 @@ urlpatterns = [
 
     # Beds management
     path('<int:garden_id>/add_bed', views.add_bed, name='add_bed'),
-    path('<int:bedid>/delete_bed', views.delete_bed, name='delete_bed'),
+    path('<int:garden_id>/create_bed', custom_login_required(views.BedCreateView.as_view()), name='create_bed'),
+    path('<int:garden_id>/update_bed/<int:pk>', custom_login_required(views.BedUpdateView.as_view()),
+         name='update_bed'),
+    path('<int:garden_id>/delete_bed/<int:pk>', custom_login_required(views.BedDelete.as_view()),
+         name='delete_bed'),
+    # path('<int:bedid>/delete_bed', views.delete_bed, name='delete_bed'),
     path('<int:garden_id>/', views.garden_view, name='garden_view'),
-    path('<int:garden_id>/<int:area_id>/terminate_cropping', custom_login_required(views.DeactivateCultivatedArea.as_view()),
+    path('<int:garden_id>/<int:area_id>/terminate_cropping',
+         custom_login_required(views.DeactivateCultivatedArea.as_view()),
          name='deactivate_cultivated_area_view'),
 
     # Alerts views
@@ -65,6 +71,8 @@ urlpatterns = [
     path('<int:garden_id>/settings/notification_delay', views.edit_notification_delay, name='edit_notification_delay'),
     path('<int:garden_id>/settings/edit_email', custom_login_required(views.UserUpdate.as_view()),
          name='edit_user_email'),
+    path('<int:garden_id>/settings/edit_details', custom_login_required(views.GardenDetailsUpdate.as_view()),
+         name='garden_edit_details'),
 
     # Export pages
     path('<int:garden_id>/export', views.garden_export, name='garden_export_view'),

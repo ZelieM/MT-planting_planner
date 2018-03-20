@@ -15,6 +15,9 @@
     {% endif %}
 
     <!-- Modal -->
+    <div class="modal fade" id="modal-edit_garden_details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
     <div class="modal fade" id="modal-add_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
     </div>
@@ -27,7 +30,38 @@
     </div>
 
 
+
+
     <div class="container col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">Détails du jardin
+                <a href="{% url 'planner:garden_edit_details' garden.id %}" class="pull-right"
+                   data-toggle="modal"
+                   data-target="#modal-edit_garden_details"
+                   title="Editer les détails du jardin" data-tooltip>
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-action">
+                        <b>Description : </b>
+                        {{ garden.comment }}
+
+
+                    </li>
+                    <li class="list-group-item list-group-item-action">
+                        <b>Type de sol : </b>
+                        {{ garden.soil_type }}
+                    </li>
+                    <li class="list-group-item list-group-item-action">
+                        <b> Agriculture pratiquée : </b>
+                        {{ garden.culture_type }}
+                    </li>
+
+                </ul>
+            </div>
+        </div>
         <div class="panel panel-default">
             <div class="panel-heading">Liste des utilisateurs de ce jardin</div>
             <div class="panel-body">
