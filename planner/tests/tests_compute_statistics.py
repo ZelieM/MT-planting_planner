@@ -12,7 +12,7 @@ class ComputeStatisticsTests(TestCase):
 
     def setUp(self):
         garden = Garden.objects.create(name="MyGarden")
-        surface1 = Bed.objects.create(garden=garden, width=10, length=20)
+        surface1 = Bed.objects.create(garden=garden, width=1000, length=2000)
         v1 = Vegetable.objects.create(name="Carrots", garden=garden)
         op1 = COWithDate.objects.create(name="OP1", vegetable=v1, absoluteDate=date(2018, 3, 12),
                                         duration=timedelta(hours=2))
