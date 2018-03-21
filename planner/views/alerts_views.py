@@ -57,7 +57,7 @@ def validate_alert(request, garden_id, alert_id):
         execution_date = request.POST['execution_date']
         note = request.POST['validation_note']
         duration = request.POST['duration']
-        services.mark_operation_as_done(alert_id, execution_date, executor, note, duration)
+        services.mark_operation_as_done(operation_id=alert_id, execution_date=execution_date, executor=executor, note=note, duration=duration)
         alert_name = ForthcomingOperation.objects.get(pk=alert_id)
         success_message = 'Vous ({}) avez indiqué avoir effectué l\'opération \" {} \" le {}'.format(
             request.user.username, alert_name, execution_date)
