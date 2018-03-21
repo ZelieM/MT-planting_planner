@@ -6,6 +6,10 @@
 
 Todo small description of the project and the architecture
 
+## Architecture
+
+Todo use [ASCII flow](http://asciiflow.com/) to draw an architecture schema or include the nice draw
+
 # Installation
 
 ### Requirements
