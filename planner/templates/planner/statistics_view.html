@@ -1,7 +1,7 @@
 {% extends "planner/base.html" %}
 
 {% block extra_js %}
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
 {% endblock extra_js %}
 
 
@@ -35,11 +35,105 @@
         </div>
     </div>
 
-    <div class="container col-md-6 col-md-offset-3">
-        <div id="chart_div"></div>
+    <div class="container col-md-12">
+        <div id="chart_div">
+            <canvas id="myChart" width="400" height="200"></canvas>
+        </div>
     </div>
 
     <script>
+    // Init some nice colors
+    window.chartColors = {
+        red: 'rgb(255, 99, 132)',
+        orange: 'rgb(255, 159, 64)',
+        yellow: 'rgb(255, 205, 86)',
+        green: 'rgb(75, 192, 192)',
+        blue: 'rgb(54, 162, 235)',
+        purple: 'rgb(153, 102, 255)',
+        grey: 'rgb(201, 203, 207)'
+    };
+
+
+    // Get the canvas element used to draw the chart
+    var ctx = document.getElementById("myChart").getContext("2d");
+
+    // Create an array of data
+    var data = [
+                {% for week,hours in data.items %}
+                    {{ hours }},
+                {% endfor %}
+            ]
+    console.log(data);
+
+    {# TODO Make it dynamic #}
+    var xLabels = ['01/01', '08/01', '15/01', '22/01', '29/01'];
+
+    var config = {
+        type: 'line',
+        data: {
+            labels: xLabels,
+            datasets: [{
+                label: 'My First dataset',
+                backgroundColor: window.chartColors.red,
+                borderColor: window.chartColors.red,
+                data: data,
+                fill: false,
+            },
+            //{
+            //    label: 'My Second dataset',
+            //    fill: false,
+            //    backgroundColor: window.chartColors.blue,
+            //    borderColor: window.chartColors.blue,
+            //    data: [
+            //        randomScalingFactor(),
+            //        randomScalingFactor(),
+            //        randomScalingFactor(),
+            //        randomScalingFactor(),
+            //        randomScalingFactor(),
+            //        randomScalingFactor(),
+            //        randomScalingFactor()
+            //    ],
+            //}
+            ]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Chart.js Line Chart'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Semaines'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Heures'
+                    }
+                }]
+            }
+        }
+    };
+
+    // Instantiate the chart
+    var myLineChart = new Chart(ctx, config);
+
+
+        /*
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawBasic);
 
@@ -86,6 +180,7 @@
 
             chart.draw(data, options);
         }
+        */
     </script>
 
 {% endblock content %}
