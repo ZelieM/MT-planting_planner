@@ -5,7 +5,7 @@ from planner import services, queries
 
 from datetime import date, timedelta
 
-from planner.models import Operation, ForthcomingOperation
+from planner.models import Operation, ForthcomingOperation, CultivatedArea
 
 register = template.Library()
 
@@ -54,6 +54,11 @@ def days_late(due_date):
 @register.simple_tag
 def estimated_needed_time(alert):
     return services.get_expected_duration(alert)
+
+
+@register.simple_tag
+def active_cultivated_areas(bed):
+    return CultivatedArea.objects.filter(surface_id=bed, is_active=True)
 
 
 @register.filter
