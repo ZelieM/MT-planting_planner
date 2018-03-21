@@ -4,5 +4,53 @@
 
 
     <h2> Tu es un chercheur, Harry </h2>
+    {% load research_extras %}
+    <table class="table table-hover table-bordered table-responsive ">
+        <tr>
+            <th> Jardins</th>
+            <th>Utilisateurs</th>
+
+            <th> Détails</th>
+        </tr>
+        {% for g in gardens %}
+            <tr>
+                <td class="col-md-3">
+                    {{ g.name }}
+
+                </td>
+                <td class="col-md-3">
+                    <ul class="list-group">
+                        {% for u in g|get_garden_users %}
+                            <li class="list-group-item list-group-item-action">
+                                   '{{ u.username }}': &lt {{ u.email }} &gt
+
+                            </li>
+
+
+                        {% endfor %}
+
+                    </ul>
+                </td>
+                <td>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-action">
+                            <b>Description : </b>
+                            {{ g.comment }}
+
+                        </li>
+                        <li class="list-group-item list-group-item-action">
+                            <b>Type de sol : </b>
+                            {{ g.soil_type }}
+                        </li>
+                        <li class="list-group-item list-group-item-action">
+                            <b> Type d'agriculture pratiquée : </b>
+                            {{ g.culture_type }}
+                        </li>
+
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 
 {% endblock content %}

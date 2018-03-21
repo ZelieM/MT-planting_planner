@@ -1,0 +1,19 @@
+\documentclass{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{array}
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\begin{document}
+
+
+\begin{tabular}{|l|l|l|l|}
+\hline
+Jardin & Description & Type de sol & Type d'agriculture pratiquée \\
+\hline
+
+{% for g in gardens %}
+{{ g.name }} & {{ g.comment }} & {{ g.soil_type }} & {{ g.culture_type }} \\
+{% endfor %}
+\hline
+\end{tabular}
+
+\end{document}
