@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'planner.apps.PlannerConfig',
     'vegetables_library.apps.VegetablesLibraryConfig',
+    'research.apps.ResearchConfig',
 
 ]
 

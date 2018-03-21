@@ -19,5 +19,6 @@ from django.urls import path, include
 urlpatterns = [
     path('planner/', include('planner.urls')),
     path('vegetables_library', include('vegetables_library.urls')),
+    path('research', include('research.urls')),
     path('admin/', admin.site.urls),
 ]
