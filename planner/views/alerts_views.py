@@ -2,10 +2,12 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import TemplateView
+from django.views import View
+from django.views.generic import TemplateView, FormView
 
-from planner import queries, services
+from planner import queries, services, generate_pdf_helper
 from planner.custom_decorators import custom_login_required
+from planner.forms import ForthcomingOperationsDelayForm
 from planner.models import Garden, Vegetable, Bed, ForthcomingOperation
 
 
@@ -97,3 +99,22 @@ def delete_alert(request, garden_id, alert_id):
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
     context = {'garden': garden, 'alert_id': alert_id}
     return render(request, 'planner/modals/delete_alert_form.html', context)
+
+
+class PrintForthcomingOperations(FormView):
+    template_name = 'planner/modals/choose_period_to_print.html'
+    form_class = ForthcomingOperationsDelayForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        garden = Garden.objects.get(pk=kwargs['garden_id'])
+        context = {'garden': garden, 'form': form}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        garden_id = pk=kwargs['garden_id']
+        days_period = request.POST['delay_to_print']
+        int_period = int(days_period)
+        operations_to_print = queries.get_alert_within_notification_period(garden_id, int_period)
+        return generate_pdf_helper.forthcoming_operations_as_pdf(request, operations_to_print, garden_id)
+

@@ -41,6 +41,11 @@ urlpatterns = [
     path('<int:garden_id>/alerts/add_observation', custom_login_required(AddObservationView.as_view()),
          name='add_observation'),
 
+    # Print Alerts view
+    path('<int:garden_id>/alerts/print', custom_login_required(PrintForthcomingOperations.as_view()),
+         name='print_forthcoming_operations'),
+
+
     # Vegetables view
     path('<int:garden_id>/vegetables', vegetables_view, name='vegetables_view'),
     path('<int:garden_id>/vegetables/new', custom_login_required(AddVegetableView.as_view()),

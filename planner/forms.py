@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from django.forms import ModelForm, forms, DateInput, TimeInput
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.forms import ModelForm, forms, DateInput, TimeInput, IntegerField
 from .models import Garden, COWithDate, COWithOffset, Operation, Observation, Vegetable
 
 
@@ -15,6 +16,7 @@ class CustomTimeInput(TimeInput):
 
 class UserForm(ModelForm):
     """ Model form based on the User model """
+
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
@@ -22,6 +24,7 @@ class UserForm(ModelForm):
 
 class GardenForm(ModelForm):
     """ Model form based on the Garden model """
+
     class Meta:
         model = Garden
         fields = ['name']
@@ -29,6 +32,7 @@ class GardenForm(ModelForm):
 
 class VegetableForm(ModelForm):
     """ Model form based on the Vegetable model """
+
     class Meta:
         model = Vegetable
         fields = ['name', 'variety']
@@ -36,6 +40,7 @@ class VegetableForm(ModelForm):
 
 class CODateForm(ModelForm):
     """ Model form based for the Cultural Operation with dates model """
+
     class Meta:
         model = COWithDate
         fields = ['name', 'vegetable', 'absoluteDate', 'duration']
@@ -49,6 +54,7 @@ class CODateForm(ModelForm):
 
 class COOffsetForm(ModelForm):
     """ Model form based for the Cultural Operation with offset model """
+
     class Meta:
         model = COWithOffset
         fields = ['name', 'vegetable', 'previous_operation', 'offset_in_days', 'duration']
@@ -74,3 +80,9 @@ class ObservationForm(ModelForm):
         widgets = {
             'execution_date': CustomDateInput(),
         }
+
+
+class ForthcomingOperationsDelayForm(forms.Form):
+    delay_to_print = IntegerField(label="Durée que vous voulez imprimer, en jours", required=True, initial=5,
+                                  validators=[MaxValueValidator(100), MinValueValidator(1)]
+                                  )

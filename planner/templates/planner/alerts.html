@@ -38,6 +38,9 @@
     <div class="modal fade" id="modal-add_observation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
     </div>
+    <div class="modal fade" id="modal-print_operations" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
     <!-- Modal -->
 
     <div class="col-md-7">
@@ -50,7 +53,15 @@
         {% load planner_extras %}
         {% load l10n %}
         <div class="panel panel-default ">
-            <div class="panel-heading">Opérations à faire</div>
+            <div class="panel-heading">Opérations à faire
+                <a href="{% url 'planner:print_forthcoming_operations' garden.id %}"
+                   class="pull-right blue"
+                   data-toggle="modal"
+                   data-target="#modal-print_operations" title="Imprimer la feuille les opérations à faire"
+                   data-tooltip>
+                    <span class="glyphicon glyphicon-print"></span>
+                </a>
+            </div>
             <div class="panel-body">
 
                 <div class="table-responsive">
