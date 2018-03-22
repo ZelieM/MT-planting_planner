@@ -10,3 +10,4 @@ selenium==3.9.0
 django-widget-tweaks==1.4.1
 django-extensions==2.0.0
 coverage==4.3
+reportlab==3.4.0
