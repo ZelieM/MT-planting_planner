@@ -57,23 +57,25 @@
     // Get the canvas element used to draw the chart
     var ctx = document.getElementById("myChart").getContext("2d");
 
-    // Create an array of data
-    var data = [
-                {% for week,hours in data.items %}
-                    {{ hours }},
-                {% endfor %}
-            ]
-    console.log(data);
+    var xLabels = [
+         {% for week_number,first_day in x_axis.items %}
+            "{{ first_day }}",
+        {% endfor %}
+    ];
 
-    {# TODO Make it dynamic #}
-    var xLabels = ['01/01', '08/01', '15/01', '22/01', '29/01'];
+  // Create an array of data
+    var data = [
+                {% for week_number,work_hours in y_axis.items %}
+                    {{ work_hours }},
+                {% endfor %}
+            ];
 
     var config = {
         type: 'line',
         data: {
             labels: xLabels,
             datasets: [{
-                label: 'My First dataset',
+                label: 'Charge de travail estimée',
                 backgroundColor: window.chartColors.red,
                 borderColor: window.chartColors.red,
                 data: data,
