@@ -112,7 +112,7 @@ class PrintForthcomingOperations(FormView):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        garden_id = pk=kwargs['garden_id']
+        garden_id = kwargs['garden_id']
         days_period = request.POST['delay_to_print']
         int_period = int(days_period)
         operations_to_print = queries.get_alert_within_notification_period(garden_id, int_period)

@@ -1,6 +1,7 @@
+from datetime import date
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.forms import ModelForm, forms, DateInput, TimeInput, IntegerField
+from django.forms import ModelForm, forms, DateInput, TimeInput, IntegerField, DateField
 from .models import Garden, COWithDate, COWithOffset, Operation, Observation, Vegetable
 
 
@@ -86,3 +87,9 @@ class ForthcomingOperationsDelayForm(forms.Form):
     delay_to_print = IntegerField(label="Durée que vous voulez imprimer, en jours", required=True, initial=5,
                                   validators=[MaxValueValidator(100), MinValueValidator(1)]
                                   )
+
+
+class ExportParametersForm(forms.Form):
+    first_date = DateField(label="Depuis quelle date voulez-vous l'historique?", required=True, initial=date.today(),
+                           validators=[MaxValueValidator(date.today())], widget=CustomDateInput()
+                           )

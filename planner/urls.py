@@ -75,8 +75,7 @@ urlpatterns = [
          name='garden_edit_details'),
 
     # Export pages
-    path('<int:garden_id>/export', garden_export, name='garden_export_view'),
-    path('<int:garden_id>/export/history', export_garden_history, name='export_garden_history'),
+    path('<int:garden_id>/export', custom_login_required(ExportGardenHistoryView.as_view()), name='garden_export_view'),
 
     # Statistics page
     path('<int:garden_id>/statistics', custom_login_required(GardenStatisticsView.as_view()),
