@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_extensions',
     'django.contrib.humanize',
+    'django.contrib.admindocs',
     'planner.apps.PlannerConfig',
     'vegetables_library.apps.VegetablesLibraryConfig',
     'research.apps.ResearchConfig',

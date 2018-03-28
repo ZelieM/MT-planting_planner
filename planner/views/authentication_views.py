@@ -54,7 +54,9 @@ class GardenSelectionView(View):
         form = self.form_class(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            new_garden = form.save()
+            new_garden = form.save(commit=False)
+            new_garden.reference_email = request.user.email
+            new_garden.save()
             new_garden.users.add(request.user)
             nextpage = new_garden.get_absolute_url()
             return HttpResponseRedirect(nextpage)

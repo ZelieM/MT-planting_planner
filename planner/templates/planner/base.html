@@ -54,6 +54,8 @@
                         href="{% url 'planner:garden_view' garden.id %}">Mes planches</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="{% url 'planner:garden_statistics_view' garden.id %}"><span
+                        class="glyphicon glyphicon-stats"></span> </a></li>
                 <li><a href="{% url 'planner:garden_export_view' garden.id %}"><span
                         class="glyphicon glyphicon-export"></span> </a></li>
                 <li><a href="{% url 'planner:garden_settings_view' garden.id %}"><span

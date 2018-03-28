@@ -19,22 +19,6 @@
     {% endif %}
 
 
-    <div class="container col-md-6 col-md-offset-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">Heures de travail par semaine</div>
-            <div class="panel-body">
-                <ul class="list-group">
-                    {% for week,hours in data.items %}
-                        <li class="list-group-item list-group-item-action">
-                            {{ week }}
-                            {{ hours }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </div>
-
     <div class="container col-md-12">
         <div id="chart_div">
             <canvas id="myChart" width="400" height="200"></canvas>
@@ -101,7 +85,7 @@
         options: {
             responsive: true,
             title: {
-                display: true,
+                display: false,
                 text: 'Line Chart : hours by week'
             },
             tooltips: {

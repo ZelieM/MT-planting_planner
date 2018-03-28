@@ -15,6 +15,7 @@ TYPE_MAX_LENGTH = 100
 class Garden(models.Model):
     name = models.CharField(unique=True, max_length=NAME_MAX_LENGTH, verbose_name="Nom du jardin")
     users = models.ManyToManyField(User)
+    reference_email = models.EmailField(_('email address'), blank=True)
     notification_delay = models.IntegerField(default=5)
     comment = models.TextField(blank=True, default="", verbose_name="Description libre du jardin")
     soil_type = models.CharField(max_length=TYPE_MAX_LENGTH, blank=True, default="", verbose_name='Type de sol')
