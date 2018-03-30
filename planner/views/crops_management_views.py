@@ -15,13 +15,12 @@ class CropsIndexView(View):
 
     def get(self, request, **kwargs):
         garden = get_object_or_404(Garden, pk=kwargs['garden_id'])
-        current_period = services.get_current_production_period(kwargs['garden_id'])
         surfaces = garden.bed_set.all()
         beds = []
         for s in surfaces:
             if isinstance(s, Bed):
                 beds.append(s)
-        c = {'garden': garden, 'beds': beds, 'current_period': current_period}
+        c = {'garden': garden, 'beds': beds}
         return render(request, self.template_name, context=c)
 
 

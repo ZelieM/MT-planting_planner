@@ -32,8 +32,8 @@ def add_seed(request, garden_id):
         #     production_period=services.get_current_production_period(garden_id),
         #     vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface_id=surface)
         vegetable_concerned = Vegetable.objects.get(pk=vegetable_id).name
-        if services.add_new_plantation_to_alerts(production_period=services.get_current_production_period(garden_id),
-                                                 vegetable_id=vegetable_id, label=request.POST['seeding_label'],
+        garden = Garden.objects.get(pk=garden_id)
+        if services.add_new_plantation_to_alerts(garden=garden, vegetable_id=vegetable_id, label=request.POST['seeding_label'],
                                                  surface_id=surface):
             success_message = 'Vous ({}) avez ajouté une plantation de {} '.format(
                 request.user.username, vegetable_concerned)

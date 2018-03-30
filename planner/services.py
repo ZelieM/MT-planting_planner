@@ -1,11 +1,11 @@
 from datetime import timedelta, date, datetime
 
 from planner.models import CulturalOperation, ForthcomingOperation, COWithDate, COWithOffset, Operation, History, \
-    ProductionPeriod, HistoryItem, Vegetable, Bed, CultivatedArea
+    HistoryItem, Vegetable, Bed, CultivatedArea
 from planner.templatetags.planner_extras import register
 
 
-def add_new_plantation_to_alerts(production_period, vegetable_id, label, surface_id):
+def add_new_plantation_to_alerts(garden, vegetable_id, label, surface_id):
     """ Create a cultivated area on the surface surface_id with the vegetable vegetable_id and with a label.
     The list of operations related to this vegetable are added as undone to the list of alerts
     Return true if the plantation has been added successfully and False if an existing plantation already existed on
@@ -14,7 +14,7 @@ def add_new_plantation_to_alerts(production_period, vegetable_id, label, surface
     if CultivatedArea.objects.filter(vegetable_id=vegetable_id, label=label, surface_id=surface_id, is_active=True):
         return False  # There is already a cultivated area with all the same properties
     else:
-        cultivated_area = CultivatedArea.objects.create(production_period=production_period, vegetable_id=vegetable_id,
+        cultivated_area = CultivatedArea.objects.create(garden=garden, vegetable_id=vegetable_id,
                                                         label=label, surface_id=surface_id)
         vegetable_seeded = cultivated_area.vegetable_id
         # All the operation relative to this vegetable are added to alerts
@@ -86,23 +86,13 @@ def mark_operation_as_deleted(operation, executor, note=""):
     operation.save()
 
 
-def get_current_production_period(garden_id):
-    """ Return the current, and thus active, production period of the garden with id garden_id """
-    if not ProductionPeriod.objects.filter(garden_id=garden_id):
-        # If this garden doesn't have an active production period, create a new one starting now
-        ProductionPeriod.objects.create(label="first_period", start_date=datetime.today(), garden_id=garden_id)
-    # Take the latest production period of this garden, supposed still active
-    return ProductionPeriod.objects.filter(garden_id=garden_id).latest('start_date')
-
-
 def get_current_history(garden_id):
-    production_period = get_current_production_period(garden_id)
     try:
-        history = History.objects.get(production_period=production_period)
+        history = History.objects.get(garden_id=garden_id)
         return history
     except History.DoesNotExist:
         # If this garden doesn't have an active history, create a new one
-        return History.objects.create(production_period=production_period)
+        return History.objects.create(garden_id=garden_id)
 
 
 def get_history_items(history_id):  # pragma: no cover

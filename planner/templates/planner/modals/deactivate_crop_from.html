@@ -6,9 +6,11 @@
                     class="sr-only">Close</span></button>
             <h4 class="modal-title" id="myModalLabel"> Cloture d'une plantation </h4>
         </div>
+
         <form action="{% url 'planner:deactivate_cultivated_area_view' garden.id area_id%}" name=""
               role="form" class="" method="post" accept-charset="utf-8">
             <div class="modal-body">
+                <p> Complétez les détails concernant la récolte de cette plantation</p>
                 {% csrf_token %}
                 {{ form|crispy }}
 

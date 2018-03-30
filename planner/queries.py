@@ -1,6 +1,6 @@
 from planner import services
-from planner.models import CulturalOperation, ProductionPeriod, COWithDate, COWithOffset, \
-    ForthcomingOperation, CultivatedArea, Garden, History, HistoryItem
+from planner.models import CulturalOperation, COWithDate, COWithOffset, ForthcomingOperation, CultivatedArea, Garden, \
+    History, HistoryItem
 from datetime import datetime, timedelta, date
 
 
@@ -9,11 +9,11 @@ def get_alert_within_notification_period(garden_id, notification_delay):
      Based on the undone alerts, their original cultural operation and en eventual postponement
      """
     future_alerts = get_future_alerts(garden_id)
-    garden_id = get_past_alerts(garden_id)
+    past_alerts = get_past_alerts(garden_id)
     time_delta = date.today() + timedelta(days=notification_delay)
     todo = []
     for a in future_alerts:
-        if services.get_due_date(a, garden_id) < time_delta:
+        if services.get_due_date(a, past_alerts) < time_delta:
             todo.append(a)
     return sorted(todo, key=get_operation_due_date)
 
@@ -42,9 +42,8 @@ def done_alerts(garden_id):
 
 
 def get_garden_areas(garden_id):
-    """ Return the garden's areas of the current production period of the garden """
-    return CultivatedArea.objects.filter(production_period=services.get_current_production_period(garden_id),
-                                         is_active=True)
+    """ Return the active garden's areas of the garden """
+    return CultivatedArea.objects.filter(garden_id=garden_id, is_active=True)
 
 
 def get_operation_due_date(forthcomingoperation):

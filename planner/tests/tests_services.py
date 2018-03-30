@@ -16,9 +16,7 @@ class ServicesTests(TestCase):
         v1 = Vegetable.objects.create(name="Carrots", garden=garden)
         op1 = COWithDate.objects.create(name="FirstOP", vegetable=v1, absoluteDate=date(2017, 12, 6))
         COWithDate.objects.create(name="SecondOP", vegetable=v1, absoluteDate=date(2017, 10, 8))
-        CultivatedArea.objects.create(vegetable=v1,
-                                      production_period=queries.services.get_current_production_period(garden.id),
-                                      label='area1', surface=surface1)
+        CultivatedArea.objects.create(vegetable=v1, garden=garden, label='area1', surface=surface1)
         COWithOffset.objects.create(name="OffsetOp", vegetable=v1, previous_operation=op1, offset_in_days=5)
 
     def test_get_due_date(self):
@@ -103,17 +101,12 @@ class ServicesTests(TestCase):
     def test_add_initial_operation_to_alerts(self):
         vegetable = self.create_vegetable_with_alerts()
         surface = Bed.objects.create(name="MySurface", garden_id=vegetable.garden_id, length=150, width=250)
-        # area = CultivatedArea.objects.create(vegetable=vegetable,
-        #                                      production_period=queries.services.get_current_production_period(
-        #                                          vegetable.garden_id),
-        #                                      label='area2', surface=surface)
         with self.assertRaises(CultivatedArea.DoesNotExist):
             CultivatedArea.objects.get(label="area2")
-        queries.services.add_new_plantation_to_alerts(
-            production_period=queries.services.get_current_production_period(vegetable.garden_id),
-            vegetable_id=vegetable.id,
-            label="area2", surface_id=surface.id)
-        self.assertEqual(len(ForthcomingOperation.objects.filter(area_concerned=CultivatedArea.objects.get(label="area2"))), 3)
+        queries.services.add_new_plantation_to_alerts(garden=Garden.objects.get(pk=vegetable.garden_id),
+                                                      vegetable_id=vegetable.id, label="area2", surface_id=surface.id)
+        self.assertEqual(
+            len(ForthcomingOperation.objects.filter(area_concerned=CultivatedArea.objects.get(label="area2"))), 3)
         self.assertFalse(ForthcomingOperation.objects.get(
             original_cultural_operation=COWithDate.objects.get(name="Seeding")).is_done)
         self.assertFalse(ForthcomingOperation.objects.get(

@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from planner import queries
 from planner.compute_statistics import from_timedelta_to_hours, get_future_work_hours_by_week, get_max_operations_date
-from planner.models import Garden, Vegetable, COWithDate, COWithOffset, Bed, ProductionPeriod
+from planner.models import Garden, Vegetable, COWithDate, COWithOffset, Bed
 
 OP1_NAME = "OP1"
 OP2_NAME = "OP2"
@@ -30,11 +30,8 @@ class ComputeStatisticsTests(TestCase):
                                                        absoluteDate=OP3_DATE,
                                                        duration=timedelta(seconds=72))
 
-        self.production_period = ProductionPeriod.objects.create(garden=self.garden, start_date=OP1_DATE,
-                                                                 label="Production period")
-
-        queries.services.add_new_plantation_to_alerts(production_period=queries.services.get_current_production_period(
-            self.garden.id), label='area1', surface_id=self.surface1.id, vegetable_id=self.vegetable1.id)
+        queries.services.add_new_plantation_to_alerts(garden=self.garden, label='area1', surface_id=self.surface1.id,
+                                                      vegetable_id=self.vegetable1.id)
 
     def test_get_hours_from_timedelta(self):
         delta1 = timedelta(days=3, hours=2)

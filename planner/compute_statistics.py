@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 
 from planner import services, queries
+from planner.models import Operation
 
 
 def get_max_operations_date(operations, past_operations):
@@ -16,12 +17,37 @@ def get_max_operations_date(operations, past_operations):
     :return: the maximum due date
     :rtype: date
     """
-    max_operation_date = None
+    max_operation_date = date.today()
     for operation in operations:
         operation_due_date = services.get_due_date(operation, past_operations)
         if max_operation_date is None or operation_due_date > max_operation_date:
             max_operation_date = operation_due_date
     return max_operation_date
+
+
+def get_min_operations_date(future_operations, past_operations):
+    """
+    Iterate over the list of given operations and return the minimum due date
+
+    :param operations: a list of operations
+    :type operations: list
+
+    :param past_operations: a list of past operations
+    :type past_operations: list
+
+    :return: the maximum due date
+    :rtype: date
+    """
+    min_operation_date = date.today()
+    for operation in future_operations:
+        operation_due_date = services.get_due_date(operation, past_operations)
+        if min_operation_date is None or operation_due_date < min_operation_date:
+            min_operation_date = operation_due_date
+    for operation in past_operations:
+        operation_due_date = Operation.objects.get(original_alert=operation).execution_date
+        if min_operation_date is None or operation_due_date < min_operation_date:
+            min_operation_date = operation_due_date
+    return min_operation_date
 
 
 def get_future_work_hours_by_week(garden_id):
@@ -33,7 +59,7 @@ def get_future_work_hours_by_week(garden_id):
     x_axis = {}
     y_axis = {}
     # Get production period. Its start date will be used as the first value of the X axis.
-    production_start_date = services.get_current_production_period(garden_id).start_date
+    production_start_date = get_min_operations_date(future_operations, past_operations)
     # Get the production end date. It will be used as the last value of the X axis.
     production_end_date = get_max_operations_date(future_operations, past_operations)
 

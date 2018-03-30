@@ -83,17 +83,6 @@ class COWithDate(CulturalOperation):
         return self.absoluteDate
 
 
-class ProductionPeriod(models.Model):
-    """ A garden has a set of production period.s A production period can be a calendar year, but not only"""
-    start_date = models.DateField()
-    end_date = models.DateField(blank=True, null=True)
-    garden = models.ForeignKey(Garden, on_delete=models.CASCADE, unique_for_date=start_date)
-    label = models.CharField(max_length=100)
-
-    def __str__(self):
-        return "Production period starting :" + str(self.start_date)
-
-
 class Bed(models.Model):
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
     name = models.CharField(max_length=NAME_MAX_LENGTH)
@@ -134,7 +123,7 @@ class Bed(models.Model):
 
 class CultivatedArea(models.Model):
     vegetable = models.ForeignKey(Vegetable, blank=True, null=True, on_delete=models.SET_NULL)
-    production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
+    garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
     surface = models.ForeignKey(Bed, on_delete=models.CASCADE)
     label = models.TextField()
     # Following attributes are related to the harvest of this cultivated area
@@ -160,7 +149,7 @@ class ForthcomingOperation(models.Model):
 
 
 class History(models.Model):
-    production_period = models.OneToOneField(ProductionPeriod, on_delete=models.CASCADE)
+    garden = models.OneToOneField(Garden, on_delete=models.CASCADE)
 
 
 class HistoryItem(models.Model):

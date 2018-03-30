@@ -11,13 +11,12 @@ from planner.models import Garden, Bed
 @custom_login_required
 def garden_view(request, garden_id):
     garden = get_object_or_404(Garden, pk=garden_id)
-    current_period = services.get_current_production_period(garden_id)
     surfaces = garden.bed_set.all()
     beds = []
     for s in surfaces:
         if isinstance(s, Bed):
             beds.append(s)
-    c = {'garden': garden, 'beds': beds, 'current_period': current_period}
+    c = {'garden': garden, 'beds': beds}
     return render(request, 'planner/bed_list.html', context=c)
 
 
