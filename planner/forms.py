@@ -2,7 +2,7 @@ from datetime import date
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms import ModelForm, forms, DateInput, TimeInput, IntegerField, DateField
-from .models import Garden, COWithDate, COWithOffset, Operation, Observation, Vegetable, HarvestDetails
+from .models import Garden, COWithDate, COWithOffset, Operation, Observation, Vegetable, CultivatedArea
 
 
 class CustomDateInput(DateInput):
@@ -100,7 +100,7 @@ class HarvestForm(ModelForm):
     Form model to register harvest details when closing a cultivated area
    """
     class Meta:
-        model = HarvestDetails
+        model = CultivatedArea
         fields = ['harvest_date', 'kg_produced', 'total_selling_price']
         widgets = {
             'harvest_date': CustomDateInput(),

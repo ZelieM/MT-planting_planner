@@ -5,7 +5,7 @@ from planner import services, queries
 
 from datetime import date, timedelta
 
-from planner.models import Operation, ForthcomingOperation, CultivatedArea, HarvestDetails
+from planner.models import Operation, ForthcomingOperation, CultivatedArea
 
 register = template.Library()
 
@@ -67,13 +67,13 @@ def inactive_cultivated_areas(bed):
 
 
 @register.simple_tag
-def harvest_details(cultivated_area_id):
-    return HarvestDetails.objects.filter(area_concerned_id=cultivated_area_id)
-
-
-@register.simple_tag
 def productivity(harvest_details):
-    return round(harvest_details.total_selling_price / harvest_details.kg_produced, 2)
+    price = harvest_details.total_selling_price
+    kg = harvest_details.kg_produced
+    if price != 0 and kg != 0:
+        return round(price/kg, 2)
+    else:
+        return 0
 
 
 @register.filter

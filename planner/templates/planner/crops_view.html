@@ -48,12 +48,10 @@
                                 {% for ca in inactive_cultivated_areas %}
                                     <li class="list-group-item list-group-item-action" data-toggle="collapse"
                                         href="#collapse-ca{{ ca.id }}" class="clickable">
-                                        {{ ca.label }} : {{ ca.vegetable }}
+                                        {{ ca.label }} : {{ ca.vegetable }} ({{ ca.harvest_date|date:"F Y"}})
                                         <span class="pull-right glyphicon glyphicon-chevron-down"></span>
                                         <div id="collapse-ca{{ ca.id }}" class="collapse">
                                             <br>
-                                            {% harvest_details ca.id as previous_harvests_details %}
-                                            {% if previous_harvests_details %}
                                                 <table class="table table-hover table-bordered table-responsive ">
                                                     <tr>
                                                         <th>Date de récolte</th>
@@ -63,22 +61,21 @@
                                                         <th> Rendement (€/kg)</th>
                                                         <th> Editer</th>
                                                     </tr>
-                                                    {% for hd in previous_harvests_details %}
                                                         <tr>
                                                             <td class="col-md-3">
-                                                                {{ hd.harvest_date }}
+                                                                {{ ca.harvest_date }}
                                                             </td>
                                                             <td class="col-md-3">
-                                                                {{ hd.kg_produced }}
+                                                                {{ ca.kg_produced }}
                                                             </td>
                                                             <td>
-                                                                {{ hd.total_selling_price }}
+                                                                {{ ca.total_selling_price }}
                                                             </td>
                                                             <td>
-                                                                {% productivity hd %}
+                                                                {% productivity ca %}
                                                             </td>
                                                             <td>
-                                                                <a href=""
+                                                                <a href="{% url 'planner:deactivate_cultivated_area_view' garden.id ca.id%}"
                                                                    class="pull-right blue"
                                                                    data-toggle="modal"
                                                                    data-target="#modal-deactivate_cultivated_area"
@@ -87,11 +84,8 @@
                                                                 </a>
                                                             </td>
                                                         </tr>
-                                                    {% endfor %}
+
                                                 </table>
-                                            {% else %}
-                                                <p> Pas de détails sur cette récolte </p>
-                                            {% endif %}
                                         </div>
                                     </li>
                                 {% endfor %}

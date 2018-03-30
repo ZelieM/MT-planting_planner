@@ -137,19 +137,15 @@ class CultivatedArea(models.Model):
     production_period = models.ForeignKey(ProductionPeriod, on_delete=models.CASCADE)
     surface = models.ForeignKey(Bed, on_delete=models.CASCADE)
     label = models.TextField()
-    is_active = models.BooleanField(default=True)
+    # Following attributes are related to the harvest of this cultivated area
+    is_active = models.BooleanField(default=True)  # Set to false when we harvest this cropping
+    harvest_date = models.DateField(null=True)
+    executor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    kg_produced = models.IntegerField(blank=True, default=0)
+    total_selling_price = models.IntegerField(blank=True, default=0)
 
     def __str__(self):
         return self.label
-
-
-class HarvestDetails(models.Model):
-    harvest_date = models.DateField()
-    executor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    area_concerned = models.OneToOneField(CultivatedArea, on_delete=models.CASCADE)
-    kg_produced = models.IntegerField(blank=True, default=0)
-    total_selling_price = models.IntegerField(blank=True, default=0)
-    # TODO Ensure there is only one area_concerned by harvest
 
 
 class ForthcomingOperation(models.Model):
