@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.urls import reverse
 from model_utils.managers import InheritanceManager
@@ -175,3 +176,9 @@ class Operation(HistoryItem):
     duration = models.DurationField(blank=True, null=True)
     is_deletion = models.BooleanField(default=False)
     original_alert = models.ForeignKey(ForthcomingOperation, on_delete=models.SET_NULL, blank=True, null=True)
+
+
+class Harvest(HistoryItem):
+    kg_produced = models.IntegerField(blank=True, default=0)
+    total_selling_price = models.IntegerField(blank=True, default=0)
+    # TODO Ensure there is only one area_concerned by harvest

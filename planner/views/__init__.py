@@ -9,3 +9,4 @@ from .export_data_views import *
 from .history_views import *
 from .garden_statistics_views import *
 from .vegetables_import_views import *
+from .crops_management_views import *

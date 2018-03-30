@@ -83,18 +83,3 @@ class BedDelete(DeleteView):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
 
 
-class DeactivateCultivatedArea(FormView):
-    template_name = 'planner/modals/delete_confirmation_form.html'
-    confirmation_text = "Êtes-vous sur de vouloir marquer cette plantation comme inactive? "
-
-    def get(self, request, *args, **kwargs):
-        garden = Garden.objects.get(pk=self.kwargs["garden_id"])
-        context = {'garden': garden, 'confirmation_text': self.confirmation_text, 'area_id': self.kwargs['area_id']}
-        return render(request, self.template_name, context)
-
-    def post(self, request, **kwargs):
-        services.deactivate_cultivated_area(self.kwargs['area_id'], request.user)
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})

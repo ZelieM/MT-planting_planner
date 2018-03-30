@@ -1,0 +1,22 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}
+\contentsline {chapter}{\numberline {2}Problem analysis in market gardening}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}In market gardening}{3}{section.2.1}
+\contentsline {paragraph}{Market gardening}{3}{section*.3}
+\contentsline {paragraph}{Bed}{3}{section*.4}
+\contentsline {paragraph}{Crop rotation}{4}{section*.5}
+\contentsline {paragraph}{Work hours}{4}{section*.6}
+\contentsline {paragraph}{Planification}{4}{section*.7}
+\contentsline {section}{\numberline {2.2}Combining these two fields, what is the state of the art ? }{4}{section.2.2}
+\contentsline {chapter}{\numberline {3}Problem analysis in software engineering}{5}{chapter.3}
+\contentsline {section}{\numberline {3.1}In computer science and in software engineering}{5}{section.3.1}
+\contentsline {paragraph}{Agile Methodology}{5}{section*.10}
+\contentsline {paragraph}{Python}{6}{section*.11}
+\contentsline {paragraph}{Software framework}{6}{section*.13}
+\contentsline {paragraph}{Django}{6}{section*.15}
+\contentsline {paragraph}{Continuous Integration}{6}{section*.17}
+\contentsline {chapter}{\numberline {4}Solution}{7}{chapter.4}
+\contentsline {chapter}{\numberline {5}Architecture}{8}{chapter.5}
+\contentsline {chapter}{\numberline {6}Implementation}{9}{chapter.6}
+\contentsline {chapter}{\numberline {7}Validation}{10}{chapter.7}
+\contentsline {chapter}{\numberline {8}Conclusion and future work}{11}{chapter.8}

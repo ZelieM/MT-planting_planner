@@ -26,6 +26,9 @@ urlpatterns = [
          name='delete_bed'),
     # path('<int:bedid>/delete_bed', views.delete_bed, name='delete_bed'),
     path('<int:garden_id>/', garden_view, name='garden_view'),
+
+    # Crops management
+    path('<int:garden_id>/crops', custom_login_required(CropsIndexView.as_view()), name='crops_view'),
     path('<int:garden_id>/<int:area_id>/terminate_cropping',
          custom_login_required(DeactivateCultivatedArea.as_view()),
          name='deactivate_cultivated_area_view'),

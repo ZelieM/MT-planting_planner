@@ -1,0 +1,120 @@
+{% extends "planner/base.html" %}
+
+{% block content %}
+    {# View containing the list of beds of the current garden and a form to add new beds #}
+    {% if beds %}
+
+        <div class="modal fade" id="modal-deactivate_cultivated_area" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel"
+             aria-hidden="true">
+        </div>
+        {% load planner_extras %}
+
+        {% for b in beds %}
+            <div class="panel panel-success ">
+                <div class="panel-heading"> {{ b.name }}</div>
+                <div class="panel-body bed_panel">
+
+                    {% active_cultivated_areas b.id as active_cultivated_areas %}
+                    {% inactive_cultivated_areas b.id as inactive_cultivated_areas %}
+                    <div class="panel-group">
+                        {# CURRENT #}
+                        <h4> Plantations en cours</h4>
+                        <ul class="list-group">
+                            {% if active_cultivated_areas %}
+                                {% for ca in active_cultivated_areas %}
+                                    <li class="list-group-item list-group-item-action">
+                                        {{ ca.label }} : {{ ca.vegetable }}
+                                        <a href="{% url 'planner:deactivate_cultivated_area_view' garden.id ca.id %}"
+                                           class="pull-right red"
+                                           data-toggle="modal"
+                                           data-target="#modal-deactivate_cultivated_area"
+                                           title="Désactiver cette plantation" data-tooltip>
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <li class="list-group-item list-group-item-action">
+                                    Pas de plantations actives sur cette planche
+                                </li>
+                            {% endif %}
+                        </ul>
+
+                        {# HISTORY #}
+                        <h4> Historique de la planche </h4>
+                        <ul class="list-group">
+                            {% if inactive_cultivated_areas %}
+                                {% for ca in inactive_cultivated_areas %}
+                                    <li class="list-group-item list-group-item-action" data-toggle="collapse"
+                                        href="#collapse-ca{{ ca.id }}" class="clickable">
+                                        {{ ca.label }} : {{ ca.vegetable }}
+                                        <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+                                        <div id="collapse-ca{{ ca.id }}" class="collapse">
+                                            <br>
+                                            {% harvest_details ca.id as previous_harvests_details %}
+                                            {% if previous_harvests_details %}
+                                                <table class="table table-hover table-bordered table-responsive ">
+                                                    <tr>
+                                                        <th>Date de récolte</th>
+                                                        <th>Production (kg)</th>
+
+                                                        <th> Prix de vente (€)</th>
+                                                        <th> Rendement (€/kg)</th>
+                                                        <th> Editer</th>
+                                                    </tr>
+                                                    {% for hd in previous_harvests_details %}
+                                                        <tr>
+                                                            <td class="col-md-3">
+                                                                {{ hd.execution_date }}
+                                                            </td>
+                                                            <td class="col-md-3">
+                                                                {{ hd.kg_produced }}
+                                                            </td>
+                                                            <td>
+                                                                {{ hd.total_selling_price }}
+                                                            </td>
+                                                            <td>
+                                                                {% productivity hd %}
+                                                            </td>
+                                                            <td>
+                                                                <a href=""
+                                                                   class="pull-right blue"
+                                                                   data-toggle="modal"
+                                                                   data-target="#modal-deactivate_cultivated_area"
+                                                                   title="Editer les données de récolte" data-tooltip>
+                                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </table>
+                                            {% else %}
+                                                <p> Pas de détails sur cette récolte </p>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                {% endfor %}
+
+                            {% else %}
+                                <li class="list-group-item list-group-item-action">
+                                    Il n'y a pas d'historique de plantations pour cette planche
+                                </li>
+
+                            {% endif %}
+                        </ul>
+
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Pas de planches sur ce jardin</p>
+    {% endif %}
+
+
+    {% load static %}
+    <script src="{% static 'planner/js/activate_modal.js' %}"></script>
+
+{% endblock content %}

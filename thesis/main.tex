@@ -1,0 +1,78 @@
+% EPL master thesis cover template
+\documentclass{eplmastersthesis}
+
+% Fill in here the information: title, student name, speciality, jury members
+\title{Title of the master thesis}	% Master thesis title
+\subtitle{Subtitle (optional)}			% Optional subtitle
+\author{Zélie \textsc{Mulders}}	% Student name
+% \secondauthor{Firstname \textsc{Lastname}}	% Second student name if applicable
+\speciality{Computer Science and Engineering}		% Speciality (use one of the following options):
+										% Biomedical Engineering
+										% Chemical and Materials Engineering
+										% Civil Engineering
+										% Computer Science
+										% Computer Science and Engineering
+										% Electrical Engineering
+										% Electro-mechanical Engineering
+										% Mathematical Engineering
+										% Mechanical Engineering
+										% Physical Engineering
+%\options{Option(s)}		% If required by program commission mention options
+\supervisor{Kim \textsc{Mens}}	% 1st supervisor name
+\cosupervisor{Philippe \textsc{Baret}}	% 2nd supervisor name if applicable
+\cosupervisortwo{Adrien \textsc{Dockx}}
+\readerone{Hélène \textsc{Verhaege}}		% 1st reader name
+% \readertwo{Firstname \textsc{Lastname}}		% 2nd reader name
+% \readerthree{Firstname \textsc{Lastname}}	% 3rd reader name
+\years{2017-2018}	% Academic year
+
+\input{packages.tex}
+
+\begin{document}
+
+\maketitle					% To create front cover page
+
+\thispagestyle{empty}		% To suppress header and footer on the back of the cover page
+
+\tableofcontents
+
+
+
+
+\chapter{Introduction}
+% \input{Introduction.tex}
+
+
+\chapter{Problem analysis in market gardening}
+\input{ProblemAnalysis-Agro.tex}
+
+\chapter{Problem analysis in software engineering}
+\input{ProblemAnalysis-Techno.tex}
+
+\chapter{Solution}
+% \input{Problem.tex}
+
+% \chapter{Analysis and methodology}
+% \input{Analysis.tex}
+
+\chapter{Architecture}
+% \input{Architecture.tex}
+
+\chapter{Implementation}
+% \input{Implementation.tex}
+
+\chapter{Validation}
+% \input{Validation.tex}
+
+\chapter{Conclusion and future work}
+% \input{Conclusion.tex}
+
+
+
+\nocite{*} %pour qu'il affiche meme les non citées % BIEN JOUÉ =D
+\bibliographystyle{plain}
+\bibliography{biblio.bib}
+
+% Back cover page
+\backcoverpage
+\end{document}

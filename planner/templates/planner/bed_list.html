@@ -86,58 +86,37 @@
                     </td>
                 </tr>
             {% endfor %}
-
-            {#            <form action="{% url 'planner:add_bed' garden.id %}" name="addbed" role="form" class="form-horizontal"#}
-            {#                  method="post" accept-charset="utf-8">#}
-            {#                {% csrf_token %}#}
-            {#                <div class="form-group">#}
-            {#                    <tr>#}
-            {#                        <td class="col-md-3"><input name="bedname" placeholder="Nom de la planche" class="form-control"#}
-            {#                                                    type="text" id="BedName"/></td>#}
-            {#                        <td class="col-md-3"><input name="bedlength" placeholder="Longueur de la planche"#}
-            {#                                                    class="form-control" type="number" id="BedLength" maxlength="15"/>#}
-            {#                        </td>#}
-            {#                        <td class="col-md-3"><input name="bedwidth" placeholder="Largeur de la planche"#}
-            {#                                                    class="form-control" type="number" id="BedWidth" maxlength="15"/>#}
-            {#                        </td>#}
-            {#                        <td class="col-md-3"><input class="btn btn-success" type="submit" value="Ajouter"/></td>#}
-            {#                    </tr>#}
-            {#                </div>#}
-            {#            </form>#}
         </table>
 
 
-
-
-
-        {% for b in beds %}
-            <div class="panel panel-success ">
-                <div class="panel-heading"> {{ b.name }} - Plantations en cours</div>
-                <div class="panel-body bed_panel">
-                    <ul class="list-group">
-                        {% active_cultivated_areas b.id as cultivated_areas %}
-                        {% if cultivated_areas %}
-                            {% for ca in cultivated_areas %}
-                                <li class="list-group-item list-group-item-action">
-                                    {{ ca.label }} : {{ ca.vegetable }}
-                                    <a href="{% url 'planner:deactivate_cultivated_area_view' garden.id ca.id %}"
-                                       class="pull-right red"
-                                       data-toggle="modal"
-                                       data-target="#modal-deactivate_cultivated_area"
-                                       title="Désactiver cette plantation" data-tooltip>
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        {% else %}
-                            <li class="list-group-item list-group-item-action">
-                                Pas de plantations actives sur cette planche
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        {% endfor %}
+{#        {% for b in beds %}#}
+{#            <div class="panel panel-success ">#}
+{#                <div class="panel-heading"> {{ b.name }} - Plantations en cours</div>#}
+{#                <div class="panel-body bed_panel">#}
+{#                    <ul class="list-group">#}
+{#                        {% active_cultivated_areas b.id as cultivated_areas %}#}
+{#                        {% if cultivated_areas %}#}
+{#                            {% for ca in cultivated_areas %}#}
+{#                                <li class="list-group-item list-group-item-action">#}
+{#                                    {{ ca.label }} : {{ ca.vegetable }}#}
+{#                                    <a href="{% url 'planner:deactivate_cultivated_area_view' garden.id ca.id %}"#}
+{#                                       class="pull-right red"#}
+{#                                       data-toggle="modal"#}
+{#                                       data-target="#modal-deactivate_cultivated_area"#}
+{#                                       title="Désactiver cette plantation" data-tooltip>#}
+{#                                        <span class="glyphicon glyphicon-remove"></span>#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                            {% endfor %}#}
+{#                        {% else %}#}
+{#                            <li class="list-group-item list-group-item-action">#}
+{#                                Pas de plantations actives sur cette planche#}
+{#                            </li>#}
+{#                        {% endif %}#}
+{#                    </ul>#}
+{#                </div>#}
+{#            </div>#}
+{#        {% endfor %}#}
     {% else %}
         <p>Pas de planches sur ce jardin</p>
 
