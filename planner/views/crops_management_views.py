@@ -7,7 +7,7 @@ from django.views.generic import FormView, CreateView
 
 from planner import services
 from planner.forms import CustomDateInput, HarvestForm
-from planner.models import Garden, Bed, Harvest
+from planner.models import Garden, Bed, HarvestDetails
 
 
 class CropsIndexView(View):

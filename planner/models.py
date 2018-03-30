@@ -143,6 +143,15 @@ class CultivatedArea(models.Model):
         return self.label
 
 
+class HarvestDetails(models.Model):
+    harvest_date = models.DateField()
+    executor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    area_concerned = models.OneToOneField(CultivatedArea, on_delete=models.CASCADE)
+    kg_produced = models.IntegerField(blank=True, default=0)
+    total_selling_price = models.IntegerField(blank=True, default=0)
+    # TODO Ensure there is only one area_concerned by harvest
+
+
 class ForthcomingOperation(models.Model):
     area_concerned = models.ForeignKey(CultivatedArea, on_delete=models.CASCADE)
     original_cultural_operation = models.ForeignKey(CulturalOperation, on_delete=models.CASCADE)
@@ -177,8 +186,3 @@ class Operation(HistoryItem):
     is_deletion = models.BooleanField(default=False)
     original_alert = models.ForeignKey(ForthcomingOperation, on_delete=models.SET_NULL, blank=True, null=True)
 
-
-class Harvest(HistoryItem):
-    kg_produced = models.IntegerField(blank=True, default=0)
-    total_selling_price = models.IntegerField(blank=True, default=0)
-    # TODO Ensure there is only one area_concerned by harvest
