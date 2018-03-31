@@ -7,14 +7,6 @@ For more information on this file, see
 https://docs.djangoproject.com/en/2.0/howto/deployment/wsgi/
 """
 
-import os
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "planting_planner.settings.production")
-
-from django.core.wsgi import get_wsgi_application
-
-application = get_wsgi_application()
-
 
 import json
 from django.core.exceptions import ImproperlyConfigured
@@ -31,3 +23,14 @@ def get_secret(setting, secret=secrets):
         raise ImproperlyConfigured(error_msg)
 
 SECRET_KEY = get_secret("SECRET_KEY")
+
+import os
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "planting_planner.settings.production")
+
+from django.core.wsgi import get_wsgi_application
+
+application = get_wsgi_application()
+
+
+
