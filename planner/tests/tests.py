@@ -19,10 +19,10 @@ class GardenModelTests(TestCase):
 
     def test_login_and_access(self):
         c = Client()
-        response = c.get('/planner/garden_selection')
+        response = c.get('/garden_selection')
         self.assertEqual(response.status_code, 302)  # Access to garden selection not possible without login
         response = c.login(username='john', password='smith', email="john@smith.com")
         self.assertTrue(response)
-        response = c.get('/planner/garden_selection')
+        response = c.get('/garden_selection')
         self.assertEqual(response.status_code, 200)
 

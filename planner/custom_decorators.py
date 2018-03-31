@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 
 
-def custom_login_required(function=None, login_url="/planner/login/"):
+def custom_login_required(function=None, login_url="/login/"):
     """
     Custome decorator with a login url set based on this application
     """
