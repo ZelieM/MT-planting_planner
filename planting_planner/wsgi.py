@@ -13,7 +13,7 @@ import json
 from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = os.path.dirname(__file__)
-key = os.path.join(BASE_DIR, "secrets.json")
+key = os.path.join(BASE_DIR, "settings/secrets/secrets.json")
 with open(key) as f:
     secrets = json.loads(f.read())
 
