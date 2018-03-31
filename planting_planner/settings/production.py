@@ -18,8 +18,8 @@ DATABASES = {
     'db_vegetables_library': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'vegetable_library_db',
-        'USER': 'postgres',
-        'PASSWORD': 'azerty',
+        'USER': 'vegetable_library_user',
+        'PASSWORD': 'poprucapho',
         'HOST': '',
         'PORT': '5432'
     }
