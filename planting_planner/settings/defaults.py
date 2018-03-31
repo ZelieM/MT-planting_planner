@@ -1,3 +1,6 @@
+### sensible choices for default settings
+
+
 """
 Django settings for planting_planner project.
 
@@ -23,10 +26,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '!$7dn!n^&135_2t#ias6prynu$^imar-(f=(&#%$m&$6329qm1'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -77,33 +76,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'planting_planner.wsgi.application'
-
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'planting_planner_db',
-        'USER': 'postgres',
-        'PASSWORD': 'azerty',
-        'HOST': '',
-        'PORT': '5432'
-    },
-    'db_vegetables_library': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'vegetable_library_db',
-        'USER': 'postgres',
-        'PASSWORD': 'azerty',
-        'HOST': '',
-        'PORT': '5432'
-    }
-}
-
-# Speed up tests by using sqlite engine
-if 'test' in sys.argv:
-    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-    DATABASES['db_vegetables_library']['ENGINE'] = 'django.db.backends.sqlite3'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
