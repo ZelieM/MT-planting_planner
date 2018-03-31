@@ -42,3 +42,27 @@ To run the unit tests with code coverage, execute
 ```
 coverage run --source='.' manage.py test planner
 ```
+
+# Production
+- Ensure that python3 is installed
+- Install all requirements (with pip3)
+
+
+Apache config file (`/etc/apache2/sites-available/lauzeplan.conf`)
+
+````
+WSGIScriptAlias / /home/zmulders/MT-planting_planner/planting_planner/wsgi.py
+WSGIPythonPath /home/zmulders/MT-planting_planner
+ Alias /static/ /home/zmulders/MT-planting_planner/planner/static
+
+<Directory /home/zmulders/MT-planting_planner/planner/static>
+Require all granted
+</Directory>
+
+
+ <Directory /home/zmulders/MT-planting_planner/planting_planner>
+ <Files wsgi.py>
+ Require all granted
+ </Files>
+ </Directory>
+````
