@@ -13,7 +13,10 @@ DATABASES = {
         'USER': 'lauzeplan',
         'PASSWORD': 'Jd5uHTFg',
         'HOST': 'pgsql.uclouvain.be',
-        'PORT': '5440'
+        'PORT': '5440',
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     },
     'db_vegetables_library': {
         'ENGINE': 'django.db.backends.postgresql',
