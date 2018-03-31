@@ -8,12 +8,15 @@ https://docs.djangoproject.com/en/2.0/howto/deployment/wsgi/
 """
 
 
+import os
 import json
 from django.core.exceptions import ImproperlyConfigured
 
-key = "planting_planner/settings/secrets/secrets.json"
+BASE_DIR = os.path.dirname(__file__)
+key = os.path.join(BASE_DIR, "secrets.json")
 with open(key) as f:
     secrets = json.loads(f.read())
+
 
 def get_secret(setting, secret=secrets):
     try:
@@ -22,9 +25,9 @@ def get_secret(setting, secret=secrets):
         error_msg = "Set the {} environment variable".format(setting)
         raise ImproperlyConfigured(error_msg)
 
+
 SECRET_KEY = get_secret("SECRET_KEY")
 
-import os
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "planting_planner.settings.production")
 
