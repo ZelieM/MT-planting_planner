@@ -27,7 +27,7 @@ def get_secret(setting, secret=secrets):
 
 
 SECRET_KEY = get_secret("SECRET_KEY")
-
+os.environ.setdefault('SECRET_KEY', SECRET_KEY)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "planting_planner.settings.production")
 
