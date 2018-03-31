@@ -6,3 +6,4 @@ build/
 *.svg
 *.log
 .coverage
+planting_planner/settings/secrets/
