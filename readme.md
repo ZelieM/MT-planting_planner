@@ -38,7 +38,7 @@ python manage.py runserver
 
 ## Icons
 We use [Fontawesome5](https://fontawesome.com) to insert icons in our HTML templates.
-This tool provide nice free [searchable icons](https://fontawesome.com/icons).
+This tool provide nice free [searchable icons](https://fontawesome.com/icons?m=free).
 
 To use an icon, simply insert the following tag and replace `fa-user` by the icon you want
 
