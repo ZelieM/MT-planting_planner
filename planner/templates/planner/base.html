@@ -56,10 +56,18 @@
                         href="{% url 'planner:crops_view' garden.id %}">Mes cultures</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'planner:garden_statistics_view' garden.id %}"><i class="fas fa-fw fa-chart-bar"></i></a></li>
-                <li><a href="{% url 'planner:garden_export_view' garden.id %}"><i class="fas fa-fw fa-upload"></i></a></li>
-                <li><a href="{% url 'planner:garden_settings_view' garden.id %}"><i class="fas fa-fw fa-cog"></i></a></li>
-                <li><a href="{% url 'planner:log_out' %}"><i class="fas fa-fw fa-sign-out-alt"></i></a></li>
+                <li><a href="{% url 'planner:garden_statistics_view' garden.id %}">
+                    <i class="fas fa-fw fa-chart-bar"></i> <span class="hidden-md hidden-lg hidden-sm"> Statistiques</span>
+                </a></li>
+                <li><a href="{% url 'planner:garden_export_view' garden.id %}">
+                    <i class="fas fa-fw fa-upload"></i> <span class="hidden-md hidden-lg hidden-sm"> Exporter</span>
+                </a></li>
+                <li><a href="{% url 'planner:garden_settings_view' garden.id %}">
+                    <i class="fas fa-fw fa-cog"></i><span class="hidden-md hidden-lg hidden-sm"> Paramètres</span>
+                </a></li>
+                <li><a href="{% url 'planner:log_out' %}">
+                    <i class="fas fa-fw fa-sign-out-alt"></i><span class="hidden-md hidden-lg hidden-sm"> Se déconnecter</span>
+                </a></li>
             </ul>
         </div>
     </div>
