@@ -9,7 +9,7 @@
 
 <div id="action-buttons">
     <div class="fab-btn btn-group show-on-hover dropup">
-        <div data-toggle="tooltip" data-placement="left" title="Actions" style="margin-left: 42px;">
+        <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">
             <button type="button" class="btn btn-danger btn-io dropdown-toggle" data-toggle="dropdown">
                     <span class="">
                       <i class="fas fa-plus"></i>
@@ -17,22 +17,24 @@
             </button>
         </div>
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-            <li data-toggle="tooltip" data-original-title="Ajouter une observation" data-placement="left">
-                <a class="btn btn-success" data-toggle="modal"
+            <li data-toggle="tooltip" data-original-title="Ajouter une observation" data-placement="right">
+                <a class="btn btn-primary" data-toggle="modal"
                    href="{% url 'planner:add_observation' garden.id %}"
                    data-target="#modal-add_observation">
                     <i class="fas fa-fw fa-eye"></i>
                 </a>
             </li>
-            <li data-toggle="tooltip" title="Ajouter une opération" data-placement="left">
-                <a class="btn btn-success" data-toggle="modal"
+            <li data-toggle="tooltip" title="Ajouter une opération" data-placement="right">
+                <a class="btn btn-warning" data-toggle="modal"
                    href="{% url 'planner:add_punctual_operation' garden.id %}"
                    data-target="#modal-add_punctual_operation">
-                    <i class="fas fa-fw fa-plus"></i>
+                    <!--<i class="fas fa-fw fa-angle-double-right"></i>-->
+                    <i class="fas fa-fw fa-bolt"></i>
+                    <!--<i class="fas fa-fw fa-forward"></i>-->
                 </a>
 
             </li>
-            <li data-toggle="tooltip" title="Ajouter une plantation" data-placement="left">
+            <li data-toggle="tooltip" title="Ajouter une plantation" data-placement="right">
                 <a class="btn btn-success" data-toggle="modal"
                    href="{% url 'planner:add_seed_view' garden.id %}"
                    data-target="#modal-add_seed">
@@ -80,15 +82,15 @@
     <!-- Modal -->
 
     <div class="col-md-7">
-        <div>
-            <a class="btn btn-success" data-toggle="modal"
-               href="{% url 'planner:add_seed_view' garden.id %}"
-               data-target="#modal-add_seed" title="add item" data-tooltip>
-                <i class="fas fa-fw fa-plus"></i>
-                Ajouter une plantation
-            </a>
-        </div>
-        <br/>
+        <!--<div>-->
+            <!--<a class="btn btn-success" data-toggle="modal"-->
+               <!--href="{% url 'planner:add_seed_view' garden.id %}"-->
+               <!--data-target="#modal-add_seed" title="add item" data-tooltip>-->
+                <!--<i class="fas fa-fw fa-plus"></i>-->
+                <!--Ajouter une plantation-->
+            <!--</a>-->
+        <!--</div>-->
+        <!--<br/>-->
         {% load planner_extras %}
         {% load l10n %}
         <div class="panel panel-default ">
@@ -163,20 +165,20 @@
         </div>
     </div>
     <div class=" col-md-5 ">
-        <div class="align-content-center">
-            <a class="btn btn-success" data-toggle="modal"
-               href="{% url 'planner:add_punctual_operation' garden.id %}"
-               data-target="#modal-add_punctual_operation" title="Ajouter une opération ponctuelle" data-tooltip>
-                <i class="fas fa-fw fa-plus"></i>Ajouter une action
-            </a>
-            <a class="btn btn-success" data-toggle="modal"
-               href="{% url 'planner:add_observation' garden.id %}"
-               data-target="#modal-add_observation" title="Ajouter une observation" data-tooltip>
-                <i class="fas fa-fw fa-plus"></i> Ajouter une observation
-            </a>
-            <br>
-        </div>
-        <br>
+        <!--<div class="align-content-center">-->
+            <!--<a class="btn btn-success" data-toggle="modal"-->
+               <!--href="{% url 'planner:add_punctual_operation' garden.id %}"-->
+               <!--data-target="#modal-add_punctual_operation" title="Ajouter une opération ponctuelle" data-tooltip>-->
+                <!--<i class="fas fa-fw fa-plus"></i>Ajouter une action-->
+            <!--</a>-->
+            <!--<a class="btn btn-success" data-toggle="modal"-->
+               <!--href="{% url 'planner:add_observation' garden.id %}"-->
+               <!--data-target="#modal-add_observation" title="Ajouter une observation" data-tooltip>-->
+                <!--<i class="fas fa-fw fa-plus"></i> Ajouter une observation-->
+            <!--</a>-->
+            <!--<br>-->
+        <!--</div>-->
+        <!--<br>-->
         <div class="panel panel-default ">
             <div class="panel-heading">Historique</div>
             <div class="panel-body">
