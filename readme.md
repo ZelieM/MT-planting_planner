@@ -53,7 +53,7 @@ Apache config file (`/etc/apache2/sites-available/lauzeplan.conf`)
 ````
 WSGIScriptAlias / /home/zmulders/MT-planting_planner/planting_planner/wsgi.py
 WSGIPythonPath /home/zmulders/MT-planting_planner
- Alias /static/ /home/zmulders/MT-planting_planner/planner/static
+ Alias /static /home/zmulders/MT-planting_planner/planner/static
 
 <Directory /home/zmulders/MT-planting_planner/planner/static>
 Require all granted
