@@ -3,42 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <title>Nouvel utilisateur</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
+            integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "planner/css/style.css" %}">
+    <link rel="stylesheet" href="{% static "planner/css/login.css" %}">
 </head>
 <body>
 
-{% if messages %}
-<ul class="messages list-group">
-    {% for message in messages %}
-    <li{% if message.tags == "error" %} class="alert alert-danger"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+<div class="background-top-image"></div>
 
-<div class="col-xs-6 col-xs-offset-3">
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="main">
+                <div class="row">
 
-    <h1>Creez un nouveau compte</h1>
-    <form action="" name="createuser" role="form" class="form-horizontal" method="post" accept-charset="utf-8">
-       {% csrf_token %}
-                  <div class="form-group">
-            <div class="col-md-8"><input name="username" placeholder="Nom d'utilisateur" class="form-control" type="text" id="UserName" required/></div>
+                    <div class="col-sm-6 col-sm-offset-3 panel panel-default panel-body">
+                        <div class="cover-img">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Flower_Garden_and_Bungalow%2C_Bermuda_MET_DT5581.jpg">
+                            <!--<img src="http://photos1.blogger.com/blogger/262/957/640/EN_klutz0006.jpg">-->
+                        </div>
+                        <hr/>
+
+                        <h1 class="text-center">Creez un nouveau compte</h1>
+
+                        {% if messages %}
+                        <ul class="messages list-group">
+                            {% for message in messages %}
+                            <li{% if message.tags == "error" %} class="alert alert-danger"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                        <form action="" name="createuser" role="form" class="form-horizontal" method="post"
+                              accept-charset="utf-8">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fas fa-fw fa-user"></i></span>
+                                        <input name="username" placeholder="Nom d'utilisateur"
+                                               class="form-control"
+                                           type="text" id="UserName" required/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fas fa-fw fa-key"></i></span>
+                                        <input name="password" placeholder="Mot de passe"
+                                           class="form-control" type="password"
+                                           id="Password" required/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fas fa-fw fa-envelope"></i></span>
+                                        <input name="mailaddress" placeholder="Addresse email"
+                                           class="form-control"
+                                           type="email" id="MailAddress" required/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input class="btn btn-primary btn-lg btn-block"
+                                           type="submit"
+                                           value="S'enregistrer" id="SignUp"
+                                           required/>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 col-xs-offset-4 text-center">
+                            <a href="{% url 'planner:login' %}" role="button">
+                                Déjà un compte? Connectez-vous
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
-
-        <div class="form-group">
-            <div class="col-md-8"><input name="password" placeholder="Mot de passe" class="form-control" type="password" id="Password" required/></div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-8"><input name="mailaddress" placeholder="Addresse email" class="form-control" type="email" id="MailAddress" required/></div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-0 col-md-8"><input  class="btn btn-success btn btn-success" type="submit" value="S'enregistrer" id="SignUp" required/></div>
-        </div>
-
-    </form>
-
+    </div>
 </div>
 
 </body>

@@ -38,3 +38,8 @@ footer {
 .margin-button{
     margin: 10px;
 }
+
+/* Remove all border radius */
+.form-control, .btn, .panel, .input-group-addon, .alert {
+    border-radius: 0;
+}
