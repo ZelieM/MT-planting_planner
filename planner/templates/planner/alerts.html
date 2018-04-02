@@ -45,9 +45,12 @@
 
     <div class="col-md-7">
         <div>
-            <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
+            <a class="btn btn-success" data-toggle="modal"
                href="{% url 'planner:add_seed_view' garden.id %}"
-               data-target="#modal-add_seed" title="add item" data-tooltip> Ajouter une plantation</a>
+               data-target="#modal-add_seed" title="add item" data-tooltip>
+                <i class="fas fa-fw fa-plus"></i>
+                Ajouter une plantation
+            </a>
         </div>
         <br/>
         {% load planner_extras %}
@@ -59,7 +62,7 @@
                    data-toggle="modal"
                    data-target="#modal-print_operations" title="Imprimer la feuille les opérations à faire"
                    data-tooltip>
-                    <span class="glyphicon glyphicon-print"></span>
+                    <i class="fas fa-fw fa-print"></i>
                 </a>
             </div>
             <div class="panel-body">
@@ -83,18 +86,24 @@
                                 <td>{{ current_alert.original_cultural_operation.name }}</td>
                                 <td>{% due_date current_alert garden.id as current_due_date %} {{ current_due_date|date:"j F" }} </td>
                                 <td>
-                                    <a class="glyphicon glyphicon-ok" data-toggle="modal"
+                                    <a class="" data-toggle="modal"
                                        href="{% url 'planner:validate_alert_view' garden.id current_alert.id %}"
                                        data-target="#modal-validate_alert" title="Valider l'action"
-                                       data-tooltip></a>
-                                    <a class="glyphicon glyphicon-repeat" data-toggle="modal"
+                                       data-tooltip>
+                                        <i class="fas fa-fw fa-check"></i>
+                                    </a>
+                                    <a class="" data-toggle="modal"
                                        href="{% url 'planner:postpone_alert_view' garden.id current_alert.id %}"
                                        data-target="#modal-postpone_alert" title="Reporter l'action"
-                                       data-tooltip></a>
-                                    <a class="glyphicon glyphicon-remove" data-toggle="modal"
+                                       data-tooltip>
+                                        <i class="fas fa-fw fa-redo"></i>
+                                    </a>
+                                    <a class="" data-toggle="modal"
                                        href="{% url 'planner:delete_alert_view' garden.id current_alert.id %}"
                                        data-target="#modal-delete_alert" title="Supprimer l'action"
-                                       data-tooltip></a>
+                                       data-tooltip>
+                                        <i class="fas fa-fw fa-times"></i>
+                                    </a>
                                 </td>
                             </tr>
                             <tr class="info">
@@ -119,14 +128,16 @@
     </div>
     <div class=" col-md-5 ">
         <div class="align-content-center">
-            <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
+            <a class="btn btn-success" data-toggle="modal"
                href="{% url 'planner:add_punctual_operation' garden.id %}"
                data-target="#modal-add_punctual_operation" title="Ajouter une opération ponctuelle" data-tooltip>
-                Ajouter une action</a>
-            <a class="glyphicon glyphicon-plus btn btn-success" data-toggle="modal"
+                <i class="fas fa-fw fa-plus"></i>Ajouter une action
+            </a>
+            <a class="btn btn-success" data-toggle="modal"
                href="{% url 'planner:add_observation' garden.id %}"
-               data-target="#modal-add_observation" title="Ajouter une observation" data-tooltip> Ajouter une
-                observation</a>
+               data-target="#modal-add_observation" title="Ajouter une observation" data-tooltip>
+                <i class="fas fa-fw fa-plus"></i> Ajouter une observation
+            </a>
             <br>
         </div>
         <br>
@@ -148,9 +159,9 @@
                                 {% if op|is_operation %}
                                     <td><b>
                                         {% if op.is_deletion %}
-                                            <span class="glyphicon glyphicon-remove red"></span>
+                                            <i class="fas fa-fw fa-times red"></i>
                                         {% else %}
-                                            <span class="glyphicon glyphicon-ok green"></span>
+                                            <i class="fas fa-fw fa-check green"></i>
                                         {% endif %}
                                         {{ op.area_concerned.label }}
                                     </b> {{ op.name }}
@@ -158,7 +169,7 @@
                                     <td>{{ op.execution_date }}</td>
                                 {% else %}
                                     <td>
-                                        <span class="glyphicon glyphicon-eye-open blue-icon"></span>
+                                        <i class="fas fa-fw fa-eye blue-icon"></i>
                                         <b> Observation - </b> {{ op.area_concerned }}
                                     </td>
                                     <td>{{ op.execution_date }}</td>

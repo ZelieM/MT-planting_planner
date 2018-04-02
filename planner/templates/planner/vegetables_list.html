@@ -19,12 +19,17 @@
     </div>
 
     <div class="container">
-        <a class="glyphicon glyphicon-plus btn btn-success margin-button" data-toggle="modal"
+        <a class="btn btn-success margin-button" data-toggle="modal"
            href="{% url 'planner:add_vegetable_to_garden_view' garden.id %}"
-           data-target="#modal-add_vegetable" title="Ajouter un légume" data-tooltip> Ajouter un légume</a>
-        <a class="glyphicon glyphicon-import btn btn-success margin-button"
+           data-target="#modal-add_vegetable" title="Ajouter un légume" data-tooltip>
+            <i class="fas fa-fw fa-plus"></i>
+            Ajouter un légume
+        </a>
+        <a class="btn btn-success margin-button"
            href="{% url 'planner:garden_import_vegetables_view' garden.id %}" title="Importer un légume depuis la librairie" data-tooltip>
-           Importer un légume depuis la librairie</a>
+            <i class="fas fa-fw fa-download"></i>
+            Importer un légume depuis la librairie
+        </a>
 
     </div>
 
@@ -43,8 +48,7 @@
                     {% for v in vegetables.all %}
                         <div class="panel-heading">
                             <h4 data-toggle="collapse" href="#collapse-v{{ v.id }}" class="panel-title clickable">
-                                <span>{{ v }} <span
-                                        class="pull-right glyphicon glyphicon-chevron-down"></span></span>
+                                <span>{{ v }} <span class="pull-right"><i class="fas fa-fw fa-chevron-down"></i></span></span>
                             </h4>
                         </div>
                         <div id="collapse-v{{ v.id }}" class="panel-collapse collapse">
@@ -67,11 +71,13 @@
                                             <td class="hidden-xs hidden-sm" title="hh:mm:ss">{{ co.duration }}</td>
                                             <td>
 
-                                                <a class="glyphicon glyphicon-pencil" data-toggle="modal"
+                                                <a class="" data-toggle="modal"
                                                    href="{% url 'planner:edit_co_view' garden.id co.id %}"
-                                                   data-target="#modal-edit" title="edit item" data-tooltip></a>
+                                                   data-target="#modal-edit" title="edit item" data-tooltip>
+                                                    <i class="fas fa-fw fa-pencil-alt"></i>
+                                                </a>
                                                 <a href="{% url 'planner:delete_co' co.id %}">
-                                                    <span class="glyphicon glyphicon-remove"></span>
+                                                    <i class="fas fa-fw fa-times"></i>
                                                 </a>
                                             </td>
                                         </tr>
@@ -79,10 +85,12 @@
                                     {% endfor %}
                                 </table>
 
-                                <a class="glyphicon glyphicon-plus btn btn-success margin-button" data-toggle="modal"
+                                <a class="btn btn-success margin-button" data-toggle="modal"
                                    href="{% url 'planner:pick_co_type' garden.id v.id %}"
-                                   data-target="#modal-pick-type" title="add item" data-tooltip> Ajouter une
-                                    opération </a>
+                                   data-target="#modal-pick-type" title="add item" data-tooltip>
+                                    <i class="fas fa-fw fa-plus"></i>
+                                    Ajouter une opération
+                                </a>
 
                             </div>
                         </div>

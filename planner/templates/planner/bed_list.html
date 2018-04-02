@@ -21,7 +21,7 @@
                        class="pull-right red"
                        data-toggle="modal"
                        data-target="#modal-create_bed" title="Ajouter une planche" data-tooltip>
-                        <span class="glyphicon glyphicon-plus green"></span>
+                        <i class="fas fa-fw fa-plus green"></i>
                     </a>
                 </th>
                 <th>Dimensions</th>
@@ -36,13 +36,13 @@
                            class="pull-right red"
                            data-toggle="modal"
                            data-target="#modal-delete_bed" title="Supprimer cette planche" data-tooltip>
-                            <span class="glyphicon glyphicon-remove red"></span>
+                            <i class="fas fa-fw fa-times red"></i>
                         </a>
                         <a href="{% url 'planner:update_bed' garden.id b.id %}"
                            class="pull-right blue"
                            data-toggle="modal"
                            data-target="#modal-update_bed" title="Editer cette planche" data-tooltip>
-                            <span class="glyphicon glyphicon-pencil blue"></span>
+                            <i class="fas fa-fw fa-pencil-alt blue"></i>
                         </a>
 
                         {#                            <input class="glyphicon glyphicon-remove" type="submit" value="Supprimer"/>#}
