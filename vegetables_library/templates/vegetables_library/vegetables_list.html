@@ -31,9 +31,12 @@
     </div>
 
     <div class="container">
-        <a class="glyphicon glyphicon-plus btn btn-success margin-button" data-toggle="modal"
+        <a class="btn btn-success margin-button" data-toggle="modal"
            href="{% url 'vegetables_library:add_vegetable_to_library_view' %}"
-           data-target="#modal-add_vegetable" title="Ajouter un légume" data-tooltip>Ajouter un légume</a>
+           data-target="#modal-add_vegetable" title="Ajouter un légume" data-tooltip>
+            <i class="fas fa-fw fa-plus"></i>
+            Ajouter un légume
+        </a>
 
     </div>
 
@@ -45,8 +48,7 @@
                     {% for v in vegetables.all %}
                         <div class="panel-heading">
                             <h4 data-toggle="collapse" href="#collapse-v{{ v.id }}" class="panel-title clickable">
-                                <span>{{ v.name }} <span
-                                        class="pull-right glyphicon glyphicon-chevron-down"></span></span>
+                                <span>{{ v.name }} <span class="pull-right"><i class="fas fa-fw fa-chevron-down"></i></span></span>
                             </h4>
 
                         </div>
@@ -70,11 +72,13 @@
                                             <td class="hidden-xs hidden-sm" title="hh:mm:ss">{{ co.duration }}</td>
                                             <td>
 
-                                                <a class="glyphicon glyphicon-pencil" data-toggle="modal"
+                                                <a class="" data-toggle="modal"
                                                    href="{% url 'vegetables_library:edit_co_view' co.id %}"
-                                                   data-target="#modal-edit" title="edit item" data-tooltip></a>
+                                                   data-target="#modal-edit" title="edit item" data-tooltip>
+                                                    <i class="fas fa-fw fa-pencil-alt"></i>
+                                                </a>
                                                 <a href="{% url 'vegetables_library:delete_co' co.id %}">
-                                                    <span class="glyphicon glyphicon-remove"></span>
+                                                    <i class="fas fa-fw fa-times"></i>
                                                 </a>
                                             </td>
                                         </tr>
@@ -82,10 +86,12 @@
                                     {% endfor %}
                                 </table>
 
-                                <a class="glyphicon glyphicon-plus btn btn-success margin-button" data-toggle="modal"
+                                <a class="btn btn-success margin-button" data-toggle="modal"
                                    href="{% url 'vegetables_library:pick_co_type' v.id %}"
-                                   data-target="#modal-pick-type" title="add item" data-tooltip> Ajouter une
-                                    opération </a>
+                                   data-target="#modal-pick-type" title="add item" data-tooltip>
+                                    <i class="fas fa-fw fa-plus"></i>
+                                    Ajouter une opération
+                                </a>
 
                             </div>
                         </div>

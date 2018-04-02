@@ -36,6 +36,19 @@ Then start the project locally with
 python manage.py runserver
 ```
 
+## Icons
+We use [Fontawesome5](https://fontawesome.com) to insert icons in our HTML templates.
+This tool provide nice free [searchable icons](https://fontawesome.com/icons).
+
+To use an icon, simply insert the following tag and replace `fa-user` by the icon you want
+
+```html
+<i class="fas fa-fw fa-user"></i>
+```
+
+- `fas` is the *solid* type of icon, Fontawesome provides Solid, Regular, Light and Brand
+- `fa-fw` forces the icons to have all the same size
+
 # Tests
 To run the unit tests with code coverage, execute
 
@@ -44,6 +57,7 @@ coverage run --source='.' manage.py test planner --settings=planting_planner.set
 ```
 
 # Production
+- Clone the repository
 - Ensure that python3 is installed
 - Install all requirements (with pip3)
 
