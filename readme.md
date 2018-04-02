@@ -40,7 +40,7 @@ python manage.py runserver
 To run the unit tests with code coverage, execute
 
 ```
-coverage run --source='.' manage.py test planner
+coverage run --source='.' manage.py test planner --settings=planting_planner.settings.tests
 ```
 
 # Production
