@@ -7,6 +7,42 @@
 
 {% block content %}
 
+<div id="action-buttons">
+    <div class="fab-btn btn-group show-on-hover dropup">
+        <div data-toggle="tooltip" data-placement="left" title="Actions" style="margin-left: 42px;">
+            <button type="button" class="btn btn-danger btn-io dropdown-toggle" data-toggle="dropdown">
+                    <span class="">
+                      <i class="fas fa-plus"></i>
+                    </span>
+            </button>
+        </div>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li data-toggle="tooltip" data-original-title="Ajouter une observation" data-placement="left">
+                <a class="btn btn-success" data-toggle="modal"
+                   href="{% url 'planner:add_observation' garden.id %}"
+                   data-target="#modal-add_observation">
+                    <i class="fas fa-fw fa-eye"></i>
+                </a>
+            </li>
+            <li data-toggle="tooltip" title="Ajouter une opération" data-placement="left">
+                <a class="btn btn-success" data-toggle="modal"
+                   href="{% url 'planner:add_punctual_operation' garden.id %}"
+                   data-target="#modal-add_punctual_operation">
+                    <i class="fas fa-fw fa-plus"></i>
+                </a>
+
+            </li>
+            <li data-toggle="tooltip" title="Ajouter une plantation" data-placement="left">
+                <a class="btn btn-success" data-toggle="modal"
+                   href="{% url 'planner:add_seed_view' garden.id %}"
+                   data-target="#modal-add_seed">
+                    <i class="fas fa-fw fa-leaf"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
     {% if messages %}
         <div class="col-md-7">
             {% for message in messages %}
@@ -204,5 +240,6 @@
     </div>
 
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>
+    <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
 
 {% endblock content %}
