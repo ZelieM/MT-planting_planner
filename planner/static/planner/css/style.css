@@ -49,3 +49,131 @@ footer {
 .panel-group .panel-heading {
     border-bottom: 1px solid #225886;
 }
+
+/* Floating action button */
+.fab-btn {
+  cursor: pointer;
+}
+.fab-btn-backdrop {
+  color: rgba(255, 255, 255, 0);
+}
+.fab-btn-primary, .fab-btn-secondary {
+  transition: all 0.35s ease-in-out;
+}
+.fab-btn.active .fab-btn-primary {
+  opacity: 0;
+  transform: rotate(225deg);
+}
+.fab-btn-secondary {
+  opacity: 0;
+  transform: rotate(-225deg);
+}
+.fab-btn.active .fab-btn-secondary {
+  opacity: 1;
+  transform: rotate(0);
+  margin-top: -2px;
+}
+
+#action-buttons .show-on-hover:hover > ul.dropdown-menu {
+    display: block;
+}
+#action-buttons .show-on-hover {
+    position: fixed;
+    bottom: 40px;
+    right: 100px;
+    z-index: 10;
+}
+#action-buttons .btn-io{
+    border-radius: 50%;
+    height: 54px;
+    width: 54px;
+    padding: 0 !important;
+    box-shadow: 0px 3px 7px 0px rgba(202, 124, 124, 0.72);
+}
+#action-buttons .dropup .dropdown-menu, .navbar-fixed-bottom .dropdown .dropdown-menu {
+    top: auto;
+    bottom: 100%;
+    margin-bottom: 1px;
+    margin-bottom: -5px;
+    padding-bottom: 30px;
+}
+#action-buttons .dropdown-menu-right {
+    right: 0 !Important;
+    left: auto !Important;
+}
+#action-buttons .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000!Important;
+    display: none;
+    float: left;
+    min-width: 50px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: center;
+    list-style: none;
+    background-color: rgba(255, 255, 255, 0) !Important;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: none;
+    border-radius: 0px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0) !Important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0) !Important;
+}
+#action-buttons .fa-iox{
+    font-size: 22px;
+}
+#action-buttons .dropdown-menu > li {
+    margin-left: 2px;
+}
+#action-buttons .dropdown-menu > li > a {
+    display: block;
+    padding: 0;
+    padding-top: 4px;
+    margin-top: 10px;
+    /*margin-left: 42px;*/ /* To fix tooltip left but still not perfect */
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #fff;
+    /*background: #fff;*/
+    white-space: nowrap;
+    width: 40px;
+    height: 40px;
+    border: solid 1px #ccc;
+    border-radius: 50px;
+    font-size: 21px;
+    box-shadow: 0px 3px 7px 0px rgba(203, 203, 203, 0.72);
+}
+#action-buttons .dropdown-menu > li > a:hover {
+    color: #000;
+}
+/*
+#action-buttons .dropdown-menu > li:first-child>a {
+    background: #1661d0 !important;
+    color: #fff !important;
+}
+*/
+/*
+#action-buttons .dropdown-menu > li:nth-child(2)>a {
+    background: #ec971f;
+    color: #fff;
+}
+*/
+/*
+#action-buttons .dropdown-menu > li:last-child>a {
+    background: #449d44;
+    color: #fff;
+}
+*/
+#action-buttons .fa-iosm{
+    margin-top: 7px;
+}
+
+.show-on-hover {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+}
