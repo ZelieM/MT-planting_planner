@@ -40,6 +40,12 @@ footer {
 }
 
 /* Remove all border radius */
-.form-control, .btn, .panel, .input-group-addon, .alert {
+.form-control, .btn, .panel, .input-group-addon, .alert, .list-group-item:last-child, .list-group-item:first-child,
+ .panel-heading, .panel-group .panel {
     border-radius: 0;
+}
+
+/* Panel groups have some space */
+.panel-group .panel-heading {
+    border-bottom: 1px solid #225886;
 }
