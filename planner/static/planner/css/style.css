@@ -1,3 +1,31 @@
+html, body {
+  height: 100%;
+}
+
+/* Make body take all height but leave space for the footer */
+.body-wrap {
+  min-height: 100%;
+}
+
+.body-container {
+  padding-bottom: 100px;
+}
+
+/* Footer */
+.footer {
+  position: relative;
+  margin-top: -100px; /* negative value of footer height */
+  height: 100px;
+  clear:both;
+  padding-top:20px;
+  background-color: gray;
+}
+
+.footer > img {
+  height: 100%;
+  padding: 0px 5%; /* TODO change this value and make the footer nice */
+}
+
 .clickable {
     cursor: pointer;
 }
@@ -8,9 +36,15 @@
     border-radius: 0;
 }
 
+/* Navbar date is bold and white */
 .navbar-date {
   font-weight: bold;
   color: white !important;
+}
+
+/* Navbar logos must not take too much space */
+.navbar-logos > .navbar-brand > img {
+  height: 100%;
 }
 
 /* Change the navbar collapsed mobile breakpoint */
@@ -219,7 +253,3 @@ footer {
     right: 50px;
 }
 /* END Floating action button */
-
-.navbar-logos > .navbar-brand > img {
-  height: 100%;
-}

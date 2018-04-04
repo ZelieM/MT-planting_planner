@@ -42,64 +42,71 @@
 
 </head>
 <body>
+<div class="body-wrap">
+  {% load planner_extras %}
 
-{% load planner_extras %}
-
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-          <div class="navbar-logos">
-              <a class="navbar-brand" href="#">
-                <img alt="LauzePlan" src="{% static '/planner/icons/apple-icon-57x57.png' %}">
-              </a>
-              <a class="navbar-brand" href="#">
-                LauzePlan
-              </a>
+  <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+          <div class="navbar-header">
+            <div class="navbar-logos">
+                <a class="navbar-brand" href="#">
+                  <img alt="LauzePlan" src="{% static '/planner/icons/apple-icon-57x57.png' %}">
+                </a>
+                <a class="navbar-brand" href="#">
+                  LauzePlan
+                </a>
+            </div>
+              <!-- Hamburger button -->
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
           </div>
-            <!-- Hamburger button -->
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
 
-        <div class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav navbar-nav ">
-                <li><a href="{% url 'planner:garden_selection' %}">Choix du jardin</a></li>
-                <li class="{% navactive request 'planner:alerts_view' garden.id %}"><a
-                        href="{% url 'planner:alerts_view' garden.id %}">Alertes</a></li>
-                <li class="{% navactive request 'planner:vegetables_view' garden.id %}"><a
-                        href="{% url 'planner:vegetables_view' garden.id %}">Mes légumes</a></li>
-                <li class="{% navactive request 'planner:garden_view' garden.id %}"><a
-                        href="{% url 'planner:garden_view' garden.id %}">Mes planches</a></li>
-                <li class="{% navactive request 'planner:crops_view' garden.id %}"><a
-                        href="{% url 'planner:crops_view' garden.id %}">Mes cultures</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                  <a class="navbar-date">{% now "D d F Y" %}</a>
-                </li>
-                <li><a href="{% url 'planner:garden_statistics_view' garden.id %}">
-                    <i class="fas fa-fw fa-chart-bar"></i> <span class="hidden-md hidden-lg hidden-sm"> Statistiques</span>
-                </a></li>
-                <li><a href="{% url 'planner:garden_export_view' garden.id %}">
-                    <i class="fas fa-fw fa-upload"></i> <span class="hidden-md hidden-lg hidden-sm"> Exporter</span>
-                </a></li>
-                <li><a href="{% url 'planner:garden_settings_view' garden.id %}">
-                    <i class="fas fa-fw fa-cog"></i><span class="hidden-md hidden-lg hidden-sm"> Paramètres</span>
-                </a></li>
-                <li><a href="{% url 'planner:log_out' %}">
-                    <i class="fas fa-fw fa-sign-out-alt"></i><span class="hidden-md hidden-lg hidden-sm"> Se déconnecter</span>
-                </a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+          <div class="collapse navbar-collapse" id="myNavbar">
+              <ul class="nav navbar-nav ">
+                  <li><a href="{% url 'planner:garden_selection' %}">Choix du jardin</a></li>
+                  <li class="{% navactive request 'planner:alerts_view' garden.id %}"><a
+                          href="{% url 'planner:alerts_view' garden.id %}">Alertes</a></li>
+                  <li class="{% navactive request 'planner:vegetables_view' garden.id %}"><a
+                          href="{% url 'planner:vegetables_view' garden.id %}">Mes légumes</a></li>
+                  <li class="{% navactive request 'planner:garden_view' garden.id %}"><a
+                          href="{% url 'planner:garden_view' garden.id %}">Mes planches</a></li>
+                  <li class="{% navactive request 'planner:crops_view' garden.id %}"><a
+                          href="{% url 'planner:crops_view' garden.id %}">Mes cultures</a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                  <li>
+                    <a class="navbar-date">{% now "D d F Y" %}</a>
+                  </li>
+                  <li><a href="{% url 'planner:garden_statistics_view' garden.id %}">
+                      <i class="fas fa-fw fa-chart-bar"></i> <span class="hidden-md hidden-lg hidden-sm"> Statistiques</span>
+                  </a></li>
+                  <li><a href="{% url 'planner:garden_export_view' garden.id %}">
+                      <i class="fas fa-fw fa-upload"></i> <span class="hidden-md hidden-lg hidden-sm"> Exporter</span>
+                  </a></li>
+                  <li><a href="{% url 'planner:garden_settings_view' garden.id %}">
+                      <i class="fas fa-fw fa-cog"></i><span class="hidden-md hidden-lg hidden-sm"> Paramètres</span>
+                  </a></li>
+                  <li><a href="{% url 'planner:log_out' %}">
+                      <i class="fas fa-fw fa-sign-out-alt"></i><span class="hidden-md hidden-lg hidden-sm"> Se déconnecter</span>
+                  </a></li>
+              </ul>
+          </div>
+      </div>
+  </nav>
 
-<div class="container">
-    {% block content %}{% endblock content %}
+  <div class="container body-container">
+      {% block content %}{% endblock content %}
+
+  </div>
 
 </div>
+<footer class="footer">
+  <img src="{% static '/planner/images/logos/logo-ucl-bleu.jpg' %}"/>
+  <img src="{% static '/planner/images/logos/logo_epl.png' %}"/>
+  <img src="{% static '/planner/images/logos/logo_agro-ucl.jpg' %}"/>
+</footer>
 </body>
 </html>
