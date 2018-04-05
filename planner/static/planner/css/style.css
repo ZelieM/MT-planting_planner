@@ -155,8 +155,8 @@ footer {
 }
 #action-buttons .show-on-hover {
     position: fixed;
-    bottom: 40px;
-    right: 3vw;
+    bottom: 110px;
+    right: 6vw;
     z-index: 10;
 }
 #action-buttons .btn-io{
