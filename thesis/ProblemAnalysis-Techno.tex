@@ -2,7 +2,13 @@
 
 \todo[inline]{pq web, pq Python et donc Django? Pq en français?}
 
-\section{In computer science and in software engineering}
+\section{Clients and their needs}
+\subsection{UCL}
+\subsection{Market gardeners}
+\paragraph{Meetings}
+
+\section{Vocabulary in software engineering}
+In this section, we define some concepts specific to software engineering. These concepts will be used in the following sections. This section can be skipped by experts of the subject.
 \paragraph{Agile Methodology}
 The Agile methodology is a set of techniques and principles for conducting a development project. The main principle is to iterate over short periods (called sprints) divided in subphases in order to build the final product in an incremental way.
 A sprint lasts between one and two weeks and is divided as follows: 
@@ -36,11 +42,6 @@ the right, we value the items on the left more.
 
 The main advantages of this methodology are to have flexibility and regular feedback on the product delivered.
 
-\paragraph{Python}
-Python is a programming language used in many fields. Its main advantage is great readability.
-
-\todo[inline]{Talk more about python? Creator, specificity's, interpreted language, speed, community, TIOBE Index...? \url{ https://www.tiobe.com/tiobe-index/} Mainly explain why you chose it and what its main features/specificities you will rely upon}
-
 \paragraph{Software framework}
 
 A framework is a set of tools that provides features that can be reused in multiple applications. A framework is different from a library in the sense that when using a library, we call the methods of the library while when using a framework, our code is called by the framework. The difference is shown on figure \ref{fig:framework-vs-library}. Frameworks help to build reusable and maintainable applications 
@@ -52,12 +53,46 @@ A framework is a set of tools that provides features that can be reused in multi
     \caption{Framework versus library}
     \label{fig:framework-vs-library}
 \end{figure}
-\paragraph{Django}
-Django is a web framework to develop web applications in Python. 
-\todo[inline]{Develop, why django, what others, what features of Djangos do you rely upon (ORM, authentication, what plugins, and so on}
 
 \paragraph{Continuous Integration}
 Continuous integration (often referred as CI) is a software engineering practice to help development teams working on a set repository. 
 When using CI, we automate a set of checks at each push request on a repository and developers should merge to this repository regularly. With continuous integration, we will detect bugs faster and more easily. We can also add tests to our continuous integration tool, these tests will then be run at each push request and we will receive a notification if they fail. Thanks to that, we can see exactly which commit implied a failure in the tests. If we do small regular commits, it will be really easy to find where the failure comes from.
+
+
+
+\section{Which platform?}
+web pour que ce soit accessible de tous les devices, aussi bien pour les maraichers sur leurs smartphone que pour les chercheurs sur leur ordinateur.
+
+\section{Which licence}
+open source car par une volonté de rentabiliser le logiciel. L'interet étant d'avoir le plus de maraichers possibles pour récolter le plus de données possible du coté des chercheurs.
+
+\section{Which methodology}
+agile parce que le problème n'était pas défini dans son intégralité au début du projet, il a été redéfini au fil des semaines, a pris de nouvelles orientation. Feedback régulier des maraichers
+
+\section{Which languages?}
+
+\subsection{Programming language}
+un language facile d'utilisation, orienté objet, compréhensible. Enseigné aux étudiants de l'université.
+\paragraph{Python}
+Python is a programming language used in many fields. Its main advantage is great readability.
+
+\todo[inline]{Talk more about python? Creator, specificity's, interpreted language, speed, community, TIOBE Index...? \url{ https://www.tiobe.com/tiobe-index/} Mainly explain why you chose it and what its main features/specificities you will rely upon}
+
+\subsection{Web framework}
+un framework facile d'utilisation, stable et fiable avec une bonne documentation et une bonne communauté. Assez de fonctionnalités, on ne veut pas tout réimplémenter.
+Quels sont les différents choix? Django, Flask, web.py, autres? Trouver avantages et inconvénients.
+
+\paragraph{Django}
+Django is a web framework to develop web applications in Python. 
+\todo[inline]{Develop, why django, what others, what features of Djangos do you rely upon (ORM, authentication, what plugins, and so on}
+
+\subsection{Database language}
+
+\paragraph{Postgresql}
+
+
+\section{Maintenance}
+
+
 
 \todo[inline]{Why you explain this, what CI you use, what CI features and tools you use; why you use these}
