@@ -1,3 +1,31 @@
+html, body {
+  height: 100%;
+}
+
+/* Make body take all height but leave space for the footer */
+.body-wrap {
+  min-height: 100%;
+}
+
+.body-container {
+  padding-bottom: 100px;
+}
+
+/* Footer */
+.footer {
+  position: relative;
+  margin-top: -100px; /* negative value of footer height */
+  height: 100px;
+  clear:both;
+  padding-top:20px;
+  background-color: gray;
+}
+
+.footer > img {
+  height: 100%;
+  padding: 0px 5%; /* TODO change this value and make the footer nice */
+}
+
 .clickable {
     cursor: pointer;
 }
@@ -6,6 +34,55 @@
 .navbar {
     margin-bottom: 50px;
     border-radius: 0;
+}
+
+/* Navbar date is bold and white */
+.navbar-date {
+  font-weight: bold;
+  color: white !important;
+}
+
+/* Navbar logos must not take too much space */
+.navbar-logos > .navbar-brand > img {
+  height: 100%;
+}
+
+/* Change the navbar collapsed mobile breakpoint */
+@media (max-width: 900px) {
+  .navbar-header {
+      float: none;
+  }
+  .navbar-left,.navbar-right {
+      float: none !important;
+  }
+  .navbar-toggle {
+      display: block;
+  }
+  .navbar-collapse {
+      border-top: 1px solid transparent;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .navbar-fixed-top {
+      top: 0;
+      border-width: 0 0 1px;
+  }
+  .navbar-collapse.collapse {
+      display: none!important;
+  }
+  .navbar-nav {
+      float: none!important;
+      margin-top: 7.5px;
+  }
+  .navbar-nav>li {
+      float: none;
+  }
+  .navbar-nav>li>a {
+      padding-top: 10px;
+      padding-bottom: 10px;
+  }
+  .collapse.in{
+      display:block !important;
+  }
 }
 
 /* Remove the jumbotron's default bottom margin */
@@ -73,14 +150,13 @@ footer {
   transform: rotate(0);
   margin-top: -2px;
 }
-
 #action-buttons .show-on-hover:hover > ul.dropdown-menu {
     display: block;
 }
 #action-buttons .show-on-hover {
     position: fixed;
     bottom: 40px;
-    right: 100px;
+    right: 3vw;
     z-index: 10;
 }
 #action-buttons .btn-io{
@@ -171,9 +247,9 @@ footer {
 #action-buttons .fa-iosm{
     margin-top: 7px;
 }
-
 .show-on-hover {
     position: fixed;
     bottom: 50px;
     right: 50px;
 }
+/* END Floating action button */
