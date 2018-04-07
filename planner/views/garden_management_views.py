@@ -78,7 +78,7 @@ class UserUpdate(UpdateView):
 
 class GardenDetailsUpdate(UpdateView):
     model = Garden
-    fields = ['comment', 'soil_type', 'culture_type', 'reference_email']
+    fields = ['name', 'comment', 'soil_type', 'culture_type', 'reference_email']
     template_name = 'planner/modals/garden_update_details_form.html'
 
     def get_context_data(self, **kwargs):
