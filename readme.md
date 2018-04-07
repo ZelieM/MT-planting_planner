@@ -26,6 +26,17 @@ Execute the migrations on the databases with the following commands:
 - `python manage.py migrate`
 - `python manage.py migrate --database=db_vegetables_library`
 
+### Secrets
+Some secret values are used when running the project.
+Those values are not versionned in git and you must create them manually on each machine.
+There are located in [planting_planner/settings/secrets/secrets.json](planting_planner/settings/secrets/secrets.json).
+
+Follow those steps to create your secrets:
+
+- Create the file [planting_planner/settings/secrets/secrets.json](planting_planner/settings/secrets/secrets.json)
+- Copy the content of [planting_planner/settings/secrets/secrets.json.template](planting_planner/settings/secrets/secrets.json.template)
+- Change the values with your secrets
+
 # Development
 
 To develop this project locally, install the requirements (see above).
