@@ -49,10 +49,10 @@
       <div class="container-fluid">
           <div class="navbar-header">
             <div class="navbar-logos">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="{% url 'planner:alerts_view' garden.id %}">
                   <img alt="LauzePlan" src="{% static '/planner/icons/apple-icon-57x57.png' %}">
                 </a>
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="{% url 'planner:alerts_view' garden.id %}">
                   LauzePlan
                 </a>
             </div>
