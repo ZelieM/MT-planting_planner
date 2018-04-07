@@ -1,40 +1,85 @@
 html {
-    height: 100%
+  height: 100%
 }
 
 body {
-    height: 100%;
-    width: 100%;
-    display: flex;           /* establish flex container */
-    flex-direction: column;  /* make main axis vertical */
-    justify-content: center; /* center items vertically, in this case */
-    align-items: center;     /* center items horizontally, in this case */
+  height: 100%;
+  width: 100%;
+  display: flex;           /* establish flex container */
+  flex-direction: column;  /* make main axis vertical */
+  justify-content: center; /* center items vertically, in this case */
+  align-items: center;     /* center items horizontally, in this case */
 }
 
 .background-top-image {
-    width: 100%;
-    height: 40%;
-    position: absolute;
-    background-color: darkseagreen;
-    top: 0;
+  width: 100%;
+  height: 40%;
+  position: absolute;
+  background-color: darkseagreen;
+  top: 0;
 }
 
 .cover-img {
-    width: 100%;
-    height: 100px;
+  width: 100%;
+  height: 100px;
 }
 
 .cover-img>img{
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 form, .alert {
-    margin-left: 20px;
-    margin-right: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 ul {
-    list-style: none;
+  list-style: none;
+}
+
+.login-logos-container {
+  width: 100%;
+  height: 100%;
+}
+
+.logo-left {
+  height: 100%;
+  float: left;
+  padding: 10px;
+  max-width: 45%;
+}
+
+.logos-right {
+  height: 100%;
+  float: right;
+  padding: 10px;
+  max-width: 45%;
+}
+
+.logos-right > .stacked-logo > img {
+  display: inherit;
+  margin: auto;
+}
+
+.login-logo {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.stacked-logo {
+  height: 50%;
+  padding: 10px;
+}
+
+.logos-bottom-container {
+  position: relative;
+  height: 40%;
+}
+
+@media (max-width: 767px){
+  .form-container {
+    margin-top: 40%;
+  }
 }

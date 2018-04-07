@@ -34,33 +34,62 @@
 </head>
 <body>
 
-<div class="background-top-image"></div>
-
-<div class="container">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="main">
-                <div class="row">
-                    <div class="col-sm-6 col-sm-offset-3 panel panel-default panel-body">
-                        <div class="cover-img">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Flower_Garden_and_Bungalow%2C_Bermuda_MET_DT5581.jpg">
-                        </div>
-                        <hr/>
-
-                        {% block form_content %}{% endblock form_content %}
-                    </div>
-
-                    <div class="row">
-                      <div class="col-xs-4 col-xs-offset-4 text-center">
-                        {% block form_navigation %}{% endblock form_navigation %}
-                      </div>
-                    </div>
-
-                </div>
-
-            </div>
+  <div class="background-top-image">
+    <div class="login-logos-container hidden-xs">
+      <div class="logo-left">
+        <img src="{% static '/planner/images/logos/logo-ucl-bleu.jpg' %}" class="login-logo"/>
+      </div>
+      <div class="logos-right">
+        <div class="stacked-logo">
+          <img src="{% static '/planner/images/logos/logo_agro-ucl.jpg' %}" class="login-logo"/>
         </div>
+        <div class="stacked-logo">
+          <img src="{% static '/planner/images/logos/logo_epl.png' %}" class="login-logo"/>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="container form-container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="main">
+          <div class="row">
+            <div class="col-sm-6 col-sm-offset-3 panel panel-default panel-body">
+              <div class="cover-img">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Flower_Garden_and_Bungalow%2C_Bermuda_MET_DT5581.jpg">
+              </div>
+              <hr/>
+              {% block form_content %}{% endblock form_content %}
+            </div>
+
+            <div class="row">
+              <div class="col-xs-4 col-xs-offset-4 text-center">
+                {% block form_navigation %}{% endblock form_navigation %}
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="logos-bottom-container visible-xs">
+  <div class="login-logos-container container">
+    <div class="logo-left">
+      <img src="{% static '/planner/images/logos/logo-ucl-bleu.jpg' %}" class="login-logo"/>
+    </div>
+    <div class="logos-right">
+      <div class="stacked-logo">
+        <img src="{% static '/planner/images/logos/logo_agro-ucl.jpg' %}" class="login-logo"/>
+      </div>
+      <div class="stacked-logo">
+        <img src="{% static '/planner/images/logos/logo_epl.png' %}" class="login-logo"/>
+      </div>
+    </div>
+  </div>
 </div>
 
 
