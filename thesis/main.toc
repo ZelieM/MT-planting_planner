@@ -20,24 +20,23 @@
 \contentsline {section}{\numberline {3.1}Clients and their needs}{7}{section.3.1}
 \contentsline {subsection}{\numberline {3.1.1}UCL}{7}{subsection.3.1.1}
 \contentsline {subsection}{\numberline {3.1.2}Market gardeners}{7}{subsection.3.1.2}
-\contentsline {paragraph}{Meetings}{7}{section*.17}
-\contentsline {section}{\numberline {3.2}Vocabulary in software engineering}{7}{section.3.2}
-\contentsline {paragraph}{Agile Methodology}{7}{section*.18}
-\contentsline {paragraph}{Software framework}{8}{section*.20}
-\contentsline {paragraph}{Continuous Integration}{8}{section*.23}
-\contentsline {section}{\numberline {3.3}Which platform?}{8}{section.3.3}
-\contentsline {section}{\numberline {3.4}Which licence}{9}{section.3.4}
-\contentsline {section}{\numberline {3.5}Which methodology}{9}{section.3.5}
-\contentsline {section}{\numberline {3.6}Which languages?}{9}{section.3.6}
-\contentsline {subsection}{\numberline {3.6.1}Programming language}{9}{subsection.3.6.1}
-\contentsline {paragraph}{Python}{9}{section*.24}
-\contentsline {subsection}{\numberline {3.6.2}Web framework}{9}{subsection.3.6.2}
-\contentsline {paragraph}{Django}{9}{section*.26}
-\contentsline {subsection}{\numberline {3.6.3}Database language}{9}{subsection.3.6.3}
-\contentsline {paragraph}{Postgresql}{9}{section*.28}
-\contentsline {section}{\numberline {3.7}Maintenance}{9}{section.3.7}
-\contentsline {chapter}{\numberline {4}Solution}{10}{chapter.4}
-\contentsline {chapter}{\numberline {5}Architecture}{11}{chapter.5}
-\contentsline {chapter}{\numberline {6}Implementation}{12}{chapter.6}
-\contentsline {chapter}{\numberline {7}Validation}{13}{chapter.7}
-\contentsline {chapter}{\numberline {8}Conclusion and future work}{14}{chapter.8}
+\contentsline {paragraph}{Meetings}{8}{section*.17}
+\contentsline {section}{\numberline {3.2}Vocabulary in software engineering}{8}{section.3.2}
+\contentsline {paragraph}{Agile Methodology}{8}{section*.18}
+\contentsline {paragraph}{Software framework}{9}{section*.21}
+\contentsline {paragraph}{Object Relational Mapping}{9}{section*.25}
+\contentsline {paragraph}{Continuous Integration}{9}{section*.26}
+\contentsline {section}{\numberline {3.3}Which platform?}{9}{section.3.3}
+\contentsline {section}{\numberline {3.4}Which methodology}{9}{section.3.4}
+\contentsline {section}{\numberline {3.5}Which languages?}{10}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}Programming language}{10}{subsection.3.5.1}
+\contentsline {paragraph}{Python}{10}{section*.27}
+\contentsline {subsection}{\numberline {3.5.2}Web framework}{10}{subsection.3.5.2}
+\contentsline {subsection}{\numberline {3.5.3}Query language}{11}{subsection.3.5.3}
+\contentsline {subsection}{\numberline {3.5.4}Written language}{11}{subsection.3.5.4}
+\contentsline {section}{\numberline {3.6}Maintenance}{11}{section.3.6}
+\contentsline {chapter}{\numberline {4}Solution}{12}{chapter.4}
+\contentsline {chapter}{\numberline {5}Architecture}{13}{chapter.5}
+\contentsline {chapter}{\numberline {6}Implementation}{14}{chapter.6}
+\contentsline {chapter}{\numberline {7}Validation}{15}{chapter.7}
+\contentsline {chapter}{\numberline {8}Conclusion and future work}{16}{chapter.8}
