@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lauzeplan - {% block page_title %}{% endblock page_title %}</title>
+
+    {% load static %}
+    {% include "planner/favicon.html" %}
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
+            integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static "planner/css/style.css" %}">
+    <link rel="stylesheet" href="{% static "planner/css/login.css" %}">
+</head>
+<body>
+
+  <div class="background-top-image">
+    <div class="login-logos-container hidden-xs">
+      <div class="logo-left">
+        <img src="{% static '/planner/images/logos/logo-ucl-bleu.jpg' %}" class="img-logo"/>
+      </div>
+      <div class="logos-right">
+        <div class="stacked-logo">
+          <img src="{% static '/planner/images/logos/logo_agro-ucl.jpg' %}" class="img-logo"/>
+        </div>
+        <div class="stacked-logo">
+          <img src="{% static '/planner/images/logos/logo_epl.png' %}" class="img-logo"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container form-container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="main">
+          <div class="row">
+            <div class="col-sm-6 col-sm-offset-3 panel panel-default panel-body">
+              <div class="cover-img">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Flower_Garden_and_Bungalow%2C_Bermuda_MET_DT5581.jpg">
+              </div>
+              <hr/>
+              {% block form_content %}{% endblock form_content %}
+            </div>
+
+            <div class="row">
+              <div class="col-xs-4 col-xs-offset-4 text-center">
+                {% block form_navigation %}{% endblock form_navigation %}
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="logos-bottom-container visible-xs">
+  <div class="login-logos-container container">
+    <div class="logo-left">
+      <img src="{% static '/planner/images/logos/logo-ucl-bleu.jpg' %}" class="img-logo"/>
+    </div>
+    <div class="logos-right">
+      <div class="stacked-logo">
+        <img src="{% static '/planner/images/logos/logo_agro-ucl.jpg' %}" class="img-logo"/>
+      </div>
+      <div class="stacked-logo">
+        <img src="{% static '/planner/images/logos/logo_epl.png' %}" class="img-logo"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
