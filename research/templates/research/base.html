@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" sizes="144x144" href="{% static '/planner/icons/apple-icon-144x144.png' %}">
     <link rel="apple-touch-icon" sizes="152x152" href="{% static '/planner/icons/apple-icon-152x152.png' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static '/planner/icons/apple-icon-180x180.png' %}">
-    <link rel="icon" type="image/png" sizes="192x192"  href="{% static '/planner/icons/android-icon-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static '/planner/icons/android-icon-192x192.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static '/planner/icons/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="96x96" href="{% static '/planner/icons/favicon-96x96.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static '/planner/icons/favicon-16x16.png' %}">
@@ -28,7 +28,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
-            integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+            integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static "planner/css/style.css" %}">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -44,20 +45,21 @@
 <body>
 
 {% load planner_extras %}
+{% load research_extras %}
 
-
-<div class="jumbotron">
-    <div class="container text-center">
-        <h1> LauzePlan : Recherche</h1>
-        <p>{% now "D d F Y" %}</p>
-    </div>
-
-
-</div>
 
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
+            <div class="navbar-logos">
+                <a class="navbar-brand" href="#">
+                    <img alt="LauzePlan" src="{% static '/planner/icons/apple-icon-57x57.png' %}">
+                </a>
+                <a class="navbar-brand" href="#">
+                    LauzePlan
+                </a>
+            </div>
+            <!-- Hamburger button -->
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -65,8 +67,26 @@
             </button>
         </div>
 
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav ">
+                <li class="{% navactive request 'research:index'%}"><a
+                        href="{% url 'research:index' %}">Jardins</a></li>
+                <li class=""><a href="">Légumes</a></li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="navbar-date">{% now "D d F Y" %}</a>
+                </li>
+                <li><a href="{% url 'research:log_out' %}">
+                    <i class="fas fa-fw fa-sign-out-alt"></i><span
+                        class="hidden-md hidden-lg hidden-sm"> Se déconnecter</span>
+                </a></li>
+            </ul>
+        </div>
     </div>
 </nav>
+
 
 <div class="container">
     {% block content %}{% endblock content %}

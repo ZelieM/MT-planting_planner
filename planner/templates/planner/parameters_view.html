@@ -64,6 +64,23 @@
                         <b> Adresse email de référence : </b>
                         {{ garden.reference_email }}
                     </li>
+                    <li class="list-group-item list-group-item-action">
+                        <b> Détails accessibles à la recherche : </b>
+                        {% if garden.details_available_for_research %}
+                            Oui
+                        {% else %}
+                            Non
+                        {% endif %}
+                    </li>
+
+                    <li class="list-group-item list-group-item-action">
+                        <b> Cultures et légumes accessibles à la recherche : </b>
+                        {% if garden.activity_data_available_for_research %}
+                            Oui
+                        {% else %}
+                            Non
+                        {% endif %}
+                    </li>
 
                 </ul>
             </div>
