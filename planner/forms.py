@@ -28,7 +28,7 @@ class GardenForm(ModelForm):
 
     class Meta:
         model = Garden
-        fields = ['name']
+        fields = ['name', 'postal_code']
 
 
 class VegetableForm(ModelForm):

@@ -2,15 +2,13 @@ from .defaults import *
 # Read SECRET_KEY from an environment variable
 
 import os
+
 SECRET_KEY = os.environ['SECRET_KEY']
-
-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '130.104.12.56', 'lauzeplan.sipr.ucl.ac.be']
-
 
 DATABASES = {
     'default': {

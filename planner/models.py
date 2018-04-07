@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
 from django.urls import reverse
 from model_utils.managers import InheritanceManager
@@ -15,6 +16,7 @@ TYPE_MAX_LENGTH = 100
 
 class Garden(models.Model):
     name = models.CharField(unique=True, max_length=NAME_MAX_LENGTH, verbose_name="Nom du jardin")
+    postal_code = models.IntegerField(default=1000, validators=[MaxValueValidator(9999), MinValueValidator(1000)])
     users = models.ManyToManyField(User)
     reference_email = models.EmailField(_('email address'), blank=True)
     notification_delay = models.IntegerField(default=5)
@@ -22,6 +24,11 @@ class Garden(models.Model):
     soil_type = models.CharField(max_length=TYPE_MAX_LENGTH, blank=True, default="", verbose_name='Type de sol')
     culture_type = models.CharField(max_length=TYPE_MAX_LENGTH, blank=True, default="",
                                     verbose_name='Type d\'agriculture pratiquée sur ce jardin')
+    # Confidentiality fields, if set to true, the garden's data are accessible for research
+    details_available_for_research = models.BooleanField(default=True,
+                                                         verbose_name="J'accepte que les données de mon jardin soient accessibles pour la recherche universitaire")
+    activity_data_available_for_research = models.BooleanField(default=True,
+                                                               verbose_name="J'accepte que les données de mes récoltes soient accessibles pour la recherche universitaire")
 
     def __str__(self):
         return "Garden: " + self.name
@@ -115,7 +122,7 @@ class Bed(models.Model):
 
     @property
     def get_area(self):
-        return (self.length * self.width)/10000  # Division to have m² instead of cm²
+        return (self.length * self.width) / 10000  # Division to have m² instead of cm²
 
     def __str__(self):
         return self.name + " : " + str(self.length) + "x" + str(self.width)
@@ -170,4 +177,3 @@ class Operation(HistoryItem):
     duration = models.DurationField(blank=True, null=True)
     is_deletion = models.BooleanField(default=False)
     original_alert = models.ForeignKey(ForthcomingOperation, on_delete=models.SET_NULL, blank=True, null=True)
-

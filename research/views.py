@@ -1,5 +1,8 @@
 import os
-from django.http import HttpResponse
+
+from django.contrib.auth import logout
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
 from reportlab.pdfgen import canvas
 
 
@@ -14,15 +17,15 @@ import tempfile
 
 @researcher_permission_required()
 def index(request):
-    gardens = Garden.objects.all()
+    gardens = Garden.objects.filter(details_available_for_research=True)
     context = {'gardens': gardens}
-    # return render(request, 'research/index.html', context)
-    return garden_as_pdf(request)
+    return render(request, 'research/index.html', context)
+    # return garden_as_pdf(request)
 
 
 def garden_as_pdf(request):
     # https://rumpelsepp.github.io/2014/09/23/generating-pdfs-with-django-and-latex.html
-    gardens = Garden.objects.all()
+    gardens = Garden.objects.filter(details_available_for_research=True)
     context = {
             'gardens': gardens,
         }
@@ -50,7 +53,7 @@ def garden_as_pdf(request):
 
 def some_view(request):
 
-    gardens = Garden.objects.all()
+    gardens = Garden.objects.filter(details_available_for_research=True)
     context = {
             'gardens': gardens,
         }
@@ -72,3 +75,8 @@ def some_view(request):
     p.showPage()
     p.save()
     return response
+
+
+def log_out(request):
+    logout(request)
+    return HttpResponseRedirect("/login/")
