@@ -46,10 +46,12 @@
             <div class="panel-body">
                 <ul class="list-group">
                     <li class="list-group-item list-group-item-action">
+                        <b>Nom : </b>
+                        {{ garden.name }}
+                    </li>
+                    <li class="list-group-item list-group-item-action">
                         <b>Description : </b>
                         {{ garden.comment }}
-
-
                     </li>
                     <li class="list-group-item list-group-item-action">
                         <b>Type de sol : </b>
@@ -62,6 +64,23 @@
                     <li class="list-group-item list-group-item-action">
                         <b> Adresse email de référence : </b>
                         {{ garden.reference_email }}
+                    </li>
+                    <li class="list-group-item list-group-item-action">
+                        <b> Détails accessibles à la recherche : </b>
+                        {% if garden.details_available_for_research %}
+                            Oui
+                        {% else %}
+                            Non
+                        {% endif %}
+                    </li>
+
+                    <li class="list-group-item list-group-item-action">
+                        <b> Cultures et légumes accessibles à la recherche : </b>
+                        {% if garden.activity_data_available_for_research %}
+                            Oui
+                        {% else %}
+                            Non
+                        {% endif %}
                     </li>
 
                 </ul>
