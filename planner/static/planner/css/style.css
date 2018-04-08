@@ -235,11 +235,6 @@ html, body {
 #action-buttons .fa-iosm{
     margin-top: 7px;
 }
-.show-on-hover {
-    position: fixed;
-    bottom: 50px;
-    right: 50px;
-}
 /* END Floating action button */
 
 /* Logos */

@@ -8,6 +8,32 @@
 
 {% block content %}
 
+<div id="action-buttons">
+    <div class="fab-btn btn-group show-on-hover dropup">
+        <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">
+            <button type="button" class="btn btn-danger btn-io dropdown-toggle" data-toggle="dropdown">
+                    <span class="">
+                      <i class="fas fa-plus"></i>
+                    </span>
+            </button>
+        </div>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li data-toggle="tooltip" data-original-title="Ajouter un légume" data-placement="right">
+                <a class="btn btn-success" data-toggle="modal"
+                   href="{% url 'planner:add_vegetable_to_garden_view' garden.id %}"
+                   data-target="#modal-add_vegetable">
+                    <i class="fas fa-fw fa-plus"></i>
+                </a>
+            </li>
+            <li data-toggle="tooltip" title="Importer un légume depuis la librairie" data-placement="right">
+                <a class="btn btn-primary" data-toggle="modal"
+                   href="{% url 'planner:garden_import_vegetables_view' garden.id %}">
+                    <i class="fas fa-fw fa-download"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
 
     <!-- Modal -->
     <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -18,21 +44,6 @@
     </div>
     <div class="modal fade" id="modal-add_vegetable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
-    </div>
-
-    <div class="container">
-        <a class="btn btn-success margin-button" data-toggle="modal"
-           href="{% url 'planner:add_vegetable_to_garden_view' garden.id %}"
-           data-target="#modal-add_vegetable" title="Ajouter un légume" data-tooltip>
-            <i class="fas fa-fw fa-plus"></i>
-            Ajouter un légume
-        </a>
-        <a class="btn btn-success margin-button"
-           href="{% url 'planner:garden_import_vegetables_view' garden.id %}" title="Importer un légume depuis la librairie" data-tooltip>
-            <i class="fas fa-fw fa-download"></i>
-            Importer un légume depuis la librairie
-        </a>
-
     </div>
 
     <!-- /.modal -->
@@ -105,5 +116,6 @@
 
     {% load static %}
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>
+    <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
 
 {% endblock content %}
