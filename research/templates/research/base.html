@@ -69,10 +69,12 @@
 
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav ">
-                <li class="{% navactive request 'research:all_gardens_view'%}"><a
+                <li class="{% navactive request 'research:all_gardens_view' %}"><a
                         href="{% url 'research:all_gardens_view' %}">Jardins</a></li>
-                <li class="{% navactive request 'research:all_vegetables_view'%}">
+                <li class="{% navactive request 'research:all_vegetables_view' %}">
                     <a href="{% url 'research:all_vegetables_view' %}">Légumes</a></li>
+                <li class="{% navactive request 'research:vegetables_library_view' %}">
+                    <a href="{% url 'research:vegetables_library_view' %}">Librairie</a></li>
 
             </ul>
             <ul class="nav navbar-nav navbar-right">

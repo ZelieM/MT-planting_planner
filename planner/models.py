@@ -48,6 +48,9 @@ class Vegetable(models.Model):
         else:
             return self.name
 
+    class Meta:
+        unique_together = ('name', 'variety', 'garden')
+
 
 class CulturalOperation(models.Model):
     objects = InheritanceManager()

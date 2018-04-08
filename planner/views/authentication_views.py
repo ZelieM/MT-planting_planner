@@ -46,7 +46,8 @@ class GardenSelectionView(View):
     def get(self, request):
         form = self.form_class()
         gardens_followed = Garden.objects.filter(users=request.user)
-        context = {'form': form, 'gardens_followed': gardens_followed}
+        is_searcher = request.user.has_perm('is_researcher')
+        context = {'form': form, 'gardens_followed': gardens_followed, 'is_searcher': is_searcher}
         return render(request, self.template_name, context)
 
     def post(self, request):

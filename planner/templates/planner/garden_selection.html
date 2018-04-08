@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
-            integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+            integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static "planner/css/style.css" %}">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -40,8 +41,16 @@
             </button>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
+            {% if is_searcher %}
+            <ul class="nav navbar-nav ">
+                <li class=""><a
+                        href="{% url 'research:all_gardens_view' %}">Accéder à l'interface chercheur</a></li>
+
+            </ul>
+            {% endif %}
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'planner:log_out' %}"><i class="fas fa-fw fa-sign-out-alt"></i> Se déconnecter</a></li>
+                <li><a href="{% url 'planner:log_out' %}"><i class="fas fa-fw fa-sign-out-alt"></i> Se déconnecter</a>
+                </li>
             </ul>
         </div>
     </div>
