@@ -122,3 +122,6 @@ GRAPH_MODELS = {
 }
 
 DATABASE_ROUTERS = ['vegetables_library.dbRouter.VegetablesLibraryDBRouter']
+
+
+ADMINS = [('Zelie', 'zelie.mulders@student.uclouvain.be')]
