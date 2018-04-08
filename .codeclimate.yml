@@ -6,3 +6,4 @@ exclude_patterns:
   - "**/test/"
   - "**/tests/"
   - "**/migrations/"
+  - "**/static/admin/"
