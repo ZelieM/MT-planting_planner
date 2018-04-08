@@ -123,5 +123,4 @@ GRAPH_MODELS = {
 
 DATABASE_ROUTERS = ['vegetables_library.dbRouter.VegetablesLibraryDBRouter']
 
-
-ADMINS = [('Zelie', 'zelie.mulders@student.uclouvain.be')]
+ADMINS = [('Zelie', 'zelie.mulders@student.uclouvain.be'), ('ZeliePerso', 'zelie.mulders@gmail.com')]
