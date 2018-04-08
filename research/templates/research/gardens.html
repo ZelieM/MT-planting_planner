@@ -1,0 +1,75 @@
+{% extends 'research/base.html' %}
+
+{% block content %}
+    {% load research_extras %}
+
+
+
+    <div id="action-buttons">
+        <div class="fab-btn btn-group show-on-hover dropup">
+            <div data-toggle="tooltip" data-placement="right" title="Exporter" style="margin-left: 42px;">
+                <a href="{% url 'research:export_gardens_data' %}">
+                   <button class="btn btn-primary btn-io">
+                    <span class="">
+                      <i class="fas fa-w fa-download"></i>
+                    </span>
+                </button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-hover table-bordered table-responsive ">
+        <tr>
+            <th> Jardins</th>
+            <th>Utilisateurs</th>
+            <th> Détails</th>
+            <th> Autres</th>
+        </tr>
+        {% for g in gardens %}
+            <tr>
+                <td class="col-md-3">
+                    {{ g.name }}
+                </td>
+                <td class="col-md-3">
+                    {% if g.reference_email %}
+                        {{ g.reference_email }}
+                    {% else %}
+                        Pas d'adresse email communiquée
+                    {% endif %}
+                </td>
+                <td>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-action">
+                            <b>Code postal : </b>
+                            {{ g.postal_code }}
+                        </li>
+                        <li class="list-group-item list-group-item-action">
+                            <b>Description : </b>
+                            {{ g.comment }}
+                        </li>
+                        <li class="list-group-item list-group-item-action">
+                            <b>Type de sol : </b>
+                            {{ g.soil_type }}
+                        </li>
+                        <li class="list-group-item list-group-item-action">
+                            <b> Type d'agriculture pratiquée : </b>
+                            {{ g.culture_type }}
+                        </li>
+                        <li class="list-group-item list-group-item-action">
+                            <b> Nombre d'utilisateurs : </b>
+                            {% get_garden_number_users g %}
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    {#                    <a href="" class="btn btn-success"> Légumes</a>#}
+                    {#                    <a href="" class="btn btn-success"> Activité</a>#}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% load static %}
+    <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
+{% endblock content %}
