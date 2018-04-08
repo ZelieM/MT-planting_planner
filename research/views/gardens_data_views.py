@@ -1,23 +1,17 @@
 import codecs
 import csv
 import os
-
+import tempfile
 from datetime import date
-from django.contrib.auth import logout
+from subprocess import Popen, PIPE
+
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import get_template
 from django.views import View
 from django.views.generic import TemplateView
-from reportlab.pdfgen import canvas
 
 from planner.models import Garden
-from research.custom_decorators import researcher_permission_required
-
-from django.template import Context
-from django.template.loader import get_template
-from subprocess import Popen, PIPE
-import tempfile
 
 
 class GardensView(TemplateView):
@@ -81,22 +75,3 @@ def export_gardens_data():
         writer.writerow(
             [h.name, h.postal_code, h.reference_email, h.comment, h.soil_type, h.culture_type, n])
     return response
-
-
-class VegetablesView(TemplateView):
-    template_name = 'research/vegetables.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        from planner.models import Vegetable as gardens_vegetables
-        vegetables = gardens_vegetables.objects.filter(garden__activity_data_available_for_research=True)
-        context['vegetables'] = vegetables
-        from vegetables_library.models import Vegetable as library_vegetables
-        library_vegetables = library_vegetables.objects.all()
-        context['library_vegetables'] = library_vegetables
-        return context
-
-
-def log_out(request):
-    logout(request)
-    return HttpResponseRedirect("/login/")
