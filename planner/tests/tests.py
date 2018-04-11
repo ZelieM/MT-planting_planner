@@ -8,8 +8,8 @@ from django.test import Client
 class GardenModelTests(TestCase):
 
     def setUp(self):
-        Garden.objects.create(name="MyCuteGarden")
-        Garden.objects.create(name="MyUglyGarden")
+        Garden.objects.create(name="MyCuteGarden", postal_code=1000)
+        Garden.objects.create(name="MyUglyGarden", postal_code=1000)
         User.objects.create_user(username='john', password="smith", email="john@smith.com")
 
     def test_basic(self):

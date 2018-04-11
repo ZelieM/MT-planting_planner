@@ -11,7 +11,7 @@ from planner.models import Garden, Vegetable, COWithDate, ForthcomingOperation, 
 class ServicesTests(TestCase):
 
     def setUp(self):
-        garden = Garden.objects.create(name="MyGarden")
+        garden = Garden.objects.create(name="MyGarden", postal_code=1000)
         surface1 = Bed.objects.create(garden=garden, width=10, length=20)
         v1 = Vegetable.objects.create(name="Carrots", garden=garden)
         op1 = COWithDate.objects.create(name="FirstOP", vegetable=v1, absoluteDate=date(2017, 12, 6))
