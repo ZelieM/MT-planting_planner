@@ -6,8 +6,8 @@
     <table class="table table-hover table-bordered table-responsive ">
         <tr>
             <th> Jardin</th>
-            <th>Nom du légume</th>
-            <th> Variété</th>
+            <th>Légume - Variété</th>
+            <th> Détails </th>
         </tr>
         {% for v in vegetables %}
             <tr>
@@ -15,10 +15,10 @@
                     {{ v.garden.name }}
                 </td>
                 <td class="col-md-3">
-                    {{ v.name }}
+                    {{ v.name }} - {{ v.variety }}
                 </td>
                 <td>
-                    {{ v.variety }}
+
                 </td>
             </tr>
         {% endfor %}
