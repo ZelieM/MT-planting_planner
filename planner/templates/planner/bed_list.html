@@ -3,13 +3,41 @@
 {% block page_title %}Mes planches{% endblock page_title %}
 
 {% block content %}
-    {# View containing the list of beds of the current garden and a form to add new beds #}
+
+    <div class="modal fade" id="modal-create_bed" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+
+    <div id="action-buttons">
+        <div class="fab-btn btn-group show-on-hover dropup">
+            <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">
+                <button type="button" class="btn btn-danger btn-io dropdown-toggle" data-toggle="dropdown">
+                    <span class="">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </span>
+                </button>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li data-toggle="tooltip" title="Imprimer les QR codes" data-placement="right">
+                    <a class="btn btn-warning" href="{% url 'planner:print_qr_codes' garden.id %}">
+                        <i class="fas fa-fw fa-qrcode"></i>
+                    </a>
+
+                </li>
+                <li data-toggle="tooltip" title="Ajouter une planche" data-placement="right">
+                    <a class="btn btn-success" data-toggle="modal"
+                       href="{% url 'planner:create_bed' garden.id %}"
+                       data-target="#modal-create_bed">
+                        <i class="fas fa-fw fa-plus"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {# View containing the list of beds of the current garden  #}
     {% if beds %}
 
         {% load planner_extras %}
         <div class="modal fade" id="modal-deactivate_cultivated_area" tabindex="-1" role="dialog" aria-hidden="true">
-        </div>
-        <div class="modal fade" id="modal-create_bed" tabindex="-1" role="dialog" aria-hidden="true">
         </div>
         <div class="modal fade" id="modal-update_bed" tabindex="-1" role="dialog" aria-hidden="true">
         </div>
@@ -19,12 +47,6 @@
         <table class="table table-hover table-bordered table-responsive ">
             <tr>
                 <th>Planche
-                    <a href="{% url 'planner:create_bed' garden.id %}"
-                       class="pull-right red"
-                       data-toggle="modal"
-                       data-target="#modal-create_bed" title="Ajouter une planche" data-tooltip>
-                        <i class="fas fa-fw fa-plus green"></i>
-                    </a>
                 </th>
                 <th>Dimensions</th>
 
@@ -46,9 +68,6 @@
                            data-target="#modal-update_bed" title="Editer cette planche" data-tooltip>
                             <i class="fas fa-fw fa-pencil-alt blue"></i>
                         </a>
-
-                        {#                            <input class="glyphicon glyphicon-remove" type="submit" value="Supprimer"/>#}
-
                     </td>
                     <td class="col-md-3">
                         <ul class="list-group">
@@ -90,56 +109,14 @@
             {% endfor %}
         </table>
 
-
-{#        {% for b in beds %}#}
-{#            <div class="panel panel-success ">#}
-{#                <div class="panel-heading"> {{ b.name }} - Plantations en cours</div>#}
-{#                <div class="panel-body bed_panel">#}
-{#                    <ul class="list-group">#}
-{#                        {% active_cultivated_areas b.id as cultivated_areas %}#}
-{#                        {% if cultivated_areas %}#}
-{#                            {% for ca in cultivated_areas %}#}
-{#                                <li class="list-group-item list-group-item-action">#}
-{#                                    {{ ca.label }} : {{ ca.vegetable }}#}
-{#                                    <a href="{% url 'planner:deactivate_cultivated_area_view' garden.id ca.id %}"#}
-{#                                       class="pull-right red"#}
-{#                                       data-toggle="modal"#}
-{#                                       data-target="#modal-deactivate_cultivated_area"#}
-{#                                       title="Désactiver cette plantation" data-tooltip>#}
-{#                                        <span class="glyphicon glyphicon-remove"></span>#}
-{#                                    </a>#}
-{#                                </li>#}
-{#                            {% endfor %}#}
-{#                        {% else %}#}
-{#                            <li class="list-group-item list-group-item-action">#}
-{#                                Pas de plantations actives sur cette planche#}
-{#                            </li>#}
-{#                        {% endif %}#}
-{#                    </ul>#}
-{#                </div>#}
-{#            </div>#}
-{#        {% endfor %}#}
     {% else %}
-        <p>Pas de planches sur ce jardin</p>
+        <p>Pas encore de planches sur ce jardin, cliquez sur le bouton <i class="fas fa-fw fa-plus green"></i> pour en ajouter une</p>
 
-        <form action="{% url 'planner:add_bed' garden.id %}" name="addbed" role="form" class="form-horizontal"
-              method="post" accept-charset="utf-8">
-            {% csrf_token %}
-            <div class="form-group">
-                <div class="col-md-3"><input name="bedname" placeholder="Nom de la planche" class="form-control"
-                                             type="text" id="BedName"/></div>
-                <div class="col-md-3"><input name="bedlength" placeholder="Longueur de la planche" class="form-control"
-                                             type="number" id="BedLength" maxlength="15"/></div>
-                <div class="col-md-3"><input name="bedwidth" placeholder="Largeur de la planche" class="form-control"
-                                             type="number" id="BedWidth" maxlength="15"/></div>
-                <div class="col-md-3"><input class="btn btn-success btn btn-success " type="submit" value="Ajouter"/>
-                </div>
-            </div>
-        </form>
     {% endif %}
 
 
     {% load static %}
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>
+    <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
 
 {% endblock content %}

@@ -14,7 +14,7 @@ def forthcoming_operations_as_pdf(request, operations_to_print, garden_id):
         'operations': operations_to_print,
         'garden_id': garden_id,
     }
-    template = get_template('planner/latex/print_operations_template.tex')
+    template = get_template('planner/printable/print_operations_template.tex')
     rendered_tpl = template.render(context).encode('utf-8')
     # Python3 only. For python2 check out the docs!
     with tempfile.TemporaryDirectory() as tempdir:

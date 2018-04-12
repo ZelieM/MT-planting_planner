@@ -1,7 +1,6 @@
 from django.conf.urls import url
-from django.urls import path
-
 from django.contrib.auth import views as auth_views
+from django.urls import path
 
 from .views import *
 
@@ -13,7 +12,6 @@ urlpatterns = [
     # Authentications views
     url(r'^login/$', auth_views.login, {'template_name': 'planner/login.html'}, name='login'),
     path('signup', signup, name='signup'),
-    # path('garden_selection', views.garden_selection, name='garden_selection'),
     path('garden_selection', custom_login_required(GardenSelectionView.as_view()), name='garden_selection'),
     path('logout', log_out, name="log_out"),
 
@@ -24,8 +22,11 @@ urlpatterns = [
          name='update_bed'),
     path('<int:garden_id>/delete_bed/<int:pk>', custom_login_required(BedDelete.as_view()),
          name='delete_bed'),
-    # path('<int:bedid>/delete_bed', views.delete_bed, name='delete_bed'),
     path('<int:garden_id>/', garden_view, name='garden_view'),
+
+    # QR codes logic
+    path('<int:garden_id>/qr/<int:pk>', custom_login_required(BedQRView.as_view()), name="qr_bed_view"),
+    path('<int:garden_id>/print_qr', custom_login_required(PrintQRView.as_view()), name="print_qr_codes"),
 
     # Crops management
     path('<int:garden_id>/crops', custom_login_required(CropsIndexView.as_view()), name='crops_view'),
@@ -39,7 +40,8 @@ urlpatterns = [
     path('<int:garden_id>/alerts/<int:alert_id>/validate', validate_alert, name='validate_alert_view'),
     path('<int:garden_id>/alerts/<int:alert_id>/postpone', postpone_alert, name='postpone_alert_view'),
     path('<int:garden_id>/alerts/<int:alert_id>/delete', delete_alert, name='delete_alert_view'),
-    path('<int:garden_id>/alerts/add_punctual_operation', custom_login_required(AddPunctualOperationView.as_view()),
+    path('<int:garden_id>/alerts/add_punctual_operation',
+         custom_login_required(AddPunctualOperationView.as_view()),
          name='add_punctual_operation'),
     path('<int:garden_id>/alerts/add_observation', custom_login_required(AddObservationView.as_view()),
          name='add_observation'),
@@ -47,7 +49,6 @@ urlpatterns = [
     # Print Alerts view
     path('<int:garden_id>/alerts/print', custom_login_required(PrintForthcomingOperations.as_view()),
          name='print_forthcoming_operations'),
-
 
     # Vegetables view
     path('<int:garden_id>/vegetables', vegetables_view, name='vegetables_view'),
@@ -78,7 +79,8 @@ urlpatterns = [
          name='garden_edit_details'),
 
     # Export pages
-    path('<int:garden_id>/export', custom_login_required(ExportGardenHistoryView.as_view()), name='garden_export_view'),
+    path('<int:garden_id>/export', custom_login_required(ExportGardenHistoryView.as_view()),
+         name='garden_export_view'),
 
     # Statistics page
     path('<int:garden_id>/statistics', custom_login_required(GardenStatisticsView.as_view()),

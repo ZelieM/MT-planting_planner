@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'widget_tweaks',
+    'qr_code',
     'django_extensions',
     'django.contrib.humanize',
     'django.contrib.admindocs',

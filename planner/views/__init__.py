@@ -10,3 +10,4 @@ from .history_views import *
 from .garden_statistics_views import *
 from .vegetables_import_views import *
 from .crops_management_views import *
+from .qr_logic_views import *

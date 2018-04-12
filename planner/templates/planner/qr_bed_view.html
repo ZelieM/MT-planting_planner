@@ -1,0 +1,34 @@
+{% extends "planner/base.html" %}
+
+{% block page_title %}Culture actives de la planche {{ bed.name }}{% endblock page_title %}
+
+{% block content %}
+    {# View containing the list of active areas on a specific bed of a garden #}
+    {% if areas %}
+
+        {% load planner_extras %}
+        <div class="modal fade" id="modal-deactivate_cultivated_area" tabindex="-1" role="dialog" aria-hidden="true">
+        </div>
+
+        <ul class="list-group">
+            {% for a in areas %}
+                <li class="list-group-item list-group-item-action">
+                <a class="btn btn-primary" href="">
+                    {{ a.label }} - {{ a.vegetable }}
+                </a>
+
+                </li>
+            {% endfor %}
+        </ul>
+
+
+    {% else %}
+        <p>Il n'y a pas de culture en cours sur cette planche, cliquer sur le bouton <i
+                class="fas fa-fw fa-plus-circle red"></i> pour en ajouter une</p>
+    {% endif %}
+
+
+    {% load static %}
+    <script src="{% static 'planner/js/activate_modal.js' %}"></script>
+
+{% endblock content %}
