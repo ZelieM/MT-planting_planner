@@ -44,14 +44,19 @@
     var ctx = document.getElementById("myChart").getContext("2d");
 
     var xLabels = [
-         {% for week_number,first_day in x_axis.items %}
+         {% for week_number,first_day in x_axis_estimated.items %}
             "{{ first_day }}",
         {% endfor %}
     ];
 
   // Create an array of data
-    var data = [
-                {% for week_number,work_hours in y_axis.items %}
+    var data_estimated = [
+                {% for week_number,work_hours in y_axis_estimated.items %}
+                    {{ work_hours }},
+                {% endfor %}
+            ];
+    var data_actual = [
+                {% for week_number,work_hours in y_axis_actual.items %}
                     {{ work_hours }},
                 {% endfor %}
             ];
@@ -64,24 +69,16 @@
                 label: 'Charge de travail estimée',
                 backgroundColor: window.chartColors.red,
                 borderColor: window.chartColors.red,
-                data: data,
-                fill: false,
+                data: data_estimated,
+                fill: false
             },
-            //{
-            //    label: 'My Second dataset',
-            //    fill: false,
-            //    backgroundColor: window.chartColors.blue,
-            //    borderColor: window.chartColors.blue,
-            //    data: [
-            //        randomScalingFactor(),
-            //        randomScalingFactor(),
-            //        randomScalingFactor(),
-            //        randomScalingFactor(),
-            //        randomScalingFactor(),
-            //        randomScalingFactor(),
-            //        randomScalingFactor()
-            //    ],
-            //}
+            {
+               label: 'Charge de travail réelle',
+               backgroundColor: window.chartColors.blue,
+               borderColor: window.chartColors.blue,
+               data: data_actual,
+               fill: false
+            }
             ]
         },
         options: {

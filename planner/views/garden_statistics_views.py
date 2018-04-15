@@ -10,6 +10,12 @@ class GardenStatisticsView(TemplateView):
 
     def get(self, request, **kwargs):
         garden_id = kwargs['garden_id']
-        x_axis, y_axis = compute_statistics.get_future_work_hours_by_week(garden_id)
-        context = {'garden': Garden.objects.get(pk=garden_id), 'x_axis': x_axis, 'y_axis': y_axis}
+        x_axis_estimated, y_axis_estimated, x_axis_actual, y_axis_actual = compute_statistics.get_estimated_and_actual_work_hours_per_week(garden_id)
+        context = {
+                    'garden': Garden.objects.get(pk=garden_id),
+                    'x_axis_estimated': x_axis_estimated,
+                    'y_axis_estimated': y_axis_estimated,
+                    'x_axis_actual': x_axis_actual,
+                    'y_axis_actual': y_axis_actual
+                    }
         return render(request, self.template_name, context)
