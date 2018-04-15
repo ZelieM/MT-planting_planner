@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+import collections
 
 from planner import services, queries
 from planner.models import Operation
@@ -149,11 +150,15 @@ def get_estimated_and_actual_work_hours_per_week(garden_id):
     # Make sure the dictionaries have the sames keys
     x_axis_estimated, x_axis_actual = fill_missing_values_between_two_dict(x_axis_estimated, x_axis_actual)
     y_axis_estimated, y_axis_actual = fill_missing_values_between_two_dict(y_axis_estimated, y_axis_actual, 0.0)
-    # Order the dictioneraies by key (=week numbers) because in the HTML template, we won't use the keys
-    x_axis_estimated = dict(sorted(x_axis_estimated.items()))
-    x_axis_actual = dict(sorted(x_axis_actual.items()))
-    y_axis_estimated = dict(sorted(y_axis_estimated.items()))
-    y_axis_actual = dict(sorted(y_axis_actual.items()))
+    # Order the dictionaries by key (=week numbers) because in the HTML template, we won't use the keys
+    x_axis_estimated = collections.OrderedDict(sorted(x_axis_estimated.items()))
+    x_axis_actual = collections.OrderedDict(sorted(x_axis_actual.items()))
+    y_axis_estimated = collections.OrderedDict(sorted(y_axis_estimated.items()))
+    y_axis_actual = collections.OrderedDict(sorted(y_axis_actual.items()))
+    print(x_axis_estimated)
+    print(x_axis_actual)
+    print(y_axis_estimated)
+    print(y_axis_actual)
     return x_axis_estimated, y_axis_estimated, x_axis_actual, y_axis_actual
 
 
