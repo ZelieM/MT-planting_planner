@@ -2,6 +2,7 @@ from html import escape
 from io import BytesIO
 
 from django.urls import reverse
+from django.views.generic import TemplateView
 from xhtml2pdf import pisa
 from django.template.loader import get_template
 from django.http import HttpResponse
@@ -9,6 +10,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
 
+from planner import queries
 from planner.models import Garden, Bed, CultivatedArea
 
 
@@ -42,6 +44,17 @@ class PrintQRView(View):
                 'beds': beds,
                 'urls': urls
             })
+
+
+class OperationByAreaQRView(TemplateView):
+    template_name = 'planner/alerts_by_area.html'
+
+    def get(self, request, **kwargs):
+        garden = Garden.objects.get(pk=kwargs['garden_id'])
+        area = CultivatedArea.objects.get(pk=kwargs['pk'])
+        alerts = queries.get_currently_active_alerts(garden.id, area.id)
+        context = {'garden': garden, 'alerts': alerts, 'area' : area}
+        return render(request, self.template_name, context)
 
 
 def render_to_pdf(template_src, context_dict):

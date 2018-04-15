@@ -9,11 +9,11 @@
         {% load planner_extras %}
         <div class="modal fade" id="modal-deactivate_cultivated_area" tabindex="-1" role="dialog" aria-hidden="true">
         </div>
-
+    <h4> Liste des plantations sur la planche "{{ bed.name }}"</h4>
         <ul class="list-group">
             {% for a in areas %}
                 <li class="list-group-item list-group-item-action">
-                <a class="btn btn-primary" href="">
+                <a class="btn btn-primary" href="{% url 'planner:qr_area_view' garden.id a.id %}">
                     {{ a.label }} - {{ a.vegetable }}
                 </a>
 
@@ -23,8 +23,8 @@
 
 
     {% else %}
-        <p>Il n'y a pas de culture en cours sur cette planche, cliquer sur le bouton <i
-                class="fas fa-fw fa-plus-circle red"></i> pour en ajouter une</p>
+        <p>Il n'y a pas de culture en cours sur cette planche, cliquer sur le bouton
+            <i class="fas fa-fw fa-plus-circle red"></i> pour en ajouter une</p>
     {% endif %}
 
 

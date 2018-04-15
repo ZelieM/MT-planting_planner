@@ -41,6 +41,8 @@ class Vegetable(models.Model):
     name = models.CharField(max_length=100)
     variety = models.CharField(max_length=100, blank=True, default="")
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
+    # Field filled with primary key of vegetable from the library when exporting
+    extern_id = models.IntegerField(null=True)
 
     def __str__(self):
         if self.variety:

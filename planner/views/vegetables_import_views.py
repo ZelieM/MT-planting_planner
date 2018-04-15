@@ -1,10 +1,12 @@
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import FormView
 
-from planner import services
+import planner.import_vegetables_helpers
+from planner import services, import_vegetables_helpers
 from planner.models import Garden
 from vegetables_library.models import Vegetable as library_vegetable
 from vegetables_library.models import CulturalOperation as library_operation
@@ -36,5 +38,5 @@ class SelectVegetablesToImportView(FormView):
 
     def post(self, request, *args, **kwargs):
         vegetables_selected = request.POST.getlist('vegetables_id')
-        services.import_vegetables_to_garden(kwargs['garden_id'], vegetables_selected)
+        import_vegetables_helpers.import_vegetables_to_garden(kwargs['garden_id'], vegetables_selected)
         return HttpResponseRedirect(self.get_success_url())

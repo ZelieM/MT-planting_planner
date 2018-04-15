@@ -85,14 +85,7 @@
         {% load planner_extras %}
         {% load l10n %}
         <div class="panel panel-default ">
-            <div class="panel-heading">Opérations à faire
-                <a href="{% url 'planner:print_forthcoming_operations' garden.id %}"
-                   class="pull-right blue"
-                   data-toggle="modal"
-                   data-target="#modal-print_operations" title="Imprimer la feuille les opérations à faire"
-                   data-tooltip>
-                    <i class="fas fa-fw fa-print"></i>
-                </a>
+            <div class="panel-heading">Opérations à faire sur la plantation {{ area }} ({{ area.vegetable }})
             </div>
             <div class="panel-body">
 
@@ -100,8 +93,6 @@
                     <table class="table sortable">
                         <thead>
                         <tr>
-                            <th>Plantation</th>
-                            <th>Légume</th>
                             <th>Action</th>
                             <th> A faire le</th>
                             <th></th>
@@ -110,9 +101,7 @@
                         <tbody>
                         {% for current_alert in alerts %}
                             <tr data-toggle="collapse" href="#collapse-a{{ current_alert.id }}" class="clickable">
-                                <td><b>{{ current_alert.area_concerned.label }} </b></td>
-                                <td>{{ current_alert.area_concerned.vegetable }}</td>
-                                <td>{{ current_alert.original_cultural_operation.name }}</td>
+                                                                <td>{{ current_alert.original_cultural_operation.name }}</td>
                                 <td>{% due_date current_alert garden.id as current_due_date %} {{ current_due_date|date:"j F" }} </td>
                                 <td>
                                     <a class="" data-toggle="modal"
@@ -155,82 +144,7 @@
             </div>
         </div>
     </div>
-    <div class=" col-md-5 ">
-        <!--<div class="align-content-center">-->
-            <!--<a class="btn btn-success" data-toggle="modal"-->
-               <!--href="{% url 'planner:add_punctual_operation' garden.id %}"-->
-               <!--data-target="#modal-add_punctual_operation" title="Ajouter une opération ponctuelle" data-tooltip>-->
-                <!--<i class="fas fa-fw fa-plus"></i>Ajouter une action-->
-            <!--</a>-->
-            <!--<a class="btn btn-success" data-toggle="modal"-->
-               <!--href="{% url 'planner:add_observation' garden.id %}"-->
-               <!--data-target="#modal-add_observation" title="Ajouter une observation" data-tooltip>-->
-                <!--<i class="fas fa-fw fa-plus"></i> Ajouter une observation-->
-            <!--</a>-->
-            <!--<br>-->
-        <!--</div>-->
-        <!--<br>-->
-        <div class="panel panel-default ">
-            <div class="panel-heading">Historique</div>
-            <div class="panel-body">
 
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Action</th>
-                            <th>Date</th>
-                        </tr>
-                        </thead>
-                        {% for op in history %}
-                            <tbody>
-                            <tr data-toggle="collapse" href="#collapse-history{{ op.id }}" class="clickable">
-                                {% if op|is_operation %}
-                                    <td><b>
-                                        {% if op.is_deletion %}
-                                            <i class="fas fa-fw fa-times red"></i>
-                                        {% else %}
-                                            <i class="fas fa-fw fa-check green"></i>
-                                        {% endif %}
-                                        {{ op.area_concerned.label }}
-                                    </b> {{ op.name }}
-                                    </td>
-                                    <td>{{ op.execution_date }}</td>
-                                {% else %}
-                                    <td>
-                                        <i class="fas fa-fw fa-eye blue-icon"></i>
-                                        <b> Observation - </b> {{ op.area_concerned }}
-                                    </td>
-                                    <td>{{ op.execution_date }}</td>
-                                {% endif %}
-                            </tr>
-
-                            <tr class="info">
-                                <td colspan="5" class="hiddenRow">
-                                    <div class="collapse" id="collapse-history{{ op.id }}">
-                                        {% if op|is_operation %}
-                                            <b> Légume : </b> {{ op.area_concerned.vegetable }}
-                                            {#                                        <br>#}
-                                            {#                                        <b> A été reporté de : </b> {{ op.postponement }} jours#}
-                                            <br>
-                                            <b> Opération effectuée par : </b> {{ op.executor }}
-                                            <br>
-                                            <b> Durée réelle: </b> {{ op.duration }}
-                                            <br>
-                                            <b> Commentaire éventuel : </b> {{ op.note }}
-                                        {% else %}
-                                            <b> Description : </b> {{ op.description }}
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>
     <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>

@@ -4,11 +4,19 @@ from planner.models import CulturalOperation, COWithDate, COWithOffset, Forthcom
 from datetime import datetime, timedelta, date
 
 
-def get_alert_within_notification_period(garden_id, notification_delay):
+def get_garden_areas(garden_id):
+    """ Return the active garden's areas of the garden """
+    return CultivatedArea.objects.filter(garden_id=garden_id, is_active=True)
+
+
+def get_alert_within_notification_period(garden_id, notification_delay, area_id=None):
     """ Return an array with the active alerts and their due date
      Based on the undone alerts, their original cultural operation and en eventual postponement
      """
-    future_alerts = get_future_alerts(garden_id)
+    if area_id:
+        future_alerts = get_future_alerts_by_area(area_id)
+    else:
+        future_alerts = get_future_alerts(garden_id)
     past_alerts = get_past_alerts(garden_id)
     time_delta = date.today() + timedelta(days=notification_delay)
     todo = []
@@ -18,11 +26,11 @@ def get_alert_within_notification_period(garden_id, notification_delay):
     return sorted(todo, key=get_operation_due_date)
 
 
-def get_currently_active_alerts(garden_id):
+def get_currently_active_alerts(garden_id, area_id=None):
     """ Return the list of active alerts for the garden with id garden_id.
     An alert is considered as active if it is marked as notdone and the due date is within the notification delay of the garden """
     notification_delay = Garden.objects.get(pk=garden_id).notification_delay
-    return get_alert_within_notification_period(garden_id, notification_delay)
+    return get_alert_within_notification_period(garden_id, notification_delay, area_id)
 
 
 def get_past_alerts(garden_id):
@@ -33,17 +41,16 @@ def get_future_alerts(garden_id):
     return ForthcomingOperation.objects.filter(area_concerned__in=get_garden_areas(garden_id), is_done=False)
 
 
+def get_future_alerts_by_area(area_id):
+    return ForthcomingOperation.objects.filter(area_concerned_id=area_id, is_done=False)
+
+
 def done_alerts(garden_id):
     """ Return the list of alerts of this garden that are marked as done """
     # garden_areas = get_garden_areas(garden_id)
     history = HistoryItem.objects.order_by('-execution_date').select_subclasses().filter(
         history=services.get_current_history(garden_id))
     return history
-
-
-def get_garden_areas(garden_id):
-    """ Return the active garden's areas of the garden """
-    return CultivatedArea.objects.filter(garden_id=garden_id, is_active=True)
 
 
 def get_operation_due_date(forthcomingoperation):

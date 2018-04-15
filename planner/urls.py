@@ -26,6 +26,7 @@ urlpatterns = [
 
     # QR codes logic
     path('<int:garden_id>/qr/<int:pk>', custom_login_required(BedQRView.as_view()), name="qr_bed_view"),
+    path('<int:garden_id>/qr_area/<int:pk>', custom_login_required(OperationByAreaQRView.as_view()), name="qr_area_view"),
     path('<int:garden_id>/print_qr', custom_login_required(PrintQRView.as_view()), name="print_qr_codes"),
 
     # Crops management
