@@ -27,6 +27,9 @@
         </div>
     </div>
 
+    <!-- MomentJS: a library to manipulate dates in JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js" integrity="sha256-L3S3EDEk31HcLA5C6T2ovHvOcD80+fgqaCDt2BAi92o=" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/locale/be.js" integrity="sha256-kzy83J9hG9gVI1OHzMoNMPVE9Cwoyp5P9UqWDzeBZ04=" crossorigin="anonymous"></script> -->
     <script>
     // Init some nice colors
     window.chartColors = {
@@ -43,19 +46,26 @@
     // Get the canvas element used to draw the chart
     var ctx = document.getElementById("myChart").getContext("2d");
 
+    // Build the X axis that contains the Monday of each week
     var xLabels = [
-         {% for week_number,first_day in x_axis.items %}
+         {% for week_number,first_day in x_axis_estimated.items %}
             "{{ first_day }}",
         {% endfor %}
     ];
 
   // Create an array of data
-    var data = [
-                {% for week_number,work_hours in y_axis.items %}
+    var data_estimated = [
+                {% for week_number,work_hours in y_axis_estimated.items %}
+                    {{ work_hours }},
+                {% endfor %}
+            ];
+    var data_actual = [
+                {% for week_number,work_hours in y_axis_actual.items %}
                     {{ work_hours }},
                 {% endfor %}
             ];
 
+    // Chart configuration
     var config = {
         type: 'line',
         data: {
@@ -64,24 +74,16 @@
                 label: 'Charge de travail estimée',
                 backgroundColor: window.chartColors.red,
                 borderColor: window.chartColors.red,
-                data: data,
-                fill: false,
+                data: data_estimated,
+                fill: false
             },
-            //{
-            //    label: 'My Second dataset',
-            //    fill: false,
-            //    backgroundColor: window.chartColors.blue,
-            //    borderColor: window.chartColors.blue,
-            //    data: [
-            //        randomScalingFactor(),
-            //        randomScalingFactor(),
-            //        randomScalingFactor(),
-            //        randomScalingFactor(),
-            //        randomScalingFactor(),
-            //        randomScalingFactor(),
-            //        randomScalingFactor()
-            //    ],
-            //}
+            {
+               label: 'Charge de travail réelle',
+               backgroundColor: window.chartColors.blue,
+               borderColor: window.chartColors.blue,
+               data: data_actual,
+               fill: false
+            }
             ]
         },
         options: {
@@ -93,6 +95,19 @@
             tooltips: {
                 mode: 'index',
                 intersect: false,
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        // Customize the label show on tooltip to properly show a duration
+                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        mDuration = moment.duration(tooltipItem.yLabel, 'hours');
+                        hours = mDuration.hours() + mDuration.days() * 24;
+                        label += mDuration.humanize() + ' ( ' + hours + 'h' + mDuration.minutes() + ' )';
+                        return label;
+                    }
+                }
             },
             hover: {
                 mode: 'nearest',
@@ -119,56 +134,6 @@
 
     // Instantiate the chart
     var myLineChart = new Chart(ctx, config);
-
-
-        /*
-        google.charts.load('current', {packages: ['corechart', 'bar']});
-        google.charts.setOnLoadCallback(drawBasic);
-
-        function drawBasic() {
-
-            {#var data = new google.visualization.DataTable();#}
-            {#data.addColumn('number', 'X');#}
-            {#data.addColumn('number', 'Heures');#}
-            {##}
-            {#data.addRows([#}
-            {#    {% for week,hours in data.items %}#}
-            {#        [{{ week }}, {{ hours }}],#}
-            {#    {% endfor %}#}
-            {#]);#}
-
-            var data = google.visualization.arrayToDataTable([
-                ['Semaine', 'Heures'],
-                {% for week,hours in data.items %}
-                    [{{ week }}, {{ hours }}],
-                {% endfor %}
-            ]);
-
-            var options = {
-                hAxis: {
-                    title: 'Semaines',
-                    ticks: [
-                        {% for week,hours in data.items %}
-                            {{ week }},
-                        {% endfor %}
-                    ],
-                    legend: {
-                        position: 'none'
-                    }
-                },
-                vAxis: {
-                    title: 'Temps en heures',
-                    legend: {
-                        position: 'none'
-                    }
-                }
-            };
-
-            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-
-            chart.draw(data, options);
-        }
-        */
     </script>
 
 {% endblock content %}
