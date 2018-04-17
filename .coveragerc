@@ -9,3 +9,7 @@ omit =
     */__init__.py
     # omit specific files
     manage.py
+    # omit test files
+    */tests/*
+    # Omit models files
+    */models.py
