@@ -1,4 +1,4 @@
-### sensible choices for default settings
+# sensible choices for default settings
 
 
 """

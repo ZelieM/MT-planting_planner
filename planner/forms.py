@@ -99,6 +99,7 @@ class HarvestForm(ModelForm):
     """
     Form model to register harvest details when closing a cultivated area
    """
+
     class Meta:
         model = CultivatedArea
         fields = ['harvest_date', 'kg_produced', 'total_selling_price']

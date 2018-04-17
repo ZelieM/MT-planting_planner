@@ -50,5 +50,3 @@ class OperationByAreaQRView(TemplateView):
         alerts = queries.get_currently_active_alerts(garden.id, area.id)
         context = {'garden': garden, 'alerts': alerts, 'area': area}
         return render(request, self.template_name, context)
-
-

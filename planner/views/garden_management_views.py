@@ -70,22 +70,25 @@ class EditNotificationDelay(View):
         return HttpResponseRedirect(reverse('planner:garden_settings_view', kwargs=kwargs))
 
 
-class UserUpdate(UpdateView):
-    model = User
-    fields = ['email']
-    template_name = 'planner/modals/user_update_email_form.html'
+class GardenDetailsUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
         return context
 
+    def get_success_url(self):
+        return reverse_lazy('planner:garden_settings_view', kwargs={'garden_id': self.kwargs['garden_id']})
+
+
+class UserUpdate(GardenDetailsUpdate):
+    model = User
+    fields = ['email']
+    template_name = 'planner/modals/user_update_email_form.html'
+
     def get_object(self, queryset=None):
         obj = User.objects.get(pk=self.request.user.id)
         return obj
-
-    def get_success_url(self):
-        return reverse_lazy('planner:garden_settings_view', kwargs={'garden_id': self.kwargs['garden_id']})
 
 
 class GardenDetailsUpdate(UpdateView):
@@ -94,14 +97,7 @@ class GardenDetailsUpdate(UpdateView):
               'activity_data_available_for_research']
     template_name = 'planner/modals/garden_update_details_form.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
-        return context
-
     def get_object(self, queryset=None):
         obj = Garden.objects.get(pk=self.kwargs["garden_id"])
         return obj
 
-    def get_success_url(self):
-        return reverse_lazy('planner:garden_settings_view', kwargs={'garden_id': self.kwargs['garden_id']})

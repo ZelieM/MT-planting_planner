@@ -1,10 +1,13 @@
 import codecs
 import csv
 from datetime import date
+
 from django.http import HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
-from vegetables_library.models import Vegetable, CulturalOperation, COWithDate, COWithOffset
+
+from vegetables_library.models import Vegetable, CulturalOperation, COWithDate
+
 
 class LibraryView(TemplateView):
     template_name = 'research/library_view.html'

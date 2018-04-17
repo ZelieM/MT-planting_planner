@@ -50,6 +50,7 @@ def get_min_operations_date(future_operations, past_operations):
             min_operation_date = operation_due_date
     return min_operation_date
 
+
 def get_min_history_operations_date(history_operations):
     """
     Iterate over the list of Operation and return the smallest execution_date
@@ -59,6 +60,7 @@ def get_min_history_operations_date(history_operations):
         if min_operation_date is None or operation.execution_date < min_operation_date:
             min_operation_date = operation.execution_date
     return min_operation_date
+
 
 def get_max_history_operations_date(history_operations):
     """
@@ -70,6 +72,7 @@ def get_max_history_operations_date(history_operations):
             max_operation_date = operation.execution_date
     return max_operation_date
 
+
 def get_statistics_start_end_dates_for_productions_date(production_start_date,
                                                         production_end_date):
     statistic_start_date = week_start_date(production_start_date.isocalendar()[0],
@@ -78,14 +81,17 @@ def get_statistics_start_end_dates_for_productions_date(production_start_date,
                                          production_end_date.isocalendar()[1])
     return statistic_start_date, statistic_end_date
 
+
 def build_statistics_axis_per_week_for_productions_date(production_start_date,
                                                         production_end_date):
-    statistic_start_date, statistic_end_date = get_statistics_start_end_dates_for_productions_date(production_start_date=production_start_date,
-                                                                                                    production_end_date=production_end_date)
+    statistic_start_date, statistic_end_date = get_statistics_start_end_dates_for_productions_date(
+        production_start_date=production_start_date,
+        production_end_date=production_end_date)
     x_axis = get_mondays_of_weeks_between_two_dates(statistic_start_date, statistic_end_date)
     y_axis = dict.fromkeys(x_axis.keys(), 0.0)
 
     return x_axis, y_axis
+
 
 def get_future_work_hours_by_week(garden_id):
     """ Compute the estimated number of hours to work by week on the garden with id garden_id """
@@ -101,12 +107,13 @@ def get_future_work_hours_by_week(garden_id):
     production_end_date = get_max_operations_date(future_operations, past_operations)
 
     x_axis, y_axis = build_statistics_axis_per_week_for_productions_date(production_start_date=production_start_date,
-                                                                        production_end_date=production_end_date)
+                                                                         production_end_date=production_end_date)
 
     for fop in future_operations:
         op_week = services.get_due_date(fop, past_operations).isocalendar()[1]
         y_axis[op_week] += from_timedelta_to_hours(services.get_expected_duration(fop))
     return x_axis, y_axis
+
 
 def get_actual_work_hours_by_week(garden_id):
     """ Compute the number of hours of work done by week on the garden with id garden_id """
@@ -118,13 +125,14 @@ def get_actual_work_hours_by_week(garden_id):
     production_end_date = get_max_history_operations_date(history_operations)
 
     x_axis, y_axis = build_statistics_axis_per_week_for_productions_date(production_start_date=production_start_date,
-                                                                        production_end_date=production_end_date)
+                                                                         production_end_date=production_end_date)
     for history_operation in history_operations:
         if history_operation.duration is not None and history_operation.execution_date is not None:
             op_week = history_operation.execution_date.isocalendar()[1]
             y_axis[op_week] += from_timedelta_to_hours(history_operation.duration)
 
     return x_axis, y_axis
+
 
 def fill_missing_values_between_two_dict(dict1, dict2, default_value=None):
     """
@@ -142,6 +150,7 @@ def fill_missing_values_between_two_dict(dict1, dict2, default_value=None):
         if key_dict2 not in dict1:
             dict1[key_dict2] = default_value if default_value is not None else dict2[key_dict2]
     return dict1, dict2
+
 
 def get_estimated_and_actual_work_hours_per_week(garden_id):
     # Compute both statistics

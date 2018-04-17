@@ -52,12 +52,14 @@ class AddSeed(View):
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
 
 
-class ValidateAlert(View):
-
+class OperationsOnAlertViews(View):
     def get(self, request, **kwargs):
         garden = Garden.objects.get(pk=kwargs['garden_id'])
         context = {'garden': garden, 'alert_id': kwargs['alert_id']}
-        return render(request, 'planner/modals/validate_alert_form.html', context)
+        return render(request, self.template_name, context)
+
+class ValidateAlert(OperationsOnAlertViews):
+    template_name = 'planner/modals/validate_alert_form.html'
 
     def post(self, request, **kwargs):
         garden_id = kwargs['garden_id']
@@ -74,12 +76,8 @@ class ValidateAlert(View):
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
 
 
-class PostponeAlert(View):
-
-    def get(self, request, **kwargs):
-        garden = Garden.objects.get(pk=kwargs['garden_id'])
-        context = {'garden': garden, 'alert_id': kwargs['alert_id']}
-        return render(request, 'planner/modals/postpone_alert_form.html', context)
+class PostponeAlert(OperationsOnAlertViews):
+    template_name = 'planner/modals/postpone_alert_form.html'
 
     def post(self, request, **kwargs):
         garden_id = kwargs['garden_id']
@@ -92,12 +90,8 @@ class PostponeAlert(View):
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
 
 
-class DeleteAlert(View):
-
-    def get(self, request, **kwargs):
-        garden = Garden.objects.get(pk=kwargs['garden_id'])
-        context = {'garden': garden, 'alert_id': kwargs['alert_id']}
-        return render(request, 'planner/modals/delete_alert_form.html', context)
+class DeleteAlert(OperationsOnAlertViews):
+    template_name = 'planner/modals/delete_alert_form.html'
 
     def post(self, request, **kwargs):
         garden_id = kwargs['garden_id']

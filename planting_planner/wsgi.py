@@ -7,7 +7,6 @@ For more information on this file, see
 https://docs.djangoproject.com/en/2.0/howto/deployment/wsgi/
 """
 
-
 import os
 import json
 from django.core.exceptions import ImproperlyConfigured
@@ -34,6 +33,3 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "planting_planner.settings.produ
 from django.core.wsgi import get_wsgi_application
 
 application = get_wsgi_application()
-
-
-
