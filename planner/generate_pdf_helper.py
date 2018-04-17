@@ -1,11 +1,12 @@
-import tempfile
-
 import os
-from django.http import HttpResponse
-from django.template.loader import get_template
+import tempfile
+from html import escape
+from io import BytesIO
 from subprocess import Popen, PIPE
 
-from planner.models import Garden
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 
 def forthcoming_operations_as_pdf(request, operations_to_print, garden_id):
@@ -34,3 +35,15 @@ def forthcoming_operations_as_pdf(request, operations_to_print, garden_id):
     # r['Content-Disposition'] = 'attachment; filename=texput.pdf'
     r.write(pdf)
     return r
+
+
+def render_html_template_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    context = context_dict
+    html = template.render(context)
+    result = BytesIO()
+
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))

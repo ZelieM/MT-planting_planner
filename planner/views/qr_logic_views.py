@@ -1,16 +1,11 @@
-from html import escape
-from io import BytesIO
-
 from django.urls import reverse
 from django.views.generic import TemplateView
-from xhtml2pdf import pisa
-from django.template.loader import get_template
-from django.http import HttpResponse
 
 from django.shortcuts import render
 from django.views import View
 
 from planner import queries
+from planner.generate_pdf_helper import render_html_template_to_pdf
 from planner.models import Garden, Bed, CultivatedArea
 
 
@@ -37,7 +32,7 @@ class PrintQRView(View):
                 reverse('planner:qr_bed_view', kwargs={'garden_id': garden.id, 'pk': b.id}))
         print("urls")
         print(urls)
-        return render_to_pdf(
+        return render_html_template_to_pdf(
             self.template_name,
             {
                 'pagesize': 'A4',
@@ -53,17 +48,7 @@ class OperationByAreaQRView(TemplateView):
         garden = Garden.objects.get(pk=kwargs['garden_id'])
         area = CultivatedArea.objects.get(pk=kwargs['pk'])
         alerts = queries.get_currently_active_alerts(garden.id, area.id)
-        context = {'garden': garden, 'alerts': alerts, 'area' : area}
+        context = {'garden': garden, 'alerts': alerts, 'area': area}
         return render(request, self.template_name, context)
 
 
-def render_to_pdf(template_src, context_dict):
-    template = get_template(template_src)
-    context = context_dict
-    html = template.render(context)
-    result = BytesIO()
-
-    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-    if not pdf.err:
-        return HttpResponse(result.getvalue(), content_type='application/pdf')
-    return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
