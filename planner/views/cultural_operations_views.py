@@ -2,10 +2,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView
-from django.views.generic.base import View
+from django.views.generic.base import View, TemplateView
 
 from planner import services
-from planner.custom_decorators import custom_login_required
 from planner.forms import CustomDateInput, CustomTimeInput, CODateForm, COOffsetForm
 from planner.models import Garden, COWithDate, COWithOffset, CulturalOperation
 
@@ -81,21 +80,23 @@ class EditCulturalOperationView(View):
             return render(request, 'planner/modals/co_form_success.html', {'co': co})
 
 
-@custom_login_required
-def pick_co_type(request, garden_id, v_id):
-    # if this is a POST request we need to redirect to a form to create the new operation
-    if request.method == 'POST':
-        urlargs = {'garden_id': garden_id, 'vegetable_id': v_id}
+class PickCOType(TemplateView):
+    template_name = 'planner/modals/pick_co_type_form.html'
+
+    def get(self, request, *args, **kwargs):
+        # if a GET, we render the form to pick the type of operation
+        context = {'garden': Garden.objects.get(pk=kwargs['garden_id']), 'vegetable': kwargs['v_id']}
+        return render(request, 'planner/modals/pick_co_type_form.html', context)
+
+    def post(self, request, *args, **kwargs):
         if request.POST['cotype'] == 'offsetco':
-            return HttpResponseRedirect(reverse('planner:add_offset_co_view', kwargs=urlargs))
+            return HttpResponseRedirect(reverse('planner:add_offset_co_view', kwargs=kwargs))
         else:
-            return HttpResponseRedirect(reverse('planner:add_date_co_view', kwargs=urlargs))
-    # if a GET, we render the form to pick the type of operation
-    context = {'garden': Garden.objects.get(pk=garden_id), 'vegetable': v_id}
-    return render(request, 'planner/modals/pick_co_type_form.html', context)
+            return HttpResponseRedirect(reverse('planner:add_date_co_view', kwargs=kwargs))
 
 
-@custom_login_required
-def delete_co(request, co_id):
-    CulturalOperation.objects.select_subclasses().get(pk=co_id).delete()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+class CulturalOperationDelete(View):
+
+    def get(self, request, *args, **kwargs):
+        CulturalOperation.objects.select_subclasses().get(pk=kwargs['co_id']).delete()
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))

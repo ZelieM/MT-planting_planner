@@ -22,15 +22,21 @@ class AlertView(TemplateView):
         return render(request, self.template_name, context)
 
 
-@custom_login_required
-def add_seed(request, garden_id):
-    # if this is a POST request we add the initial operation of the vegetable selected in the history
-    if request.method == 'POST':
+class AddSeed(View):
+    """ GET : This class renders a form to add a plantation to the current garden
+        POST: this class add a vegetable plantation on a specific surface of the garden"""
+
+    def get(self, request, **kwargs):
+        garden_id = kwargs['garden_id']
+        vegetables = Vegetable.objects.filter(garden_id=garden_id)
+        surfaces = Bed.objects.filter(garden_id=garden_id)
+        context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables, 'surfaces': surfaces}
+        return render(request, 'planner/modals/add_seeding_form.html', context)
+
+    def post(self, request, **kwargs):
+        garden_id = kwargs['garden_id']
         surface = request.POST['surface_selection']
         vegetable_id = request.POST['vegetable_selection']
-        # carea = CultivatedArea.objects.create(
-        #     production_period=services.get_current_production_period(garden_id),
-        #     vegetable_id=vegetable_id, label=request.POST['seeding_label'], surface_id=surface)
         vegetable_concerned = Vegetable.objects.get(pk=vegetable_id).name
         garden = Garden.objects.get(pk=garden_id)
         if services.add_new_plantation_to_alerts(garden=garden, vegetable_id=vegetable_id, label=request.POST['seeding_label'],
@@ -44,17 +50,18 @@ def add_seed(request, garden_id):
             messages.add_message(request, messages.WARNING, warning_message)
 
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
-    vegetables = Vegetable.objects.filter(garden_id=garden_id)
-    surfaces = Bed.objects.filter(garden_id=garden_id)
-    context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables, 'surfaces': surfaces}
-    return render(request, 'planner/modals/add_seeding_form.html', context)
 
 
-@custom_login_required
-def validate_alert(request, garden_id, alert_id):
-    garden = Garden.objects.get(pk=garden_id)
-    # if this is a POST request we have to mark the alert as done, else we show a modal to validate
-    if request.method == 'POST':
+class ValidateAlert(View):
+
+    def get(self, request, **kwargs):
+        garden = Garden.objects.get(pk=kwargs['garden_id'])
+        context = {'garden': garden, 'alert_id': kwargs['alert_id']}
+        return render(request, 'planner/modals/validate_alert_form.html', context)
+
+    def post(self, request, **kwargs):
+        garden_id = kwargs['garden_id']
+        alert_id = kwargs['alert_id']
         executor = request.user
         execution_date = request.POST['execution_date']
         note = request.POST['validation_note']
@@ -65,30 +72,36 @@ def validate_alert(request, garden_id, alert_id):
             request.user.username, alert_name, execution_date)
         messages.add_message(request, messages.SUCCESS, success_message)
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
-    context = {'garden': garden, 'alert_id': alert_id}
-    return render(request, 'planner/modals/validate_alert_form.html', context)
 
 
-@custom_login_required
-def postpone_alert(request, garden_id, alert_id):
-    garden = Garden.objects.get(pk=garden_id)
-    # if this is a POST request we have to postpone the alert by the number of days encoded
-    if request.method == 'POST':
+class PostponeAlert(View):
+
+    def get(self, request, **kwargs):
+        garden = Garden.objects.get(pk=kwargs['garden_id'])
+        context = {'garden': garden, 'alert_id': kwargs['alert_id']}
+        return render(request, 'planner/modals/postpone_alert_form.html', context)
+
+    def post(self, request, **kwargs):
+        garden_id = kwargs['garden_id']
+        alert_id = kwargs['alert_id']
         postponement = request.POST['postponement_in_days']
         services.postpone_alert(alert_id, postponement)
         alert_name = ForthcomingOperation.objects.get(pk=alert_id)
         success_message = 'Vous avez bien reporté l\'opération \" {} \" de {} jours'.format(alert_name, postponement)
         messages.add_message(request, messages.SUCCESS, success_message)
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
-    context = {'garden': garden, 'alert_id': alert_id}
-    return render(request, 'planner/modals/postpone_alert_form.html', context)
 
 
-@custom_login_required
-def delete_alert(request, garden_id, alert_id):
-    garden = Garden.objects.get(pk=garden_id)
-    # if this is a POST request we have to postpone the alert by the number of days encoded
-    if request.method == 'POST':
+class DeleteAlert(View):
+
+    def get(self, request, **kwargs):
+        garden = Garden.objects.get(pk=kwargs['garden_id'])
+        context = {'garden': garden, 'alert_id': kwargs['alert_id']}
+        return render(request, 'planner/modals/delete_alert_form.html', context)
+
+    def post(self, request, **kwargs):
+        garden_id = kwargs['garden_id']
+        alert_id = kwargs['alert_id']
         reason = request.POST['deletion_justification']
         note = request.POST['note']
         executor = request.user
@@ -97,8 +110,6 @@ def delete_alert(request, garden_id, alert_id):
         success_message = 'Vous ({}) avez supprimé l\'opération \" {} \"'.format(request.user.username, alert_name)
         messages.add_message(request, messages.SUCCESS, success_message)
         return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
-    context = {'garden': garden, 'alert_id': alert_id}
-    return render(request, 'planner/modals/delete_alert_form.html', context)
 
 
 class PrintForthcomingOperations(FormView):

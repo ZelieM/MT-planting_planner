@@ -1,19 +1,21 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 
 from planner.custom_decorators import custom_login_required
 from planner.forms import VegetableForm
 from planner.models import Garden, Vegetable, CulturalOperation
 
 
-@custom_login_required
-def vegetables_view(request, garden_id):
-    garden = Garden.objects.get(pk=garden_id)
-    vegetables = Vegetable.objects.filter(garden=garden)
-    cultural_operations = CulturalOperation.objects.select_subclasses()
-    context = {'garden': garden, 'vegetables': vegetables, "cultural_operations": cultural_operations}
-    return render(request, 'planner/vegetables_list.html', context=context)
+class VegetablesView(TemplateView):
+    template_name = 'planner/vegetables_list.html'
+
+    def get(self, request, *args, **kwargs):
+        garden = Garden.objects.get(pk=kwargs['garden_id'])
+        vegetables = Vegetable.objects.filter(garden=garden)
+        cultural_operations = CulturalOperation.objects.select_subclasses()
+        context = {'garden': garden, 'vegetables': vegetables, "cultural_operations": cultural_operations}
+        return render(request, self.template_name, context=context)
 
 
 class AddVegetableView(FormView):
