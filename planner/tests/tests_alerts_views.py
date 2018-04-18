@@ -21,3 +21,9 @@ class AlertsViewsTests(TestCase):
         login = self.client.login(username=self.username, password=self.password)
         response = self.client.get('/{}/alerts'.format(self.garden.id))
         self.assertEqual(response.status_code, 200)
+
+    def test_add_seed(self):
+        login = self.client.login(username=self.username, password=self.password)
+        response = self.client.get('/{}/alerts/add_seed'.format(self.garden.id))
+        self.assertEqual(response.status_code, 200)
+

@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
@@ -24,7 +24,8 @@ def signup(request):
         password = request.POST['password']
         mail = request.POST['mailaddress']
         try:
-            User.objects.create_user(username=username, password=password, email=mail)
+            user = User.objects.create_user(username=username, password=password, email=mail)
+            login(request, user)
             return HttpResponseRedirect('garden_selection')
         except IntegrityError:
             messages.error(request, 'Le nom d\'utilisateur existe deja')
