@@ -80,9 +80,9 @@ urlpatterns = [
          name='delete_user_from_garden'),
     path('<int:garden_id>/settings/notification_delay', custom_login_required(EditNotificationDelay.as_view()),
          name='edit_notification_delay'),
-    path('<int:garden_id>/settings/edit_email', custom_login_required(UserUpdate.as_view()),
+    path('<int:garden_id>/settings/edit_email', custom_login_required(UserEmail.as_view()),
          name='edit_user_email'),
-    path('<int:garden_id>/settings/edit_details', custom_login_required(GardenDetailsUpdate.as_view()),
+    path('<int:garden_id>/settings/edit_details', custom_login_required(GardenDetails.as_view()),
          name='garden_edit_details'),
 
     # Export pages

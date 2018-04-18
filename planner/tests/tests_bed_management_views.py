@@ -53,4 +53,4 @@ class BedManagementViewsTests(TestCase):
         response = self.client.post('/{}/delete_bed/{}'.format(self.garden.id, bed.id))
         self.assertRedirects(response, expected_url='/{}/'.format(self.garden.id), status_code=302,
                              target_status_code=200)
-        self.assertFalse(len(Bed.objects.filter(pk=bed.id)), 0)
+        self.assertEqual(len(Bed.objects.filter(pk=bed.id)), 0)

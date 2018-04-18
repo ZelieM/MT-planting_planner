@@ -10,7 +10,6 @@ from planner.custom_decorators import custom_login_required
 from planner.models import Garden
 
 
-
 class AddUserToGarden(TemplateView):
     template_name = 'planner/modals/add_user_to_garden_form.html'
 
@@ -81,7 +80,7 @@ class GardenDetailsUpdate(UpdateView):
         return reverse_lazy('planner:garden_settings_view', kwargs={'garden_id': self.kwargs['garden_id']})
 
 
-class UserUpdate(GardenDetailsUpdate):
+class UserEmail(GardenDetailsUpdate):
     model = User
     fields = ['email']
     template_name = 'planner/modals/user_update_email_form.html'
@@ -91,7 +90,7 @@ class UserUpdate(GardenDetailsUpdate):
         return obj
 
 
-class GardenDetailsUpdate(UpdateView):
+class GardenDetails(GardenDetailsUpdate):
     model = Garden
     fields = ['name', 'comment', 'soil_type', 'culture_type', 'reference_email', 'details_available_for_research',
               'activity_data_available_for_research']
