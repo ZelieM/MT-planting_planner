@@ -25,6 +25,14 @@ class AuthenticationViewsTests(TestCase):
         self.assertEqual(Garden.objects.get(name="NewGarden").postal_code, 4444)
         self.assertRedirects(response, expected_url='/{}/alerts'.format(garden_created.id), status_code=302, target_status_code=200)
 
+    def test_access_private_garden(self):
+        login = self.client.login(username=self.username, password=self.password)
+        garden = Garden.objects.create(name="My Beautiful Garden", postal_code=1234)
+        response = self.client.get('/{}'.format(garden.id))
+        self.assertEqual(response.status_code, 403)   # Access denied
+        garden.users.add(self.user)
+        response = self.client.get('/{}'.format(garden.id))
+        self.assertEqual(response.status_code, 200)
 
     def test_login(self):
         login = self.client.login(username=self.username, password=self.password)

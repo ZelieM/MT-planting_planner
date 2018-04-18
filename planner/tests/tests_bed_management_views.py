@@ -17,7 +17,7 @@ class BedManagementViewsTests(TestCase):
 
     def test_beds_index(self):
         login = self.client.login(username=self.username, password=self.password)
-        response = self.client.get('/{}/'.format(self.garden.id))
+        response = self.client.get('/{}'.format(self.garden.id))
         self.assertEqual(response.status_code, 200)
 
     def test_create_bed(self):
@@ -29,7 +29,7 @@ class BedManagementViewsTests(TestCase):
         form = {'name': 'MyBed', 'length': '450', 'width': '350', 'exposition': 'NO', 'comment': 'nocomment',
                 'soil_type': 'oily'}
         response = self.client.post('/{}/create_bed'.format(self.garden.id), form)
-        self.assertRedirects(response, expected_url='/{}/'.format(self.garden.id), status_code=302,
+        self.assertRedirects(response, expected_url='/{}'.format(self.garden.id), status_code=302,
                              target_status_code=200)
         self.assertEqual(len(self.garden.bed_set.all()), 1)
 
@@ -41,7 +41,7 @@ class BedManagementViewsTests(TestCase):
         form = {'name': 'ChangingName', 'length': '450', 'width': '350', 'exposition': 'NO', 'comment': 'nocomment',
                 'soil_type': 'oily'}
         response = self.client.post('/{}/update_bed/{}'.format(self.garden.id, bed.id), data=form)
-        self.assertRedirects(response, expected_url='/{}/'.format(self.garden.id), status_code=302,
+        self.assertRedirects(response, expected_url='/{}'.format(self.garden.id), status_code=302,
                              target_status_code=200)
         self.assertEqual(Bed.objects.get(pk=bed.id).name, 'ChangingName')
 
@@ -51,6 +51,6 @@ class BedManagementViewsTests(TestCase):
         response = self.client.get('/{}/delete_bed/{}'.format(self.garden.id, bed.id))
         self.assertEqual(response.status_code, 200)
         response = self.client.post('/{}/delete_bed/{}'.format(self.garden.id, bed.id))
-        self.assertRedirects(response, expected_url='/{}/'.format(self.garden.id), status_code=302,
+        self.assertRedirects(response, expected_url='/{}'.format(self.garden.id), status_code=302,
                              target_status_code=200)
         self.assertEqual(len(Bed.objects.filter(pk=bed.id)), 0)
