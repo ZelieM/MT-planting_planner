@@ -58,6 +58,7 @@ class OperationsOnAlertViews(View):
         context = {'garden': garden, 'alert_id': kwargs['alert_id']}
         return render(request, self.template_name, context)
 
+
 class ValidateAlert(OperationsOnAlertViews):
     template_name = 'planner/modals/validate_alert_form.html'
 
