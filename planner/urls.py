@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from planner.custom_decorators import access_private_garden
+from planner.custom_decorators import access_private_garden, custom_login_required
 from .views import *
 
 app_name = 'planner'

@@ -17,7 +17,7 @@ install:
 
 script:
   - export DJANGO_SECRETKEY=secret
-  - coverage run --source='.' manage.py test --settings=planting_planner.settings.tests
+  - coverage run --source='.' manage.py test planner --settings=planting_planner.settings.tests
 
 after_script:
   - codeclimate-test-reporter --file .coverage
