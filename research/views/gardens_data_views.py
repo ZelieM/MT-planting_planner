@@ -26,32 +26,32 @@ class GardensView(TemplateView):
         return context
 
 
-def garden_as_pdf(request):
-    # https://rumpelsepp.github.io/2014/09/23/generating-pdfs-with-django-and-latex.html
-    gardens = Garden.objects.filter(details_available_for_research=True)
-    context = {
-        'gardens': gardens,
-    }
-    template = get_template('research/latex_template.tex')
-    rendered_tpl = template.render(context).encode('utf-8')
-    # Python3 only. For python2 check out the docs!
-    with tempfile.TemporaryDirectory() as tempdir:
-        # Create subprocess, supress output with PIPE and
-        # run latex twice to generate the TOC properly.
-        # Finally read the generated pdf.
-        for i in range(2):
-            process = Popen(
-                ['pdflatex', '-output-directory', tempdir],
-                stdin=PIPE,
-                stdout=PIPE,
-            )
-            process.communicate(rendered_tpl)
-        with open(os.path.join(tempdir, 'texput.pdf'), 'rb') as f:
-            pdf = f.read()
-    r = HttpResponse(content_type='application/pdf')
-    # r['Content-Disposition'] = 'attachment; filename=texput.pdf'
-    r.write(pdf)
-    return r
+# def garden_as_pdf(request):
+#     # https://rumpelsepp.github.io/2014/09/23/generating-pdfs-with-django-and-latex.html
+#     gardens = Garden.objects.filter(details_available_for_research=True)
+#     context = {
+#         'gardens': gardens,
+#     }
+#     template = get_template('research/latex_template.tex')
+#     rendered_tpl = template.render(context).encode('utf-8')
+#     # Python3 only. For python2 check out the docs!
+#     with tempfile.TemporaryDirectory() as tempdir:
+#         # Create subprocess, supress output with PIPE and
+#         # run latex twice to generate the TOC properly.
+#         # Finally read the generated pdf.
+#         for i in range(2):
+#             process = Popen(
+#                 ['pdflatex', '-output-directory', tempdir],
+#                 stdin=PIPE,
+#                 stdout=PIPE,
+#             )
+#             process.communicate(rendered_tpl)
+#         with open(os.path.join(tempdir, 'texput.pdf'), 'rb') as f:
+#             pdf = f.read()
+#     r = HttpResponse(content_type='application/pdf')
+#     # r['Content-Disposition'] = 'attachment; filename=texput.pdf'
+#     r.write(pdf)
+#     return r
 
 
 class ExportGardens(View):
