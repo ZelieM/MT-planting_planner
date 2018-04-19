@@ -6,7 +6,6 @@ from django.views import View
 from django.views.generic import TemplateView, FormView
 
 from planner import queries, services, generate_pdf_helper
-from planner.custom_decorators import custom_login_required
 from planner.forms import ForthcomingOperationsDelayForm
 from planner.models import Garden, Vegetable, Bed, ForthcomingOperation
 
@@ -39,7 +38,8 @@ class AddSeed(View):
         vegetable_id = request.POST['vegetable_selection']
         vegetable_concerned = Vegetable.objects.get(pk=vegetable_id).name
         garden = Garden.objects.get(pk=garden_id)
-        if services.add_new_plantation_to_alerts(garden=garden, vegetable_id=vegetable_id, label=request.POST['seeding_label'],
+        if services.add_new_plantation_to_alerts(garden=garden, vegetable_id=vegetable_id,
+                                                 label=request.POST['seeding_label'],
                                                  surface_id=surface):
             success_message = 'Vous ({}) avez ajouté une plantation de {} '.format(
                 request.user.username, vegetable_concerned)
@@ -69,7 +69,8 @@ class ValidateAlert(OperationsOnAlertViews):
         execution_date = request.POST['execution_date']
         note = request.POST['validation_note']
         duration = request.POST['duration']
-        services.mark_operation_as_done(operation_id=alert_id, execution_date=execution_date, executor=executor, note=note, duration=duration)
+        services.mark_operation_as_done(operation_id=alert_id, execution_date=execution_date, executor=executor,
+                                        note=note, duration=duration)
         alert_name = ForthcomingOperation.objects.get(pk=alert_id)
         success_message = 'Vous ({}) avez indiqué avoir effectué l\'opération \" {} \" le {}'.format(
             request.user.username, alert_name, execution_date)
@@ -123,4 +124,3 @@ class PrintForthcomingOperations(FormView):
         int_period = int(days_period)
         operations_to_print = queries.get_alert_within_notification_period(garden_id, int_period)
         return generate_pdf_helper.forthcoming_operations_as_pdf(request, operations_to_print, garden_id)
-

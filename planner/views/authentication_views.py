@@ -3,10 +3,9 @@ from django.contrib.auth import logout, login
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.views.generic.base import View
 
-from planner.custom_decorators import custom_login_required
 from planner.forms import GardenForm
 from planner.models import Garden
 

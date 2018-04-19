@@ -64,5 +64,3 @@ class BedDelete(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
-
-

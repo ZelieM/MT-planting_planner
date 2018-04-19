@@ -30,8 +30,6 @@ class PrintQRView(View):
         for b in beds:
             urls[b] = self.request.build_absolute_uri(
                 reverse('planner:qr_bed_view', kwargs={'garden_id': garden.id, 'pk': b.id}))
-        print("urls")
-        print(urls)
         return render_html_template_to_pdf(
             self.template_name,
             {

@@ -6,7 +6,6 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import UpdateView, TemplateView
 
-from planner.custom_decorators import custom_login_required
 from planner.models import Garden
 
 
@@ -99,4 +98,3 @@ class GardenDetails(GardenDetailsUpdate):
     def get_object(self, queryset=None):
         obj = Garden.objects.get(pk=self.kwargs["garden_id"])
         return obj
-

@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import FormView, TemplateView
 
-from planner.custom_decorators import custom_login_required
 from planner.forms import VegetableForm
 from planner.models import Garden, Vegetable, CulturalOperation
 
