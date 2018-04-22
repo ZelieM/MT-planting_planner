@@ -89,10 +89,11 @@ class PickCOType(TemplateView):
         return render(request, 'planner/modals/pick_co_type_form.html', context)
 
     def post(self, request, *args, **kwargs):
+        context = {'garden_id': kwargs['garden_id'], 'vegetable_id': kwargs['v_id']}
         if request.POST['cotype'] == 'offsetco':
-            return HttpResponseRedirect(reverse('planner:add_offset_co_view', kwargs=kwargs))
+            return HttpResponseRedirect(reverse('planner:add_offset_co_view', kwargs=context))
         else:
-            return HttpResponseRedirect(reverse('planner:add_date_co_view', kwargs=kwargs))
+            return HttpResponseRedirect(reverse('planner:add_date_co_view', kwargs=context))
 
 
 class CulturalOperationDelete(View):
