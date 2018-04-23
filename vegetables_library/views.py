@@ -6,13 +6,13 @@ from django.views import View
 from django.views.generic import FormView, CreateView
 
 from vegetables_library.forms import VegetableForm, CustomTimeInput, CustomDateInput, CODateForm, COOffsetForm
-from vegetables_library.models import Vegetable, CulturalOperation, COWithOffset, COWithDate
+from vegetables_library.models import Variety, CulturalOperation, COWithOffset, COWithDate, Species
 
 
 def index(request):
-    vegetables = Vegetable.objects.values()
+    species = Species.objects.values()
     cultural_operations = CulturalOperation.objects.select_subclasses()
-    context = {'vegetables': vegetables, "cultural_operations": cultural_operations}
+    context = {'species': species, "cultural_operations": cultural_operations}
     return render(request, 'vegetables_library/vegetables_list.html', context=context)
 
 

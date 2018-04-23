@@ -2,7 +2,7 @@ from planner.models import Vegetable, COWithDate, COWithOffset
 
 
 def import_vegetables_to_garden(garden_id, vegetables_selected):
-    from vegetables_library.models import Vegetable as library_vegetable
+    from vegetables_library.models import Variety as library_vegetable
     for v in vegetables_selected:
         current_vegetable = library_vegetable.objects.get(pk=v)
         copy_vegetable(garden_id, current_vegetable)
@@ -15,9 +15,11 @@ def copy_vegetable(garden_id, vegetable_from_library):
     from vegetables_library.models import COWithDate as library_co_with_date
     # If the vegetable is already existing in the garden, we return without copying it again
     if not len(Vegetable.objects.filter(garden_id=garden_id, extern_id=vegetable_from_library.id)):
-        copied_vegetable = Vegetable.objects.create(garden_id=garden_id, name=vegetable_from_library.name,
+        copied_vegetable = Vegetable.objects.create(garden_id=garden_id, name=vegetable_from_library.french_name,
+                                                    variety=vegetable_from_library.species.french_name,
                                                     extern_id=vegetable_from_library.id)
-        operations_to_copy = library_operation.objects.select_subclasses().filter(vegetable_id=vegetable_from_library.id)
+        operations_to_copy = library_operation.objects.select_subclasses().filter(
+            vegetable_id=vegetable_from_library.id)
         for op in operations_to_copy:
             if type(op) is library_co_with_date:
                 co = COWithDate.objects.create(vegetable_id=copied_vegetable.id, name=op.name, duration=op.duration,

@@ -24,9 +24,11 @@ class ImportVegetablesViewsTests(TestCase):
         self.client.login(username=self.username, password=self.password)
         response = self.client.get('/{}/import_vegetables/select'.format(self.garden.id))
         self.assertEqual(response.status_code, 200)
-        from vegetables_library.models import Vegetable as library_vegetable
+        from vegetables_library.models import Variety as library_vegetable
+        from vegetables_library.models import Species as library_species
+        species = library_species.objects.create(french_name="Red kuri")
         self.assertEqual(self.garden.vegetable_set.count(), 0)
-        vegetable = library_vegetable.objects.create(name="Pumpkin", variety="Red kuri")
+        vegetable = library_vegetable.objects.create(french_name="Pumpkin", species=species)
         form = {'vegetables_id': vegetable.id}
         response = self.client.post('/{}/import_vegetables/select'.format(self.garden.id), form)
         self.assertRedirects(response, '/{}/import_vegetables'.format(self.garden.id))

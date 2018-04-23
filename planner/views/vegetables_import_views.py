@@ -7,7 +7,7 @@ from django.views.generic import FormView
 from planner import import_vegetables_helpers
 from planner.models import Garden
 from vegetables_library.models import CulturalOperation as library_operation
-from vegetables_library.models import Vegetable as library_vegetable
+from vegetables_library.models import Variety as library_vegetable
 
 
 class ImportVegetablesView(View):

@@ -9,7 +9,7 @@ class VegetablesView(TemplateView):
         from planner.models import Vegetable as gardens_vegetables
         vegetables = gardens_vegetables.objects.filter(garden__activity_data_available_for_research=True)
         context['vegetables'] = vegetables
-        from vegetables_library.models import Vegetable as library_vegetables
+        from vegetables_library.models import Variety as library_vegetables
         library_vegetables = library_vegetables.objects.all()
         context['library_vegetables'] = library_vegetables
         return context

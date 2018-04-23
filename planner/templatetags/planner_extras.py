@@ -6,6 +6,7 @@ from planner import services, queries
 from datetime import date, timedelta
 
 from planner.models import Operation, ForthcomingOperation, CultivatedArea
+from vegetables_library.models import Variety
 
 register = template.Library()
 
@@ -34,6 +35,13 @@ def addstr(arg1, arg2):
 @register.filter
 def related_to(cultural_operation, vegetableid):
     return cultural_operation.select_subclasses().filter(vegetable_id=vegetableid).all()
+
+
+@register.filter
+def varieties_from_species(species):
+    print(species)
+    print(Variety.objects.filter(species_id=species))
+    return Variety.objects.filter(species=species)
 
 
 @register.simple_tag

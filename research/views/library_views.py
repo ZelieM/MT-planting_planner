@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
 
-from vegetables_library.models import Vegetable, CulturalOperation, COWithDate
+from vegetables_library.models import Variety, CulturalOperation, COWithDate
 
 
 class LibraryView(TemplateView):
@@ -15,7 +15,7 @@ class LibraryView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        library_vegetables = Vegetable.objects.all()
+        library_vegetables = Variety.objects.all()
         context['library_vegetables'] = library_vegetables
         return context
 
@@ -26,7 +26,7 @@ class ExportLibrary(View):
 
 
 def export_library_data():
-    library_vegetables = Vegetable.objects.all()
+    library_vegetables = Variety.objects.all()
 
     response = HttpResponse(content_type='text/csv')
     filename = "vegetable_library_data_{}.csv".format(str(date.today()))

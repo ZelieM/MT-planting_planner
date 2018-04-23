@@ -40,58 +40,38 @@
 
     </div>
 
-    {% if vegetables %}
+    {% if species %}
         {% load planner_extras %}
         <div class="container">
             <div class="panel-group">
                 <div class="panel panel-primary">
-                    {% for v in vegetables.all %}
+                    {% for s in species %}
                         <div class="panel-heading">
-                            <h4 data-toggle="collapse" href="#collapse-v{{ v.id }}" class="panel-title clickable">
-                                <span>{{ v.name }} <span class="pull-right"><i class="fas fa-fw fa-chevron-down"></i></span></span>
+                            <h4 data-toggle="collapse" href="#collapse-v{{ s.id }}" class="panel-title clickable">
+                                <span>{{ s.french_name }} <span class="pull-right"><i class="fas fa-fw fa-chevron-down"></i></span></span>
                             </h4>
 
                         </div>
-                        <div id="collapse-v{{ v.id }}" class="panel-collapse collapse">
+                        <div id="collapse-v{{ s.id }}" class="panel-collapse collapse">
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th>Action</th>
-                                        <th>Date ou délai</th>
-                                        <th class="hidden-xs hidden-sm">Durée [h/m²]</th>
-                                        <th></th>
+                                        <th>Legume</th>
+                                        <th>Nom latin</th>
                                     </tr>
                                     </thead>
-                                    {% for co in cultural_operations|related_to:v.id %}
+                                    {% for v in s.id|varieties_from_species %}
                                         <tbody>
                                         <tr>
-                                            <td>{{ co.name }}</td>
-                                            {% load humanize %}
-                                            <td>{{ co.get_date|date:"j F" }}</td>
-                                            <td class="hidden-xs hidden-sm" title="hh:mm:ss">{{ co.duration }}</td>
-                                            <td>
+                                            <td>{{ v.french_name }}</td>
 
-                                                <a class="" data-toggle="modal"
-                                                   href="{% url 'vegetables_library:edit_co_view' co.id %}"
-                                                   data-target="#modal-edit" title="edit item" data-tooltip>
-                                                    <i class="fas fa-fw fa-pencil-alt"></i>
-                                                </a>
-                                                <a href="{% url 'vegetables_library:delete_co' co.id %}">
-                                                    <i class="fas fa-fw fa-times"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                            <td>{{ v.latin_name }}</td>
+
+
                                         </tbody>
                                     {% endfor %}
                                 </table>
-
-                                <a class="btn btn-success margin-button" data-toggle="modal"
-                                   href="{% url 'vegetables_library:pick_co_type' v.id %}"
-                                   data-target="#modal-pick-type" title="add item" data-tooltip>
-                                    <i class="fas fa-fw fa-plus"></i>
-                                    Ajouter une opération
-                                </a>
 
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 from django.forms import ModelForm, DateInput, TimeInput
 
-from vegetables_library.models import Vegetable, COWithDate, COWithOffset
+from vegetables_library.models import Variety, COWithDate, COWithOffset
 
 
 class CustomDateInput(DateInput):
@@ -16,8 +16,8 @@ class CustomTimeInput(TimeInput):
 class VegetableForm(ModelForm):
     """ Model form based on the Vegetable model """
     class Meta:
-        model = Vegetable
-        fields = ['name', 'variety']
+        model = Variety
+        fields = ['french_name', 'latin_name']
 
 
 class CODateForm(ModelForm):
