@@ -92,12 +92,13 @@ class OutOfCupSeeding(models.Model):
     """ Main dates when sowing out of cup """
     seeding_start = models.DateField()
     seeding_end = models.DateField()
-    transplant_start = models.DateField()
-    transplant_end = models.DateField()
+    transplant_start = models.DateField(null=True, blank=True)
+    transplant_end = models.DateField(null=True, blank=True)
+    pots_cycle_duration = models.IntegerField(null=True, blank=True)
     harvest_start = models.DateField()
     harvest_end = models.DateField()
     ground_cycle_duration = models.IntegerField()
-    pots_cycle_duration = models.IntegerField()
+
 
 
 class Variety(models.Model):
@@ -107,7 +108,8 @@ class Variety(models.Model):
     latin_name = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     species = models.ForeignKey(Species, on_delete=models.CASCADE, null=True)
     open_ground_seeding = models.ForeignKey(GroundSeeding, on_delete=models.SET_NULL, null=True)
-    out_of_cup_seeding = models.ForeignKey(OutOfCupSeeding, on_delete=models.SET_NULL, null=True)
+    out_of_cup_seeding = models.ForeignKey(OutOfCupSeeding, on_delete=models.SET_NULL, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
 
     # TODO ensure that there is at least open ground seeding or out of cup seeding not null
 

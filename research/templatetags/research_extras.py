@@ -2,6 +2,8 @@ from django import template
 from django.contrib.auth.models import User
 from django.urls import reverse
 
+from vegetables_library.models import Variety
+
 register = template.Library()
 
 
@@ -21,3 +23,10 @@ def navactive(request, url):
 def vegetable_operations(vegetableid):
     from vegetables_library.models import CulturalOperation
     return CulturalOperation.objects.select_subclasses().filter(vegetable_id=vegetableid).all()
+
+
+@register.filter
+def varieties_from_species(species):
+    print(species)
+    print(Variety.objects.filter(species_id=species))
+    return Variety.objects.filter(species=species)

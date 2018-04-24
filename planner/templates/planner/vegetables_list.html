@@ -112,7 +112,12 @@
             </div>
         </div>
 
+        {% else %}
+        <p>Pas encore de légumes dans ce jardin, cliquez sur le bouton <i class="fas fa-fw fa-plus green"></i> pour en créer ou en importer</p>
+
     {% endif %}
+
+
 
     {% load static %}
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>

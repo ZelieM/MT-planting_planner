@@ -38,8 +38,8 @@ class Garden(models.Model):
 
 
 class Vegetable(models.Model):
-    name = models.CharField(max_length=100)
-    variety = models.CharField(max_length=100, blank=True, default="")
+    name = models.CharField(max_length=100, verbose_name='Nom')
+    variety = models.CharField(max_length=100, blank=True, default="", verbose_name="Variété")
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
     # Field filled with primary key of vegetable from the library when exporting
     extern_id = models.IntegerField(null=True)
@@ -88,12 +88,12 @@ class COWithDate(CulturalOperation):
 
 class Bed(models.Model):
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
-    name = models.CharField(max_length=NAME_MAX_LENGTH)
-    length = models.IntegerField()
-    width = models.IntegerField()
+    name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name='Nom')
+    length = models.IntegerField(verbose_name='Longueur (cm)')
+    width = models.IntegerField(verbose_name='Largeur (cm)')
 
-    comment = models.TextField(blank=True, default="")
-    soil_type = models.CharField(max_length=TYPE_MAX_LENGTH, blank=True, default="")
+    comment = models.TextField(blank=True, default="", verbose_name='Commentaire éventuel')
+    soil_type = models.CharField(max_length=TYPE_MAX_LENGTH, blank=True, default="", verbose_name='Type de sol')
 
     NORTH = 'N'
     SOUTH = 'S'
@@ -114,7 +114,7 @@ class Bed(models.Model):
         (NW, 'Nord-Ouest')
     )
 
-    exposition = models.CharField(max_length=2, choices=EXPOSITION_CHOICES, default=NORTH)
+    exposition = models.CharField(max_length=2, choices=EXPOSITION_CHOICES, default=NORTH, verbose_name='Exposition')
 
     @property
     def get_area(self):
@@ -125,16 +125,17 @@ class Bed(models.Model):
 
 
 class CultivatedArea(models.Model):
-    vegetable = models.ForeignKey(Vegetable, blank=True, null=True, on_delete=models.SET_NULL)
+    vegetable = models.ForeignKey(Vegetable, blank=True, null=True, on_delete=models.SET_NULL,
+                                  verbose_name='Légume cultivé')
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
-    surface = models.ForeignKey(Bed, on_delete=models.CASCADE)
-    label = models.TextField()
+    surface = models.ForeignKey(Bed, on_delete=models.CASCADE, verbose_name="Planche")
+    label = models.TextField(verbose_name="Label de la culture")
     # Following attributes are related to the harvest of this cultivated area
     is_active = models.BooleanField(default=True)  # Set to false when we harvest this cropping
-    harvest_date = models.DateField(null=True)
+    harvest_date = models.DateField(null=True, verbose_name="Date de récolte")
     executor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    kg_produced = models.IntegerField(blank=True, default=0)
-    total_selling_price = models.IntegerField(blank=True, default=0)
+    kg_produced = models.IntegerField(blank=True, default=0, verbose_name="Quantité récoltée (kg)")
+    total_selling_price = models.IntegerField(blank=True, default=0, verbose_name="Prix de vente total (€)")
 
     def __str__(self):
         return self.label
@@ -158,18 +159,19 @@ class History(models.Model):
 class HistoryItem(models.Model):
     objects = InheritanceManager()
     history = models.ForeignKey(History, on_delete=models.CASCADE)
-    execution_date = models.DateField()
+    execution_date = models.DateField(verbose_name="Date d'exécution")
     executor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    area_concerned = models.ForeignKey(CultivatedArea, on_delete=models.SET_NULL, blank=True, null=True)
+    area_concerned = models.ForeignKey(CultivatedArea, on_delete=models.SET_NULL, blank=True, null=True,
+                                       verbose_name="Culture concernée")
 
 
 class Observation(HistoryItem):
-    description = models.TextField()
+    description = models.TextField(verbose_name="Description")
 
 
 class Operation(HistoryItem):
-    name = models.CharField(max_length=NAME_MAX_LENGTH)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name="Nom de l'opération")
     note = models.TextField(blank=True, default="")
-    duration = models.DurationField(blank=True, null=True)
+    duration = models.DurationField(blank=True, null=True, verbose_name="Durée")
     is_deletion = models.BooleanField(default=False)
     original_alert = models.ForeignKey(ForthcomingOperation, on_delete=models.SET_NULL, blank=True, null=True)

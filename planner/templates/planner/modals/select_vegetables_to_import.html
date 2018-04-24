@@ -9,8 +9,8 @@
         {% csrf_token %}
         <div class="modal-body">
             <select name="vegetables_id" multiple class="selectpicker">
-                {% for v in vegetables_from_library %}
-                <option value="{{ v.id }}">{{ v.name }}</option>
+                {% for v in varieties_from_library %}
+                <option value="{{ v.id }}">{{ v.species.french_name }} - {{ v.french_name }}</option>
                 {% endfor %}
             </select>
         </div>

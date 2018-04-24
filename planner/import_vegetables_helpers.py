@@ -18,6 +18,7 @@ def copy_vegetable(garden_id, vegetable_from_library):
         copied_vegetable = Vegetable.objects.create(garden_id=garden_id, name=vegetable_from_library.french_name,
                                                     variety=vegetable_from_library.species.french_name,
                                                     extern_id=vegetable_from_library.id)
+        copy_seeding_dates(vegetable_from_library, copied_vegetable)
         operations_to_copy = library_operation.objects.select_subclasses().filter(
             vegetable_id=vegetable_from_library.id)
         for op in operations_to_copy:
@@ -27,6 +28,13 @@ def copy_vegetable(garden_id, vegetable_from_library):
                 co_with_offset_to_copy = library_co_with_offset.objects.filter(vegetable=vegetable_from_library,
                                                                                previous_operation=op)
                 copy_with_recursion_co_with_offset(copied_vegetable.id, co_with_offset_to_copy, op, co)
+
+
+def copy_seeding_dates(vegetable_from_library, vegetable_copied):
+    seeding_end = vegetable_from_library.open_ground_seeding.seeding_end
+    COWithDate.objects.create(name="Semis", vegetable=vegetable_copied, absoluteDate=seeding_end)
+    harvest_end = vegetable_from_library.open_ground_seeding.harvest_end
+    COWithDate.objects.create(name="Récolte", vegetable=vegetable_copied, absoluteDate=harvest_end)
 
 
 def copy_with_recursion_co_with_offset(vegetable_concerned_id, operations_from_library_to_copy, library_parent_co,

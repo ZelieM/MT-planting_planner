@@ -124,6 +124,9 @@ def get_actual_work_hours_by_week(garden_id):
     production_start_date = get_min_history_operations_date(history_operations)
     production_end_date = get_max_history_operations_date(history_operations)
 
+    if production_start_date is None or production_end_date is None:
+        raise NoHistoryError()
+
     x_axis, y_axis = build_statistics_axis_per_week_for_productions_date(production_start_date=production_start_date,
                                                                          production_end_date=production_end_date)
     for history_operation in history_operations:
@@ -203,3 +206,7 @@ def week_start_date(year, week):
         delta_weeks -= 1
     delta = timedelta(days=-delta_days, weeks=delta_weeks)
     return d + delta
+
+
+class NoHistoryError(Exception):
+    pass

@@ -54,6 +54,15 @@ class CulturalOperationWithOffsetCreate(CulturalOperationCreate):
     model = COWithOffset
     fields = ['name', 'vegetable', 'previous_operation', 'offset_in_days', 'duration']
 
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super(CulturalOperationWithOffsetCreate, self).get_form(form_class)
+        # Ensure that the dropdown list of previous operation only contains operations from this garden
+        form.fields['previous_operation'].queryset = CulturalOperation.objects.select_subclasses().filter(
+            vegetable__garden_id=self.kwargs['garden_id'])
+        return form
+
 
 class EditCulturalOperationView(View):
     template_name = 'planner/modals/edit_co_form.html'

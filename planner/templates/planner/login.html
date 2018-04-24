@@ -6,8 +6,18 @@
 <h1 class="text-center">Connectez-vous</h1>
 
 {% if form.errors %}
-<p class="alert alert-danger alert-dismissible">Nom d'utilisateur ou mot de passe incorrect</p>
+<div class="alert alert-danger alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    Nom d'utilisateur ou mot de passe incorrect</div>
 {% endif %}
+
+
+    <div class="alert alert-warning alert-dismissible">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+     Cette application a pour vocation d'aider les maraichers professionnels comme amateurs à planifier leurs cultures et garder une trace de leurs actions.
+        Créez un compte et créez un jardin pour commencer à l'utiliser.
+        <i> Elle a été développée dans le cadre d'un mémoire à l'Université Catholique de Louvain. </i>
+</div>
 
 <form action="" name="login" role="form" class="form-horizontal" method="post"
 accept-charset="utf-8">

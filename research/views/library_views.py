@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
 
-from vegetables_library.models import Variety, CulturalOperation, COWithDate
+from vegetables_library.models import Variety, CulturalOperation, COWithDate, Species
 
 
 class LibraryView(TemplateView):
@@ -15,8 +15,8 @@ class LibraryView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        library_vegetables = Variety.objects.all()
-        context['library_vegetables'] = library_vegetables
+        species = Species.objects.all()
+        context['library_species'] = species
         return context
 
 
