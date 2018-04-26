@@ -167,10 +167,6 @@ def get_estimated_and_actual_work_hours_per_week(garden_id):
     x_axis_actual = collections.OrderedDict(sorted(x_axis_actual.items()))
     y_axis_estimated = collections.OrderedDict(sorted(y_axis_estimated.items()))
     y_axis_actual = collections.OrderedDict(sorted(y_axis_actual.items()))
-    print(x_axis_estimated)
-    print(x_axis_actual)
-    print(y_axis_estimated)
-    print(y_axis_actual)
     return x_axis_estimated, y_axis_estimated, x_axis_actual, y_axis_actual
 
 

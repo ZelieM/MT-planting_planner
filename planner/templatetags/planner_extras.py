@@ -39,8 +39,6 @@ def related_to(cultural_operation, vegetableid):
 
 @register.filter
 def varieties_from_species(species):
-    print(species)
-    print(Variety.objects.filter(species_id=species))
     return Variety.objects.filter(species=species)
 
 

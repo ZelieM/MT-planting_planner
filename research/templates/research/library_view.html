@@ -21,13 +21,25 @@
                         <i class="fas fa-fw fa-download"></i>
                     </a>
                 </li>
-                <li data-toggle="tooltip" title="Importer des données" data-placement="right">
-                    <a class="btn btn-warning"
-                       href="">
-                        <i class="fas fa-fw fa-upload"></i>
+                <li data-toggle="tooltip" data-original-title="Télécharger les espèces" data-placement="right">
+                    <a class="btn btn-primary"
+                       href="{% url "research:export_library_species" %}">
+                        <i class="fas fa-fw fa-download"></i>
                     </a>
-
                 </li>
+                <li data-toggle="tooltip" data-original-title="Télécharger les variétés" data-placement="right">
+                    <a class="btn btn-primary"
+                       href="{% url "research:export_library_varieties" %}">
+                        <i class="fas fa-fw fa-download"></i>
+                    </a>
+                </li>
+                {#                <li data-toggle="tooltip" title="Importer des données" data-placement="right">#}
+                {#                    <a class="btn btn-warning"#}
+                {#                       href="">#}
+                {#                        <i class="fas fa-fw fa-upload"></i>#}
+                {#                    </a>#}
+                {##}
+                {#                </li>#}
             </ul>
         </div>
     </div>
@@ -45,24 +57,24 @@
                     </div>
                     <div id="collapse-v{{ s.id }}" class="panel-collapse collapse">
                         <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Legume</th>
+                                    <th>Nom latin</th>
+                                </tr>
+                                </thead>
+                                {% for v in s.id|varieties_from_species %}
+                                    <tbody>
                                     <tr>
-                                        <th>Legume</th>
-                                        <th>Nom latin</th>
-                                    </tr>
-                                    </thead>
-                                    {% for v in s.id|varieties_from_species %}
-                                        <tbody>
-                                        <tr>
-                                            <td>{{ v.french_name }}</td>
+                                        <td>{{ v.french_name }}</td>
 
-                                            <td>{{ v.latin_name }}</td>
+                                        <td>{{ v.latin_name }}</td>
 
 
-                                        </tbody>
-                                    {% endfor %}
-                                </table>
+                                    </tbody>
+                                {% endfor %}
+                            </table>
                             {##}
 
 
