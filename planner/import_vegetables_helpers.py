@@ -31,10 +31,11 @@ def copy_vegetable(garden_id, vegetable_from_library):
 
 
 def copy_seeding_dates(vegetable_from_library, vegetable_copied):
-    seeding_end = vegetable_from_library.open_ground_seeding.seeding_end
-    COWithDate.objects.create(name="Semis", vegetable=vegetable_copied, absoluteDate=seeding_end)
-    harvest_end = vegetable_from_library.open_ground_seeding.harvest_end
-    COWithDate.objects.create(name="Récolte", vegetable=vegetable_copied, absoluteDate=harvest_end)
+    if vegetable_from_library.open_ground_seeding:  # Some vegetable in the library don't have seeding details
+        seeding_end = vegetable_from_library.open_ground_seeding.seeding_end
+        COWithDate.objects.create(name="Semis", vegetable=vegetable_copied, absoluteDate=seeding_end)
+        harvest_end = vegetable_from_library.open_ground_seeding.harvest_end
+        COWithDate.objects.create(name="Récolte", vegetable=vegetable_copied, absoluteDate=harvest_end)
 
 
 def copy_with_recursion_co_with_offset(vegetable_concerned_id, operations_from_library_to_copy, library_parent_co,
