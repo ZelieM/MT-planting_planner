@@ -15,22 +15,22 @@
                 </button>
             </div>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <li data-toggle="tooltip" data-original-title="Télécharger les données" data-placement="right">
-                    <a class="btn btn-primary"
-                       href="{% url "research:export_library" %}">
-                        <i class="fas fa-fw fa-download"></i>
-                    </a>
-                </li>
+{#                <li data-toggle="tooltip" data-original-title="Télécharger les opérations" data-placement="right">#}
+{#                    <a class="btn btn-primary"#}
+{#                       href="{% url "research:export_library" %}">#}
+{#                        <i class="fas fa-fw fa-download"></i>#}
+{#                    </a>#}
+{#                </li>#}
                 <li data-toggle="tooltip" data-original-title="Télécharger les espèces" data-placement="right">
                     <a class="btn btn-primary"
                        href="{% url "research:export_library_species" %}">
-                        <i class="fas fa-fw fa-download"></i>
+                        <i class="fas fa-fw fa-book"></i>
                     </a>
                 </li>
                 <li data-toggle="tooltip" data-original-title="Télécharger les variétés" data-placement="right">
                     <a class="btn btn-primary"
                        href="{% url "research:export_library_varieties" %}">
-                        <i class="fas fa-fw fa-download"></i>
+                        <i class="fas fa-fw fa-seedling"></i>
                     </a>
                 </li>
                 {#                <li data-toggle="tooltip" title="Importer des données" data-placement="right">#}

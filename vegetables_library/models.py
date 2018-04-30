@@ -100,7 +100,6 @@ class OutOfCupSeeding(models.Model):
     ground_cycle_duration = models.IntegerField()
 
 
-
 class Variety(models.Model):
     """ A variety is a classification level which describe a cultivated vegetable.
     For example: Celebrity is a variety of Tomato"""

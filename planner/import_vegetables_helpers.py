@@ -1,3 +1,8 @@
+import codecs
+import csv
+
+from django.http import HttpResponse
+
 from planner.models import Vegetable, COWithDate, COWithOffset
 
 
@@ -56,3 +61,11 @@ def copy_co_with_offset(vegetable_concerned_id, operation_to_copy, parent_co):
     return COWithOffset.objects.create(vegetable_id=vegetable_concerned_id, name=operation_to_copy.name,
                                        duration=operation_to_copy.duration, previous_operation=parent_co,
                                        offset_in_days=operation_to_copy.offset_in_days)
+
+
+def get_csv_writer(csv_title):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename={}'.format(csv_title)
+    response.write(codecs.BOM_UTF8)
+    writer = csv.writer(response, delimiter=';', dialect='excel', quoting=csv.QUOTE_ALL)
+    return writer, response
