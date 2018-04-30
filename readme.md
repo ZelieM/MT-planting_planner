@@ -71,6 +71,7 @@ coverage run --source='.' manage.py test planner --settings=planting_planner.set
 - Clone the repository
 - Ensure that python3 is installed
 - Install all requirements (with pip3)
+- After each migration, restart apache (`service apache2 restart`)
 
 
 Apache config file (`/etc/apache2/sites-available/lauzeplan.conf`)

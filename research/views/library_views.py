@@ -1,11 +1,9 @@
-import codecs
-import csv
 from datetime import date
 
-from django.http import HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
 
+from planner.import_vegetables_helpers import get_csv_writer
 from vegetables_library.models import Variety, CulturalOperation, COWithDate, Species
 
 
@@ -40,9 +38,12 @@ def export_library_varieties():
     filename = "vegetable_library_varieties_{}.csv".format(str(date.today()))
     (writer, response) = get_csv_writer(filename)
     writer.writerow(
-        ['Espèce', 'Variété FR', 'Variété LATIN'])
+        ['Espèce', 'Variété FR', 'Variété LATIN', 'Début semis', 'Fin semis', 'Début récolte', 'Fin récolte',
+         'Durée du cycle', 'Note'])
     for h in library_vegetables:
-        writer.writerow([h.species.french_name, h.french_name, h.latin_name])
+        writer.writerow([h.species.french_name, h.french_name, h.latin_name, h.open_ground_seeding.seeding_start,
+                         h.open_ground_seeding.seeding_end, h.open_ground_seeding.harvest_start,
+                         h.open_ground_seeding.harvest_end, h.open_ground_seeding.cycle_duration, h.comment])
     return response
 
 
@@ -70,11 +71,3 @@ def export_library_data():
             else:
                 writer.writerow([h.name, h.variety, co.name, "", co.offset_in_days, co.previous_operation.name])
     return response
-
-
-def get_csv_writer(csv_title):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename={}'.format(csv_title)
-    response.write(codecs.BOM_UTF8)
-    writer = csv.writer(response, delimiter=';', dialect='excel', quoting=csv.QUOTE_ALL)
-    return writer, response

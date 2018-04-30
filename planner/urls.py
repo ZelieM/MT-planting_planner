@@ -89,6 +89,8 @@ urlpatterns = [
     # Export pages
     path('<int:garden_id>/export', access_private_garden(ExportGardenHistoryView.as_view()),
          name='garden_export_view'),
+    path('<int:garden_id>/export_harvest', access_private_garden(ExportGardenHarvests.as_view()),
+         name='garden_harvest_export_view'),
 
     # Statistics page
     path('<int:garden_id>/statistics', access_private_garden(GardenStatisticsView.as_view()),

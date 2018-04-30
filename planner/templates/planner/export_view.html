@@ -22,8 +22,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">Exporter l'historique de ce jardin</div>
             <div class="panel-body">
-                <form  action="{% url 'planner:garden_export_view' garden.id %}" role="form" class="" method="post" accept-charset="utf-8">
-                     {% csrf_token %}
+                <form action="{% url 'planner:garden_export_view' garden.id %}" role="form" class="" method="post"
+                      accept-charset="utf-8">
+                    {% csrf_token %}
                     {{ form|crispy }}
 
                     <input class="btn btn-success" type="submit" value="Exporter"/>
@@ -31,5 +32,11 @@
             </div>
         </div>
     </div>
+
+
+    <a class="btn btn-primary"
+       href="{% url "planner:garden_harvest_export_view" garden.id %}">
+        <i class="fas fa-fw fa-book"></i>
+    </a>
 
 {% endblock content %}
