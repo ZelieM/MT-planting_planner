@@ -102,4 +102,7 @@ urlpatterns = [
     path('<int:garden_id>/import_vegetables/select', access_private_garden(SelectVegetablesToImportView.as_view()),
          name='select_vegetables_to_import_view'),
 
+    # Contact modal
+    path('contact', ContactView.as_view(), name='contact_info'),
+
 ]
