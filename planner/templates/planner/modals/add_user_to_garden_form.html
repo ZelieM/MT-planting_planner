@@ -79,7 +79,7 @@
                 <div class="form-group">
                     <label for="user_selection">Quel utilisateur voulez vous ajouter? </label>
                     <input id="user_selection_id" name="user_selection" hidden/> <!-- contain the user ID -->
-                    <input id="user_selection"/> <!-- display the user name -->
+                    <input id="user_selection" class="form-control"/> <!-- display the user name -->
                     <br>
                 </div>
             </div>
@@ -98,6 +98,7 @@
       {% endfor %}
     ];
     $( "#user_selection" ).autocomplete({
+      minLength: 3,
       source: usersList,
       select: function(event, ui) {
         // Set the ID of the selected user to the hidden input field.
