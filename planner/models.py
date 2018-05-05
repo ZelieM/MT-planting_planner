@@ -38,7 +38,7 @@ class Garden(models.Model):
 
 
 class Vegetable(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Nom')
+    name = models.CharField(max_length=100, verbose_name='Espèce')
     variety = models.CharField(max_length=100, blank=True, default="", verbose_name="Variété")
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
     # Field filled with primary key of vegetable from the library when exporting

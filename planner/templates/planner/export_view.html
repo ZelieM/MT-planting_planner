@@ -2,8 +2,6 @@
 
 {% block page_title %}Exportation{% endblock page_title %}
 
-{% load crispy_forms_tags %}
-
 {% block content %}
 
     {% if messages %}
@@ -20,23 +18,51 @@
 
     <div class="container col-md-6 col-md-offset-3">
         <div class="panel panel-default">
-            <div class="panel-heading">Exporter l'historique de ce jardin</div>
+            <div class="panel-heading">Exporter l'historique des actions de ce jardin</div>
             <div class="panel-body">
-                <form action="{% url 'planner:garden_export_view' garden.id %}" role="form" class="" method="post"
+                <form action="{% url 'planner:garden_history_export_view' garden.id %}" role="form" class=""
+                      method="post"
                       accept-charset="utf-8">
                     {% csrf_token %}
-                    {{ form|crispy }}
+                    <label for="history_start_date">Veuillez sélectionner une date de début de l'historique </label>
+                    <input type="date" id="history_start_date" name="history_start_date" class="form-control datePicker margin-input">
 
-                    <input class="btn btn-success" type="submit" value="Exporter"/>
+                    <input class="btn btn-success form-control margin-input" type="submit" value="Exporter"/>
                 </form>
             </div>
         </div>
     </div>
 
 
-    <a class="btn btn-primary"
-       href="{% url "planner:garden_harvest_export_view" garden.id %}">
-        <i class="fas fa-fw fa-book"></i>
-    </a>
 
+    <div class="container col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">Exporter les données de récoltes de ce jardin</div>
+            <div class="panel-body">
+                <form action="{% url 'planner:garden_harvest_export_view' garden.id %}" role="form" class=""
+                      method="post"
+                      accept-charset="utf-8">
+                    {% csrf_token %}
+
+                    <label for="harvest_history_start_date">Veuillez sélectionner une date de début de l'historique de
+                        récolte </label>
+                    <input type="date" id="harvest_history_start_date" name="harvest_history_start_date" class="form-control datePicker margin-input">
+                    <input class="btn btn-success form-control margin-input" type="submit" value="Exporter"/>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        Date.prototype.toDateInputValue = (function () {
+            var local = new Date(this);
+            local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+            return local.toJSON().slice(0, 10);
+        });
+        $(document).ready(function () {
+            $('.datePicker').each(function (index, element) {
+                $(element).val(new Date().toDateInputValue());
+            });
+        })
+    </script>
 {% endblock content %}
