@@ -1,10 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import UpdateView, TemplateView
+from django.views.generic import UpdateView, TemplateView, FormView
 
 from planner.models import Garden
 
@@ -91,10 +93,30 @@ class UserEmail(GardenDetailsUpdate):
 
 class GardenDetails(GardenDetailsUpdate):
     model = Garden
-    fields = ['name', 'comment', 'soil_type', 'culture_type', 'reference_email', 'details_available_for_research',
+    fields = ['name', 'postal_code', 'comment', 'soil_type', 'culture_type', 'reference_email', 'details_available_for_research',
               'activity_data_available_for_research']
     template_name = 'planner/modals/garden_update_details_form.html'
 
     def get_object(self, queryset=None):
         obj = Garden.objects.get(pk=self.kwargs["garden_id"])
         return obj
+
+
+class ChangePasswordView(FormView):
+    template_name = 'planner/modals/change_password.html'
+
+    def post(self, request, *args, **kwargs):
+        form = PasswordChangeForm(request.user, request.POST)
+        garden = Garden.objects.get(pk=kwargs['garden_id'])
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Votre mot de passe a bien été changé')
+            return HttpResponseRedirect(reverse('planner:garden_settings_view', kwargs=kwargs))
+        else:
+            return render(request, self.template_name, {'form': form, 'garden': garden})
+
+    def get(self, request, *args, **kwargs):
+        form = PasswordChangeForm(request.user)
+        garden = Garden.objects.get(pk=kwargs['garden_id'])
+        return render(request, self.template_name, {'form': form, 'garden': garden})

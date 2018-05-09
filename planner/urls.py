@@ -85,6 +85,8 @@ urlpatterns = [
          name='edit_user_email'),
     path('<int:garden_id>/settings/edit_details', access_private_garden(GardenDetails.as_view()),
          name='garden_edit_details'),
+    path('<int:garden_id>/settings/edit_password', access_private_garden(ChangePasswordView.as_view()),
+         name='garden_edit_password'),
 
     # Export pages
     path('<int:garden_id>/export', access_private_garden(ExportGardenHistoryView.as_view()),

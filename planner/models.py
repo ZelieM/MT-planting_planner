@@ -16,7 +16,8 @@ TYPE_MAX_LENGTH = 100
 
 class Garden(models.Model):
     name = models.CharField(unique=True, max_length=NAME_MAX_LENGTH, verbose_name="Nom du jardin")
-    postal_code = models.IntegerField(validators=[MaxValueValidator(9999), MinValueValidator(1000)])
+    postal_code = models.IntegerField(validators=[MaxValueValidator(9999), MinValueValidator(1000)],
+                                      verbose_name="Code postal")
     users = models.ManyToManyField(User)
     reference_email = models.EmailField(_('email address'), blank=True)
     notification_delay = models.IntegerField(default=5)
