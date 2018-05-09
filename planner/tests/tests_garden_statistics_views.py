@@ -17,9 +17,8 @@ class GardenStatisticsViewsTests(TestCase):
         self.garden = Garden.objects.create(name="MyGarden", postal_code=1000)
         self.garden.users.add(self.user)
 
-    # TODO Fix problem in garden_statistics when we compute start_Date and end_date
-    # Error when we create a garden with no data
-    # def test_index(self):
-    #     self.client.login(username=self.username, password=self.password)
-    #     response = self.client.get('/{}/statistics'.format(self.garden.id))
-    #     self.assertEqual(response.status_code, 200)
+
+    def test_index(self):
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get('/{}/statistics'.format(self.garden.id))
+        self.assertEqual(response.status_code, 200)

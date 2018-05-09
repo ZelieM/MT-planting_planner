@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 
-from planner.models import Garden, Bed
+from planner.models import Garden, Bed, Vegetable, CultivatedArea
 
 
 class QRLogicViewsTests(TestCase):
@@ -24,4 +24,12 @@ class QRLogicViewsTests(TestCase):
     def test_bed_qr_view(self):
         self.client.login(username=self.username, password=self.password)
         response = self.client.get('/{}/qr/{}'.format(self.garden.id, self.surface.id))
+        self.assertEquals(response.status_code, 200)
+
+    def test_bed_qr_area_view(self):
+        self.client.login(username=self.username, password=self.password)
+        vegetable = Vegetable.objects.create(name="Pumpkin", variety="Red kuri", garden=self.garden)
+        area = CultivatedArea.objects.create(label="PumpkinPower", garden=self.garden, surface=self.surface,
+                                             vegetable=vegetable)
+        response = self.client.get('/{}/qr_area/{}'.format(self.garden.id, area.id))
         self.assertEquals(response.status_code, 200)

@@ -61,7 +61,7 @@ urlpatterns = [
          name='add_vegetable_to_garden_view'),
 
     # Cultural operations management
-    path('vegetables/delete_co/<int:co_id>', access_private_garden(CulturalOperationDelete.as_view()),
+    path('<int:garden_id>/vegetables/delete_co/<int:co_id>', access_private_garden(CulturalOperationDelete.as_view()),
          name='delete_co'),
     path('<int:garden_id>/co/<int:co_id>', access_private_garden(EditCulturalOperationView.as_view()),
          name='edit_co_view'),
