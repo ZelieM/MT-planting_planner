@@ -14,7 +14,7 @@
                     <select class="form-control" id="vegetable_selection" name="vegetable_selection" required>
                         {% for v in vegetables %}
                             <option id="seeded_vegetable" name="seeded_vegetable"
-                                    value="{{ v.id }}">{{ v.name }}</option>
+                                    value="{{ v.id }}">{{ v.name }} - {{ v.variety }}</option>
                         {% endfor %}
                     </select>
                 </div>

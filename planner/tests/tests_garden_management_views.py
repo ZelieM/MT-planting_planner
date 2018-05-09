@@ -24,7 +24,7 @@ class GardenManagementViewsTests(TestCase):
         login = self.client.login(username=self.username, password=self.password)
         response = self.client.get('/{}/settings/edit_details'.format(self.garden.id))
         self.assertEqual(response.status_code, 200)
-        form = {'name': "NiceGarden", 'comment': "", 'soil_type': "", 'culture_type': "",
+        form = {'name': "NiceGarden", 'postal_code': '1234', 'comment': "", 'soil_type': "", 'culture_type': "",
                 'reference_email': 'reference@ref.be', 'details_available_for_research': 'on',
                 'activity_data_available_for_research': 'on'}
         response = self.client.post('/{}/settings/edit_details'.format(self.garden.id), form)
@@ -71,3 +71,11 @@ class GardenManagementViewsTests(TestCase):
         response = self.client.get(delete_url)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(len(self.garden.users.all()), 1)
+
+    def test_change_password(self):
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get('/{}/settings/edit_password'.format(self.garden.id))
+        self.assertEqual(response.status_code, 200)
+        form = {'old_password': 'test', 'new_password1': 'azertyuiop', 'new_password2': 'azertyuiop'}
+        response = self.client.post('/{}/settings/edit_password'.format(self.garden.id), form)
+        self.assertRedirects(response, '/{}/settings'.format(self.garden.id))

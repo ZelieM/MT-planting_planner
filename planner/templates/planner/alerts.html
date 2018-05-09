@@ -9,41 +9,41 @@
 
 {% block content %}
 
-<div id="action-buttons">
-    <div class="fab-btn btn-group show-on-hover dropup">
-        <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">
-            <button type="button" class="btn btn-danger btn-io dropdown-toggle" data-toggle="dropdown">
+    <div id="action-buttons">
+        <div class="fab-btn btn-group show-on-hover dropup">
+            <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">
+                <button type="button" class="btn btn-danger btn-io dropdown-toggle" data-toggle="dropdown">
                     <span class="">
                       <i class="fas fa-plus"></i>
                     </span>
-            </button>
-        </div>
-        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-            <li data-toggle="tooltip" data-original-title="Ajouter une observation" data-placement="right">
-                <a class="btn btn-primary" data-toggle="modal"
-                   href="{% url 'planner:add_observation' garden.id %}"
-                   data-target="#modal-add_observation">
-                    <i class="fas fa-fw fa-eye"></i>
-                </a>
-            </li>
-            <li data-toggle="tooltip" title="Ajouter une opération" data-placement="right">
-                <a class="btn btn-warning" data-toggle="modal"
-                   href="{% url 'planner:add_punctual_operation' garden.id %}"
-                   data-target="#modal-add_punctual_operation">
-                    <i class="fas fa-fw fa-bolt"></i>
-                </a>
+                </button>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li data-toggle="tooltip" data-original-title="Ajouter une observation" data-placement="right">
+                    <a class="btn btn-primary" data-toggle="modal"
+                       href="{% url 'planner:add_observation' garden.id %}"
+                       data-target="#modal-add_observation">
+                        <i class="fas fa-fw fa-eye"></i>
+                    </a>
+                </li>
+                <li data-toggle="tooltip" title="Ajouter une opération" data-placement="right">
+                    <a class="btn btn-warning" data-toggle="modal"
+                       href="{% url 'planner:add_punctual_operation' garden.id %}"
+                       data-target="#modal-add_punctual_operation">
+                        <i class="fas fa-fw fa-bolt"></i>
+                    </a>
 
-            </li>
-            <li data-toggle="tooltip" title="Ajouter une plantation" data-placement="right">
-                <a class="btn btn-success" data-toggle="modal"
-                   href="{% url 'planner:add_seed_view' garden.id %}"
-                   data-target="#modal-add_seed">
-                    <i class="fas fa-fw fa-leaf"></i>
-                </a>
-            </li>
-        </ul>
+                </li>
+                <li data-toggle="tooltip" title="Ajouter une plantation" data-placement="right">
+                    <a class="btn btn-success" data-toggle="modal"
+                       href="{% url 'planner:add_seed_view' garden.id %}"
+                       data-target="#modal-add_seed">
+                        <i class="fas fa-fw fa-leaf"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
 
     {% if messages %}
         <div class="col-md-7">
@@ -97,7 +97,7 @@
             <div class="panel-body">
 
                 <div class="table-responsive">
-                    <table class="table sortable">
+                    <table class="table">
                         <thead>
                         <tr>
                             <th>Plantation</th>
@@ -138,7 +138,9 @@
                             <tr class="info">
                                 <td colspan="5" class="hiddenRow">
                                     <div class="collapse" id="collapse-a{{ current_alert.id }}">
-                                        <b> Légume : </b> {{ current_alert.area_concerned.vegetable }}
+{#                                        <b> Légume : </b> {{ current_alert.area_concerned.vegetable }}#}
+{#                                        <br>#}
+                                        <b> Planche : </b> {{ current_alert.area_concerned.surface.name }}
                                         <br>
                                         <b> Reporté de : </b> {{ current_alert.postponement }} jours
                                         <br>
@@ -157,17 +159,17 @@
     </div>
     <div class=" col-md-5 ">
         <!--<div class="align-content-center">-->
-            <!--<a class="btn btn-success" data-toggle="modal"-->
-               <!--href="{% url 'planner:add_punctual_operation' garden.id %}"-->
-               <!--data-target="#modal-add_punctual_operation" title="Ajouter une opération ponctuelle" data-tooltip>-->
-                <!--<i class="fas fa-fw fa-plus"></i>Ajouter une action-->
-            <!--</a>-->
-            <!--<a class="btn btn-success" data-toggle="modal"-->
-               <!--href="{% url 'planner:add_observation' garden.id %}"-->
-               <!--data-target="#modal-add_observation" title="Ajouter une observation" data-tooltip>-->
-                <!--<i class="fas fa-fw fa-plus"></i> Ajouter une observation-->
-            <!--</a>-->
-            <!--<br>-->
+        <!--<a class="btn btn-success" data-toggle="modal"-->
+        <!--href="{% url 'planner:add_punctual_operation' garden.id %}"-->
+        <!--data-target="#modal-add_punctual_operation" title="Ajouter une opération ponctuelle" data-tooltip>-->
+        <!--<i class="fas fa-fw fa-plus"></i>Ajouter une action-->
+        <!--</a>-->
+        <!--<a class="btn btn-success" data-toggle="modal"-->
+        <!--href="{% url 'planner:add_observation' garden.id %}"-->
+        <!--data-target="#modal-add_observation" title="Ajouter une observation" data-tooltip>-->
+        <!--<i class="fas fa-fw fa-plus"></i> Ajouter une observation-->
+        <!--</a>-->
+        <!--<br>-->
         <!--</div>-->
         <!--<br>-->
         <div class="panel panel-default ">

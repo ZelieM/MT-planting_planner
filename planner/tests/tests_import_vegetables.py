@@ -23,7 +23,7 @@ class ImportVegetableTests(TestCase):
         vegetable = [self.library_veggie.id]
         import_vegetables_to_garden(self.garden.id, vegetable)
         self.assertEqual(len(self.garden.vegetable_set.all()), 1)
-        self.assertEqual(Vegetable.objects.get(name=V1_NAME).extern_id,
+        self.assertEqual(Vegetable.objects.get(variety=V1_NAME).extern_id,
                          self.library_veggie.id)  # Check if the id of the original vegetable has been copied properly
 
     def test_import_vegetable_with_operations(self):
@@ -40,6 +40,6 @@ class ImportVegetableTests(TestCase):
                                               previous_operation=op2, offset_in_days=3)
         vegetable = [self.second_veggie.id]
         import_vegetables_to_garden(self.garden.id, vegetable)
-        imported_veggie = Vegetable.objects.get(name=self.second_veggie.french_name)
+        imported_veggie = Vegetable.objects.get(variety=self.second_veggie.french_name)
         self.assertEqual(imported_veggie.extern_id, self.second_veggie.id)
         self.assertEqual(len(CulturalOperation.objects.select_subclasses().filter(vegetable=imported_veggie)), 3)

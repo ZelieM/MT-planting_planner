@@ -29,16 +29,16 @@
     <div class="modal fade" id="modal-add_vegetable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
     </div>
-
-    <div class="container">
-        <a class="btn btn-success margin-button" data-toggle="modal"
-           href="{% url 'vegetables_library:add_vegetable_to_library_view' %}"
-           data-target="#modal-add_vegetable" title="Ajouter un légume" data-tooltip>
-            <i class="fas fa-fw fa-plus"></i>
-            Ajouter un légume
-        </a>
-
-    </div>
+{##}
+{#    <div class="container">#}
+{#        <a class="btn btn-success margin-button" data-toggle="modal"#}
+{#           href="{% url 'vegetables_library:add_vegetable_to_library_view' %}"#}
+{#           data-target="#modal-add_vegetable" title="Ajouter un légume" data-tooltip>#}
+{#            <i class="fas fa-fw fa-plus"></i>#}
+{#            Ajouter un légume#}
+{#        </a>#}
+{##}
+{#    </div>#}
 
     {% if species %}
         {% load planner_extras %}

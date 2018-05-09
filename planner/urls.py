@@ -61,7 +61,7 @@ urlpatterns = [
          name='add_vegetable_to_garden_view'),
 
     # Cultural operations management
-    path('vegetables/delete_co/<int:co_id>', access_private_garden(CulturalOperationDelete.as_view()),
+    path('<int:garden_id>/vegetables/delete_co/<int:co_id>', access_private_garden(CulturalOperationDelete.as_view()),
          name='delete_co'),
     path('<int:garden_id>/co/<int:co_id>', access_private_garden(EditCulturalOperationView.as_view()),
          name='edit_co_view'),
@@ -85,10 +85,14 @@ urlpatterns = [
          name='edit_user_email'),
     path('<int:garden_id>/settings/edit_details', access_private_garden(GardenDetails.as_view()),
          name='garden_edit_details'),
+    path('<int:garden_id>/settings/edit_password', access_private_garden(ChangePasswordView.as_view()),
+         name='garden_edit_password'),
 
     # Export pages
     path('<int:garden_id>/export', access_private_garden(ExportGardenHistoryView.as_view()),
          name='garden_export_view'),
+    path('<int:garden_id>/export_history', access_private_garden(ExportGardenOperationHistory.as_view()),
+         name='garden_history_export_view'),
     path('<int:garden_id>/export_harvest', access_private_garden(ExportGardenHarvests.as_view()),
          name='garden_harvest_export_view'),
 
@@ -101,5 +105,8 @@ urlpatterns = [
          name='garden_import_vegetables_view'),
     path('<int:garden_id>/import_vegetables/select', access_private_garden(SelectVegetablesToImportView.as_view()),
          name='select_vegetables_to_import_view'),
+
+    # Contact modal
+    path('contact', ContactView.as_view(), name='contact_info'),
 
 ]

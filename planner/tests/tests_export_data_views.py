@@ -22,8 +22,8 @@ class ExportDataViewsTests(TestCase):
 
     def test_post(self):
         login = self.client.login(username=self.username, password=self.password)
-        form = {'first_date': '2018-04-15'}
-        response = self.client.post('/{}/export'.format(self.garden.id), form)
+        form = {'history_start_date': '2018-04-15'}
+        response = self.client.post('/{}/export_history'.format(self.garden.id), form)
         self.assertEquals(
             response.get('Content-Disposition'),
             "attachment; filename=history_from_2018-04-15.csv"
