@@ -18,14 +18,14 @@
             </div>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                 <li data-toggle="tooltip" title="Imprimer les QR codes" data-placement="right">
-                    <a class="btn btn-warning" href="{% url 'planner:print_qr_codes' garden.id %}">
+                    <a class="btn btn-warning" href="{% url 'planner:print_qr_codes' garden_id %}">
                         <i class="fas fa-fw fa-qrcode"></i>
                     </a>
 
                 </li>
                 <li data-toggle="tooltip" title="Ajouter une planche" data-placement="right">
                     <a class="btn btn-success" data-toggle="modal"
-                       href="{% url 'planner:create_bed' garden.id %}"
+                       href="{% url 'planner:create_bed' garden_id %}"
                        data-target="#modal-create_bed">
                         <i class="fas fa-fw fa-plus"></i>
                     </a>
@@ -56,13 +56,13 @@
                 <tr>
                     <td class="col-md-3">
                         {{ b.name }}
-                        <a href="{% url 'planner:delete_bed' garden.id b.id %}"
+                        <a href="{% url 'planner:delete_bed' garden_id b.id %}"
                            class="pull-right red"
                            data-toggle="modal"
                            data-target="#modal-delete_bed" title="Supprimer cette planche" data-tooltip>
                             <i class="fas fa-fw fa-times red"></i>
                         </a>
-                        <a href="{% url 'planner:update_bed' garden.id b.id %}"
+                        <a href="{% url 'planner:update_bed' garden_id b.id %}"
                            class="pull-right blue"
                            data-toggle="modal"
                            data-target="#modal-update_bed" title="Editer cette planche" data-tooltip>
