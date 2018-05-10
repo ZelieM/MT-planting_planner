@@ -20,7 +20,8 @@ def copy_vegetable(garden_id, vegetable_from_library):
     from vegetables_library.models import COWithDate as library_co_with_date
     # If the vegetable is already existing in the garden, we return without copying it again
     if not len(Vegetable.objects.filter(garden_id=garden_id, extern_id=vegetable_from_library.id)):
-        copied_vegetable = Vegetable.objects.create(garden_id=garden_id, name=vegetable_from_library.species.french_name,
+        copied_vegetable = Vegetable.objects.create(garden_id=garden_id,
+                                                    name=vegetable_from_library.species.french_name,
                                                     variety=vegetable_from_library.french_name,
                                                     extern_id=vegetable_from_library.id)
         copy_seeding_dates(vegetable_from_library, copied_vegetable)
