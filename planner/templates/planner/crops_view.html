@@ -26,11 +26,11 @@
                             {% if active_cultivated_areas %}
                                 {% for ca in active_cultivated_areas %}
                                     <li class="list-group-item list-group-item-action">
-                                    <a href="{% url 'planner:qr_area_view' garden.id ca.id %}">
+                                    <a href="{% url 'planner:qr_area_view' garden_id ca.id %}">
                                         {{ ca.label }} : {{ ca.vegetable }}
                                     </a>
 
-                                        <a href="{% url 'planner:deactivate_cultivated_area_view' garden.id ca.id %}"
+                                        <a href="{% url 'planner:deactivate_cultivated_area_view' garden_id ca.id %}"
                                            class="pull-right red"
                                            data-toggle="modal"
                                            data-target="#modal-deactivate_cultivated_area"
@@ -80,7 +80,7 @@
                                                                 {% productivity ca %}
                                                             </td>
                                                             <td>
-                                                                <a href="{% url 'planner:deactivate_cultivated_area_view' garden.id ca.id%}"
+                                                                <a href="{% url 'planner:deactivate_cultivated_area_view' garden_id ca.id%}"
                                                                    class="pull-right blue"
                                                                    data-toggle="modal"
                                                                    data-target="#modal-deactivate_cultivated_area"

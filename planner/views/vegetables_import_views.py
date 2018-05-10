@@ -5,10 +5,9 @@ from django.views import View
 from django.views.generic import FormView
 
 from planner import import_vegetables_helpers
-from planner.models import Garden
 from vegetables_library.models import CulturalOperation as library_operation
-from vegetables_library.models import Variety as library_vegetable
 from vegetables_library.models import Species as library_species
+from vegetables_library.models import Variety as library_vegetable
 
 
 class ImportVegetablesView(View):
@@ -17,9 +16,8 @@ class ImportVegetablesView(View):
     def get(self, request, **kwargs):
         species_from_library = library_species.objects.all()
         operations_from_library = library_operation.objects.select_subclasses()
-        garden = Garden.objects.get(pk=kwargs['garden_id'])
         context = {'species_from_library': species_from_library,
-                   'operations_from_library': operations_from_library, 'garden': garden}
+                   'operations_from_library': operations_from_library}
         return render(request, self.template_name, context)
 
 
@@ -28,8 +26,7 @@ class SelectVegetablesToImportView(FormView):
 
     def get(self, request, **kwargs):
         varieties_from_library = library_vegetable.objects.all()
-        garden = Garden.objects.get(pk=kwargs['garden_id'])
-        context = {'varieties_from_library': varieties_from_library, 'garden': garden}
+        context = {'varieties_from_library': varieties_from_library}
         return render(request, self.template_name, context)
 
     def get_success_url(self):

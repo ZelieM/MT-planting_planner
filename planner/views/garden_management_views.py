@@ -17,7 +17,7 @@ class AddUserToGarden(TemplateView):
     def get(self, request, *args, **kwargs):
         garden = Garden.objects.get(pk=kwargs['garden_id'])
         users = User.objects.exclude(garden=garden)
-        context = {'garden': garden, 'users': users}
+        context = {'users': users}
         return render(request, self.template_name, context)
 
     def post(self, request, **kwargs):
@@ -72,11 +72,6 @@ class EditNotificationDelay(View):
 
 class GardenDetailsUpdate(UpdateView):
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
-        return context
-
     def get_success_url(self):
         return reverse_lazy('planner:garden_settings_view', kwargs={'garden_id': self.kwargs['garden_id']})
 
@@ -93,7 +88,8 @@ class UserEmail(GardenDetailsUpdate):
 
 class GardenDetails(GardenDetailsUpdate):
     model = Garden
-    fields = ['name', 'postal_code', 'comment', 'soil_type', 'culture_type', 'reference_email', 'details_available_for_research',
+    fields = ['name', 'postal_code', 'comment', 'soil_type', 'culture_type', 'reference_email',
+              'details_available_for_research',
               'activity_data_available_for_research']
     template_name = 'planner/modals/garden_update_details_form.html'
 
@@ -107,16 +103,14 @@ class ChangePasswordView(FormView):
 
     def post(self, request, *args, **kwargs):
         form = PasswordChangeForm(request.user, request.POST)
-        garden = Garden.objects.get(pk=kwargs['garden_id'])
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
             messages.success(request, 'Votre mot de passe a bien été changé')
             return HttpResponseRedirect(reverse('planner:garden_settings_view', kwargs=kwargs))
         else:
-            return render(request, self.template_name, {'form': form, 'garden': garden})
+            return render(request, self.template_name, {'form': form})
 
     def get(self, request, *args, **kwargs):
         form = PasswordChangeForm(request.user)
-        garden = Garden.objects.get(pk=kwargs['garden_id'])
-        return render(request, self.template_name, {'form': form, 'garden': garden})
+        return render(request, self.template_name, {'form': form})

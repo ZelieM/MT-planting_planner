@@ -13,7 +13,7 @@ class VegetablesView(TemplateView):
         garden = Garden.objects.get(pk=kwargs['garden_id'])
         vegetables = Vegetable.objects.filter(garden=garden)
         cultural_operations = CulturalOperation.objects.select_subclasses()
-        context = {'garden': garden, 'vegetables': vegetables, "cultural_operations": cultural_operations}
+        context = {'vegetables': vegetables, "cultural_operations": cultural_operations}
         return render(request, self.template_name, context=context)
 
 
@@ -23,8 +23,7 @@ class AddVegetableView(FormView):
 
     def get(self, request, **kwargs):
         form = self.form_class()
-        garden = Garden.objects.get(pk=kwargs['garden_id'])
-        context = {'garden': garden, 'form': form}
+        context = {'form': form}
         return render(request, self.template_name, context)
 
     def get_success_url(self):

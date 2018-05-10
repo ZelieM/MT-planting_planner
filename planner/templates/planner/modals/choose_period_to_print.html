@@ -1,21 +1,16 @@
-{% load crispy_forms_tags %}
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                    class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel"> Choix du nombre de jours à imprimer </h4>
-        </div>
-        <form action="{% url 'planner:print_forthcoming_operations' garden.id %}" name=""
-              role="form" class="" method="post" accept-charset="utf-8">
-            <div class="modal-body">
-                {% csrf_token %}
-                {{ form|crispy }}
+{% extends "planner/modals/base_modal.html" %}
+{% block modal_title %}Choix du nombre de jours à imprimer{% endblock modal_title %}
+{% block modal_content %}
+    {% load crispy_forms_tags %}
+    <form action="{% url 'planner:print_forthcoming_operations' garden_id %}" name=""
+          role="form" class="" method="post" accept-charset="utf-8">
+        <div class="modal-body">
+            {% csrf_token %}
+            {{ form|crispy }}
 
-            </div>
-            <div class="modal-footer">
-                <input class="btn btn-success" type="submit" value="Imprimer"/>
-            </div>
-        </form>
-    </div>
-</div>
+        </div>
+        <div class="modal-footer">
+            <input class="btn btn-success" type="submit" value="Imprimer"/>
+        </div>
+    </form>
+{% endblock modal_content %}

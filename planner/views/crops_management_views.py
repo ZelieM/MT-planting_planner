@@ -19,7 +19,7 @@ class CropsIndexView(View):
         for s in surfaces:
             if isinstance(s, Bed):
                 beds.append(s)
-        c = {'garden': garden, 'beds': beds}
+        c = {'beds': beds}
         return render(request, self.template_name, context=c)
 
 
@@ -29,7 +29,6 @@ class DeactivateCultivatedArea(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
         context['area_id'] = self.kwargs['area_id']
         return context
 

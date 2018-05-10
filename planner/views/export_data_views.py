@@ -1,22 +1,18 @@
-from datetime import datetime, date
+from datetime import datetime
 
 from django.shortcuts import render
-from django.views import View
 from django.views.generic import FormView
 
 from planner import services
-from planner.forms import ExportParametersForm
 from planner.import_vegetables_helpers import get_csv_writer
-from planner.models import Garden, CultivatedArea
+from planner.models import CultivatedArea
 
 
 class ExportGardenHistoryView(FormView):
     template_name = 'planner/export_view.html'
 
     def get(self, request, **kwargs):
-        garden = Garden.objects.get(pk=kwargs['garden_id'])
-        context = {'garden': garden}
-        return render(request, self.template_name, context)
+        return render(request, self.template_name)
 
 
 class ExportGardenOperationHistory(FormView):

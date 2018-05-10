@@ -1,50 +1,46 @@
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                    class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel"> Ajouter une plantation</h4>
+{% extends "planner/modals/base_modal.html" %}
+{% block modal_title %}Ajouter une plantation{% endblock modal_title %}
+{% block modal_content %}
+    <form id="add_seeding_form" action="{% url 'planner:add_seed_view' garden_id %}" name=""
+          role="form" class="" method="post" accept-charset="utf-8">
+        <div class="modal-body">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="vegetable_selection">Quel légume voulez-vous ajouter? </label>
+                <select class="form-control" id="vegetable_selection" name="vegetable_selection" required>
+                    {% for v in vegetables %}
+                        <option id="seeded_vegetable" name="seeded_vegetable"
+                                value="{{ v.id }}">{{ v.name }} - {{ v.variety }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="seeding_label">Choisissez un nom pour cette plantation </label>
+                <input id="seeding_label" type="text" class="form-control" name="seeding_label"
+                       placeholder="Label" required>
+            </div>
+
+            <div class="form-group">
+                <label for="surface_selection">Sur quelle surface sera cette plantation? </label>
+                <select class="form-control" id="surface_selection" name="surface_selection" required>
+                    {% for s in surfaces %}
+                        <option id="surface_seeded" name="surface_seeded"
+                                value="{{ s.id }}">{{ s.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+
         </div>
-        <form id="add_seeding_form" action="{% url 'planner:add_seed_view' garden.id %}" name=""
-              role="form" class="" method="post" accept-charset="utf-8">
-            <div class="modal-body">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="vegetable_selection">Quel légume voulez-vous ajouter? </label>
-                    <select class="form-control" id="vegetable_selection" name="vegetable_selection" required>
-                        {% for v in vegetables %}
-                            <option id="seeded_vegetable" name="seeded_vegetable"
-                                    value="{{ v.id }}">{{ v.name }} - {{ v.variety }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <br>
-                <div class="form-group">
-                    <label for="seeding_label">Choisissez un nom pour cette plantation </label>
-                    <input id="seeding_label" type="text" class="form-control" name="seeding_label"
-                           placeholder="Label" required>
-                </div>
 
-                <div class="form-group">
-                    <label for="surface_selection">Sur quelle surface sera cette plantation? </label>
-                    <select class="form-control" id="surface_selection" name="surface_selection" required>
-                        {% for s in surfaces %}
-                            <option id="surface_seeded" name="surface_seeded"
-                                    value="{{ s.id }}">{{ s.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <br>
-
-            </div>
-
-            <div class="modal-footer">
-                <input class="btn btn-success" type="submit" value="Ajouter"/>
-            </div>
-        </form>
+        <div class="modal-footer">
+            <input class="btn btn-success" type="submit" value="Ajouter"/>
+        </div>
+    </form>
     </div>
-</div>
-
+    </div>
+{% endblock modal_content %}
 <script>
     document.getElementById('seeding_date').valueAsDate = new Date();
 </script>
