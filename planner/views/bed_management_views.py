@@ -55,8 +55,7 @@ class BedDelete(DeleteView):
 
 class SaveBedPosition(View):
     def post(self, request, **kwargs):
-        json_data = json.loads(request.body)
-        print(json_data)
+        json_data = json.loads(request.body.decode('utf-8'))
         for e in json_data:
             current_bed = Bed.objects.get(pk=e.get('id'))
             current_bed.x = e.get('x')
