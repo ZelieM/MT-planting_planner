@@ -4,10 +4,13 @@
 
 {% block content %}
 
+    {% load planner_extras %}
     <div align="center" class="form-group">
-        <a href="{% url 'planner:crops_view' garden_id %}" class="btn btn-default">Par planche
+        <a href="{% url 'planner:crops_view' garden_id %}"
+           class="btn btn-default {% active_button request 'planner:crops_view' garden_id %}">Par planche
         </a>
-        <a href="{% url 'planner:crops_by_vegetable_view' garden_id %}" class="btn btn-default">Par légume
+        <a href="{% url 'planner:crops_by_vegetable_view' garden_id %}"
+           class="btn btn-default {% active_button request 'planner:crops_by_vegetable_view' garden_id %}">Par légume
         </a>
     </div>
 
@@ -20,15 +23,14 @@
         </div>
 
 
-        {% load planner_extras %}
         <div class="form-group">
             <input class="form-control" id="search_input" type="text" placeholder="Rechercher..">
         </div>
 
-        <div id="vegetables_panels">
+        <div id="searchable_panels">
             {% for v in vegetables %}
                 <div class="panel panel-success">
-                    <div class="panel-heading"> {{ v.name }} {{ v.variety }}</div>
+                    <div class="panel-heading searchable"> {{ v.name }} {{ v.variety }}</div>
                     <div class="panel-body bed_panel">
 
                         {% active_cultivated_vegetable v.id as active_cultivated_areas %}
@@ -39,7 +41,7 @@
                             <ul class="list-group">
                                 {% if active_cultivated_areas %}
                                     {% for ca in active_cultivated_areas %}
-                                        <li class="list-group-item list-group-item-action">
+                                        <li class="list-group-item list-group-item-action searchable">
                                             <a href="{% url 'planner:qr_area_view' garden_id ca.id %}">
                                                 {{ ca.label }} : {{ ca.vegetable }}
                                             </a>
@@ -66,7 +68,7 @@
                                 {% if inactive_cultivated_areas %}
                                     {% for ca in inactive_cultivated_areas %}
                                         <li class="list-group-item list-group-item-action" data-toggle="collapse"
-                                            href="#collapse-ca{{ ca.id }}" class="clickable">
+                                            href="#collapse-ca{{ ca.id }}" class="clickable searchable">
                                             {{ ca.label }} : {{ ca.vegetable }} ({{ ca.harvest_date|date:"F Y" }})
                                             <span class="pull-right"><i class="fas fa-fw fa-chevron-down"></i></span>
                                             <div id="collapse-ca{{ ca.id }}" class="collapse">
@@ -130,14 +132,6 @@
 
     {% load static %}
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>
-    <script>
-        $(document).ready(function () {
-            $("#search_input").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
-                $("#vegetables_panels *").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
-            });
-        });
-    </script>
+
+    <script src="{% static 'planner/js/search_cultivated_areas.js' %}"></script>
 {% endblock content %}

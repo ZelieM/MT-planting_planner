@@ -57,7 +57,8 @@
                                 href="{% url 'planner:vegetables_view' garden_id %}">Mes légumes</a></li>
                         <li class="{% navactive request 'planner:garden_view' garden_id %}"><a
                                 href="{% url 'planner:garden_view' garden_id %}">Mes planches</a></li>
-                        <li class="{% navactive request 'planner:crops_view' garden_id %}"><a
+                        <li class="{% navactive request 'planner:crops_view' garden_id %}
+                                   {% navactive request 'planner:crops_by_vegetable_view' garden_id %}"><a
                                 href="{% url 'planner:crops_view' garden_id %}">Mes cultures</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
