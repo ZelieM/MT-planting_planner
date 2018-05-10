@@ -360,10 +360,15 @@
                   y: shape.getY()
                 });
               }
+
+              // Fix to "CSRF token missing or incorrect"
+              $.ajaxSetup({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }
+              });
               $.ajax({
                 type: "POST",
                 url: "{% url 'planner:save_bed_position' garden_id %}",
-                data: bedsToSave,
+                data: JSON.stringify(bedsToSave),
                 success: function() {
                   console.log('saved');
                 },
