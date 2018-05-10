@@ -6,7 +6,7 @@ from django.views.generic.base import View, TemplateView
 
 from planner import services
 from planner.forms import CustomDateInput, CustomTimeInput, CODateForm, COOffsetForm
-from planner.models import Garden, COWithDate, COWithOffset, CulturalOperation
+from planner.models import COWithDate, COWithOffset, CulturalOperation
 
 
 class CulturalOperationCreate(CreateView):
@@ -25,12 +25,6 @@ class CulturalOperationCreate(CreateView):
             return reverse_lazy('planner:vegetables_view', kwargs={'garden_id': self.kwargs['garden_id']})
         else:
             return reverse_lazy('planner:garden_selection')
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(CulturalOperationCreate, self).get_context_data(**kwargs)
-        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
-        return context
 
 
 class CulturalOperationWithDateCreate(CulturalOperationCreate):
@@ -73,7 +67,7 @@ class EditCulturalOperationView(View):
             form = CODateForm(instance=co)
         else:
             form = COOffsetForm(instance=co)
-        context = {'form': form, 'garden': Garden.objects.get(pk=kwargs['garden_id'])}
+        context = {'form': form}
         return render(request, self.template_name, context)
 
     def post(self, request, **kwargs):
@@ -94,7 +88,7 @@ class PickCOType(TemplateView):
 
     def get(self, request, *args, **kwargs):
         # if a GET, we render the form to pick the type of operation
-        context = {'garden': Garden.objects.get(pk=kwargs['garden_id']), 'vegetable': kwargs['v_id']}
+        context = {'vegetable': kwargs['v_id']}
         return render(request, 'planner/modals/pick_co_type_form.html', context)
 
     def post(self, request, *args, **kwargs):

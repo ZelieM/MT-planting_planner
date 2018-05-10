@@ -1,21 +1,17 @@
-{% load crispy_forms_tags %}
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                    class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel"> Modification de votre adresse email </h4>
-        </div>
-        <form id="co_update_form" action="{% url 'planner:edit_user_email' garden.id %}" name=""
-              role="form" class="" method="post" accept-charset="utf-8">
-            <div class="modal-body">
-                {% csrf_token %}
-                {{ form|crispy }}
+{% extends "planner/modals/base_modal.html" %}
+{% block modal_title %}Modification de votre adresse email{% endblock modal_title %}
+{% block modal_content %}
+    {% load crispy_forms_tags %}
 
-            </div>
-            <div class="modal-footer">
-                <input class="btn btn-success" type="submit" value="Editer"/>
-            </div>
-        </form>
-    </div>
-</div>
+    <form id="co_update_form" action="{% url 'planner:edit_user_email' garden_id %}" name=""
+          role="form" class="" method="post" accept-charset="utf-8">
+        <div class="modal-body">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+        </div>
+        <div class="modal-footer">
+            <input class="btn btn-success" type="submit" value="Editer"/>
+        </div>
+    </form>
+{% endblock modal_content %}

@@ -15,7 +15,7 @@ class GardenView(TemplateView):
         for s in surfaces:
             if isinstance(s, Bed):
                 beds.append(s)
-        c = {'garden': garden, 'beds': beds}
+        c = {'beds': beds}
         return render(request, self.template_name, context=c)
 
 
@@ -26,11 +26,6 @@ class BedCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
-        return context
 
     def form_valid(self, form):
         new_bed = form.save(commit=False)
@@ -47,20 +42,10 @@ class BedUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
-        return context
-
 
 class BedDelete(DeleteView):
     model = Bed
     template_name = 'planner/modals/bed_confirm_delete.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['garden'] = Garden.objects.get(pk=self.kwargs["garden_id"])
-        return context
 
     def get_success_url(self):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})

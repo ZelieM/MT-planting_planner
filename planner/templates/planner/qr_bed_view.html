@@ -13,7 +13,7 @@
         <ul class="list-group">
             {% for a in areas %}
                 <li class="list-group-item list-group-item-action">
-                <a class="btn btn-primary" href="{% url 'planner:qr_area_view' garden.id a.id %}">
+                <a class="btn btn-primary" href="{% url 'planner:qr_area_view' garden_id a.id %}">
                     {{ a.label }} - {{ a.vegetable }}
                 </a>
 

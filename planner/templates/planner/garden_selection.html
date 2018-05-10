@@ -62,9 +62,9 @@
         <div class="panel-heading">Liste des jardins dans lesquels vous êtes actif</div>
         <div class="panel-body">
             <ul class="list-group">
-                {% for garden in gardens_followed %}
-                    <a href="{{ garden.get_absolute_url }}"
-                       class="list-group-item list-group-item-action"> {{ garden.name }}</a>
+                {% for g in gardens_followed %}
+                    <a href="{{ g.get_absolute_url }}"
+                       class="list-group-item list-group-item-action"> {{ g.name }}</a>
                 {% endfor %}
             </ul>
         </div>

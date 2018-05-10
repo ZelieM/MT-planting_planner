@@ -1,11 +1,7 @@
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                    class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel"> Reporter cette alerte?</h4>
-        </div>
-        <form id="validate_alert_form" action="{% url 'planner:postpone_alert_view' garden.id alert_id %}" name=""
+{% extends "planner/modals/base_modal.html" %}
+{% block modal_title %}Reporter cette alerte?{% endblock modal_title %}
+{% block modal_content %}
+        <form id="validate_alert_form" action="{% url 'planner:postpone_alert_view' garden_id alert_id %}" name=""
               role="form" class="" method="post" accept-charset="utf-8">
             <div class="modal-body">
                 {% csrf_token %}
@@ -26,5 +22,4 @@
                 <input class="btn btn-success" type="submit" value="Valider"/>
             </div>
         </form>
-    </div>
-</div>
+{% endblock modal_content %}

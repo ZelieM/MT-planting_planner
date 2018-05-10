@@ -1,22 +1,17 @@
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                    class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel"> Ajouter une opération </h4>
+{% extends "planner/modals/base_modal.html" %}
+{% block modal_title %}Ajouter une opération {% endblock modal_title %}
+{% block modal_content %}
+    <form id="co_pick_type_form" action="{% url 'planner:pick_co_type' garden_id vegetable %}" name=""
+          role="form" class="" method="post" accept-charset="utf-8">
+        <div class="modal-body">
+            {% csrf_token %}
+            <label><input type="radio" name="cotype" value="dateco" checked> Ajouter une opération avec une date
+                fixe</label><br>
+            <label><input type="radio" name="cotype" value="offsetco"> Ajouter une opération dépendante d'une
+                opération existante </label><br>
         </div>
-        <form id="co_pick_type_form" action="{% url 'planner:pick_co_type' garden.id vegetable %}" name=""
-              role="form" class="" method="post" accept-charset="utf-8">
-            <div class="modal-body">
-                {% csrf_token %}
-                <label><input type="radio" name="cotype" value="dateco" checked> Ajouter une opération avec une date
-                    fixe</label><br>
-                <label><input type="radio" name="cotype" value="offsetco"> Ajouter une opération dépendante d'une
-                    opération existante </label><br>
-            </div>
-            <div class="modal-footer">
-                <input class="btn btn-success" type="submit" value="Suivant"/>
-            </div>
-        </form>
-    </div>
-</div>
+        <div class="modal-footer">
+            <input class="btn btn-success" type="submit" value="Suivant"/>
+        </div>
+    </form>
+{% endblock modal_content %}

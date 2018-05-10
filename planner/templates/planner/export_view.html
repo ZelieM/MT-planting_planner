@@ -20,7 +20,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">Exporter l'historique des actions de ce jardin</div>
             <div class="panel-body">
-                <form action="{% url 'planner:garden_history_export_view' garden.id %}" role="form" class=""
+                <form action="{% url 'planner:garden_history_export_view' garden_id %}" role="form" class=""
                       method="post"
                       accept-charset="utf-8">
                     {% csrf_token %}
@@ -39,7 +39,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">Exporter les données de récoltes de ce jardin</div>
             <div class="panel-body">
-                <form action="{% url 'planner:garden_harvest_export_view' garden.id %}" role="form" class=""
+                <form action="{% url 'planner:garden_harvest_export_view' garden_id %}" role="form" class=""
                       method="post"
                       accept-charset="utf-8">
                     {% csrf_token %}

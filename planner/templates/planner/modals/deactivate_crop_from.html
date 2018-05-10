@@ -1,13 +1,8 @@
+{% extends "planner/modals/base_modal.html" %}
+{% block modal_title %}Cloture d'une plantation{% endblock modal_title %}
+{% block modal_content %}
 {% load crispy_forms_tags %}
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                    class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel"> Cloture d'une plantation </h4>
-        </div>
-
-        <form action="{% url 'planner:deactivate_cultivated_area_view' garden.id area_id%}" name=""
+        <form action="{% url 'planner:deactivate_cultivated_area_view' garden_id area_id%}" name=""
               role="form" class="" method="post" accept-charset="utf-8">
             <div class="modal-body">
                 <p> Complétez les détails concernant la récolte de cette plantation</p>
@@ -19,5 +14,4 @@
                 <input class="btn btn-success" type="submit" value="Terminer"/>
             </div>
         </form>
-    </div>
-</div>
+{% endblock modal_content %}

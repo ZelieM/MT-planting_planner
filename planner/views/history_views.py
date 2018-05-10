@@ -6,7 +6,6 @@ from django.views.generic import FormView
 
 from planner import queries, services
 from planner.forms import OperationForm, ObservationForm
-from planner.models import Garden
 
 
 class AddHistoryItemView(FormView):
@@ -15,7 +14,7 @@ class AddHistoryItemView(FormView):
         form = self.form_class(initial={'execution_date': date.today()})
         garden_id = kwargs['garden_id']
         form.fields["area_concerned"].queryset = queries.get_garden_areas(garden_id)
-        context = {'garden': Garden.objects.get(pk=garden_id), 'form': form}
+        context = {'form': form}
         return render(request, self.template_name, context)
 
     def get_success_url(self):

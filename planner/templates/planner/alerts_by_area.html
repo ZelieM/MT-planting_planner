@@ -21,14 +21,14 @@
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
             <li data-toggle="tooltip" data-original-title="Ajouter une observation" data-placement="right">
                 <a class="btn btn-primary" data-toggle="modal"
-                   href="{% url 'planner:add_observation' garden.id %}"
+                   href="{% url 'planner:add_observation' garden_id %}"
                    data-target="#modal-add_observation">
                     <i class="fas fa-fw fa-eye"></i>
                 </a>
             </li>
             <li data-toggle="tooltip" title="Ajouter une opération" data-placement="right">
                 <a class="btn btn-warning" data-toggle="modal"
-                   href="{% url 'planner:add_punctual_operation' garden.id %}"
+                   href="{% url 'planner:add_punctual_operation' garden_id %}"
                    data-target="#modal-add_punctual_operation">
                     <i class="fas fa-fw fa-bolt"></i>
                 </a>
@@ -36,7 +36,7 @@
             </li>
             <li data-toggle="tooltip" title="Ajouter une plantation" data-placement="right">
                 <a class="btn btn-success" data-toggle="modal"
-                   href="{% url 'planner:add_seed_view' garden.id %}"
+                   href="{% url 'planner:add_seed_view' garden_id %}"
                    data-target="#modal-add_seed">
                     <i class="fas fa-fw fa-leaf"></i>
                 </a>
@@ -102,22 +102,22 @@
                         {% for current_alert in alerts %}
                             <tr data-toggle="collapse" href="#collapse-a{{ current_alert.id }}" class="clickable">
                                                                 <td>{{ current_alert.original_cultural_operation.name }}</td>
-                                <td>{% due_date current_alert garden.id as current_due_date %} {{ current_due_date|date:"j F" }} </td>
+                                <td>{% due_date current_alert garden_id as current_due_date %} {{ current_due_date|date:"j F" }} </td>
                                 <td>
                                     <a class="" data-toggle="modal"
-                                       href="{% url 'planner:validate_alert_view' garden.id current_alert.id %}"
+                                       href="{% url 'planner:validate_alert_view' garden_id current_alert.id %}"
                                        data-target="#modal-validate_alert" title="Valider l'action"
                                        data-tooltip>
                                         <i class="fas fa-fw fa-check"></i>
                                     </a>
                                     <a class="" data-toggle="modal"
-                                       href="{% url 'planner:postpone_alert_view' garden.id current_alert.id %}"
+                                       href="{% url 'planner:postpone_alert_view' garden_id current_alert.id %}"
                                        data-target="#modal-postpone_alert" title="Reporter l'action"
                                        data-tooltip>
                                         <i class="fas fa-fw fa-redo"></i>
                                     </a>
                                     <a class="" data-toggle="modal"
-                                       href="{% url 'planner:delete_alert_view' garden.id current_alert.id %}"
+                                       href="{% url 'planner:delete_alert_view' garden_id current_alert.id %}"
                                        data-target="#modal-delete_alert" title="Supprimer l'action"
                                        data-tooltip>
                                         <i class="fas fa-fw fa-times"></i>

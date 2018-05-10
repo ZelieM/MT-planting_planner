@@ -20,14 +20,14 @@
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
             <li data-toggle="tooltip" data-original-title="Ajouter un légume" data-placement="right">
                 <a class="btn btn-success" data-toggle="modal"
-                   href="{% url 'planner:add_vegetable_to_garden_view' garden.id %}"
+                   href="{% url 'planner:add_vegetable_to_garden_view' garden_id %}"
                    data-target="#modal-add_vegetable">
                     <i class="fas fa-fw fa-plus"></i>
                 </a>
             </li>
             <li data-toggle="tooltip" title="Importer un légume depuis la librairie" data-placement="right">
                 <a class="btn btn-primary" data-toggle="modal"
-                   href="{% url 'planner:garden_import_vegetables_view' garden.id %}">
+                   href="{% url 'planner:garden_import_vegetables_view' garden_id %}">
                     <i class="fas fa-fw fa-download"></i>
                 </a>
             </li>
@@ -85,11 +85,11 @@
                                             <td>
 
                                                 <a class="" data-toggle="modal"
-                                                   href="{% url 'planner:edit_co_view' garden.id co.id %}"
+                                                   href="{% url 'planner:edit_co_view' garden_id co.id %}"
                                                    data-target="#modal-edit" title="edit item" data-tooltip>
                                                     <i class="fas fa-fw fa-pencil-alt"></i>
                                                 </a>
-                                                <a href="{% url 'planner:delete_co' garden.id co.id %}">
+                                                <a href="{% url 'planner:delete_co' garden_id co.id %}">
                                                     <i class="fas fa-fw fa-times"></i>
                                                 </a>
                                             </td>
@@ -99,7 +99,7 @@
                                 </table>
 
                                 <a class="btn btn-success margin-button" data-toggle="modal"
-                                   href="{% url 'planner:pick_co_type' garden.id v.id %}"
+                                   href="{% url 'planner:pick_co_type' garden_id v.id %}"
                                    data-target="#modal-pick-type" title="add item" data-tooltip>
                                     <i class="fas fa-fw fa-plus"></i>
                                     Ajouter une opération
