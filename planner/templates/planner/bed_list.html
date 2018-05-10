@@ -119,7 +119,7 @@
             </canvas>
             <button id="beds-canvas-save-btn"
                     class="btn btn-info">
-              Save beds' positions
+              Sauvegarder la configuration
             </button>
           </div>
 
@@ -127,14 +127,17 @@
             // Some customizable values
             var SCALE_FACTOR = 5; // A scale factor to use to reduce (or expand) the size of the beds
             var DEFAULT_COLOR = 'rgba(27, 193, 91, .7)';
+            var DEFAULT_TEXT_COLOR = 'black'
+            var TEXT_OFFSET_Y = -5;
 
             // Constructor for Shape objects to hold data for all drawn objects.
             // For now they will just be defined as rectangles.
-            function Shape(bed_id, x, y, w, h, fill) {
+            function Shape(bed_id, name, x, y, w, h, fill) {
             // This is a very simple and unsafe constructor.
             // All we're doing is checking if the values exist.
             // "x || 0" just means "if there is a value for x, use that. Otherwise use 0."
             this.bed_id = bed_id; // the id of the Bed
+            this.name = name || '';
             this.x = x / SCALE_FACTOR || 0; // Coodinate X of upper-left corner of the rectangle
             this.y = y / SCALE_FACTOR || 0; // Coordinate Y of upper-left corner of the rectangle
             this.w = w / SCALE_FACTOR || 1;
@@ -144,8 +147,10 @@
 
             // Draws this shape to a given context
             Shape.prototype.draw = function(ctx) {
-            ctx.fillStyle = this.fill;
-            ctx.fillRect(this.x, this.y, this.w, this.h);
+              ctx.fillStyle = this.fill;
+              ctx.fillRect(this.x, this.y, this.w, this.h);
+              ctx.fillStyle = DEFAULT_TEXT_COLOR;
+              ctx.fillText(this.name, this.x, this.y + TEXT_OFFSET_Y);
             }
 
             // Determine if a point is inside the shape's bounds
@@ -346,7 +351,7 @@
             var canvasState = new CanvasState(document.getElementById('beds-canvas'));
             // Add all the beds as Shape and draw them
             {% for b in beds %}
-              canvasState.addShape(new Shape({{ b.id }}, {{ b.x }}, {{ b.y }}, {{ b.width }}, {{ b.length}} ))
+              canvasState.addShape(new Shape({{ b.id }}, '{{ b.name }}', {{ b.x }}, {{ b.y }}, {{ b.width }}, {{ b.length}} ))
             {% endfor %}
 
             // When the save button is hit, get all the Shape's position and save them
