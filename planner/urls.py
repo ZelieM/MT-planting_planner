@@ -33,6 +33,7 @@ urlpatterns = [
 
     # Crops management
     path('<int:garden_id>/crops', access_private_garden(CropsIndexView.as_view()), name='crops_view'),
+    path('<int:garden_id>/crops/vegetables_based', access_private_garden(CropsByVegetableView.as_view()), name='crops_by_vegetable_view'),
     path('<int:garden_id>/<int:area_id>/terminate_cropping',
          access_private_garden(DeactivateCultivatedArea.as_view()),
          name='deactivate_cultivated_area_view'),
