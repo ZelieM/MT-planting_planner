@@ -348,11 +348,39 @@
               return {x: mx, y: my};
             }
 
+            // Construct our list of shapes based on the Beds coming from Django
+            var beds = [
+              {% for b in beds %}
+                {
+                  id: {{ b.id }},
+                  name: '{{ b.name }}',
+                  x: {{ b.x }},
+                  y: {{ b.y }},
+                  width: {{ b.width }},
+                  length: {{ b.length }}
+                },
+              {% endfor %}
+            ]
+
+            // Before creating our canvas and our shapes, let's compute the SCALE_FACTOR based on the biggest beds height
+            var maxHeight = 0;
+            var maxWidth = 0;
+            beds.forEach(function(b) {
+              maxHeight = b.length > maxHeight ? b.length : maxHeight;
+              maxWidth = b.width > maxWidth ? b.width : maxWidth;
+            });
+            maxHeight += 100; // make the max height a little bit bigger so that the text that goes above the shape stays visible.
+            maxWidth += 100;
+            scaleFactorHeight = maxHeight / document.getElementById('beds-canvas').height;
+            scaleFactorWidth = maxWidth / document.getElementById('beds-canvas').width;
+            SCALE_FACTOR = scaleFactorHeight > scaleFactorWidth ? scaleFactorHeight : scaleFactorWidth;
+
             var canvasState = new CanvasState(document.getElementById('beds-canvas'));
             // Add all the beds as Shape and draw them
-            {% for b in beds %}
-              canvasState.addShape(new Shape({{ b.id }}, '{{ b.name }}', {{ b.x }}, {{ b.y }}, {{ b.width }}, {{ b.length}} ))
-            {% endfor %}
+            beds.forEach(function(b) {
+              canvasState.addShape(new Shape(b.id, b.name, b.x, b.y, b.width, b.length));
+            });
+
 
             // When the save button is hit, get all the Shape's position and save them
             $("#beds-canvas-save-btn").click(function(event) {
