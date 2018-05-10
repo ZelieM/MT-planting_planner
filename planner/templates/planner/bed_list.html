@@ -113,7 +113,7 @@
         <!-- Strongly inspired from https://simonsarris.com/making-html5-canvas-useful/ -->
         <div id="beds-graphical-representation" class="row">
           <div class="col-sm-12">
-            <canvas id="beds-canvas" width="1000" height="400" style="border: 1px solid darkgray;">
+            <canvas id="beds-canvas" width="1000" height="800" style="border: 1px solid darkgray;">
               <!-- This text is displayed if your browser does not support HTML5 Canvas. -->
               Sorry, your web browser does not support HTML5 canvas. Therefore, we cannot draw the beds.
             </canvas>
@@ -374,6 +374,7 @@
             scaleFactorHeight = maxHeight / document.getElementById('beds-canvas').height;
             scaleFactorWidth = maxWidth / document.getElementById('beds-canvas').width;
             SCALE_FACTOR = scaleFactorHeight > scaleFactorWidth ? scaleFactorHeight : scaleFactorWidth;
+            SCALE_FACTOR = SCALE_FACTOR * 5; // make five times more space than the biggest bed
 
             var canvasState = new CanvasState(document.getElementById('beds-canvas'));
             // Add all the beds as Shape and draw them
