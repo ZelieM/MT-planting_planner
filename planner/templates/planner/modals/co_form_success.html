@@ -1,9 +1,6 @@
-<div class="modal-dialog modal-lg">
-    <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel"> Operation {{ co.id }}</h4>
-              </div>
+{% extends "planner/modals/base_modal.html" %}
+{% block modal_title %}Operation {{ co.id }}{% endblock modal_title %}
+{% block modal_content %}
               <div class="modal-body">
                   <p>L'opération {{ co }} a bien été modifiée</p>
                   <script>
@@ -16,5 +13,4 @@
               </div>
               <div class="modal-footer">
               </div>
-    </div><!-- /.modal-content -->
-</div><!-- /.modal-dialog -->
+{% endblock modal_content %}

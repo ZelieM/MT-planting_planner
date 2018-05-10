@@ -37,7 +37,7 @@
     <div class="container col-md-6 col-md-offset-3">
         <div class="panel panel-default">
             <div class="panel-heading">Détails du jardin
-                <a href="{% url 'planner:garden_edit_details' garden.id %}" class="pull-right"
+                <a href="{% url 'planner:garden_edit_details' garden_id %}" class="pull-right"
                    data-toggle="modal"
                    data-target="#modal-edit_garden_details"
                    title="Editer les détails du jardin" data-tooltip>
@@ -97,7 +97,7 @@
                 <ul class="list-group">
                     {% for user in following_users %}
                         <li class="list-group-item list-group-item-action"> {{ user.username }}
-                            <a href="{% url 'planner:delete_user_from_garden' garden.id user.id %}"
+                            <a href="{% url 'planner:delete_user_from_garden' garden_id user.id %}"
                                class="pull-right red">
                                 <i class="fas fa-fw fa-times"></i>
                             </a>
@@ -106,7 +106,7 @@
                 </ul>
                 <div>
                     <a class="btn btn-success" data-toggle="modal"
-                       href="{% url 'planner:add_user_to_garden_view' garden.id %}"
+                       href="{% url 'planner:add_user_to_garden_view' garden_id %}"
                        data-target="#modal-add_user" title="add user" data-tooltip>
                         <i class="fas fa-fw fa-plus"></i>
                         Ajouter un utilisateur
@@ -121,7 +121,7 @@
                     <li class="list-group-item list-group-item-action">
                         Délai de notification (en jours) :
                         <b>{{ garden.notification_delay }} </b>
-                        <a href="{% url 'planner:edit_notification_delay' garden.id %}" class="pull-right"
+                        <a href="{% url 'planner:edit_notification_delay' garden_id %}" class="pull-right"
                            data-toggle="modal"
                            data-target="#modal-edit_notification_delay"
                            title="Editer le nombre de jours précédant la notification" data-tooltip>
@@ -139,7 +139,7 @@
                     <li class="list-group-item list-group-item-action">
                         Adresse email :
                         <b>{{ user.email }} </b>
-                        <a href="{% url 'planner:edit_user_email' garden.id %}" class="pull-right"
+                        <a href="{% url 'planner:edit_user_email' garden_id %}" class="pull-right"
                            data-toggle="modal"
                            data-target="#modal-edit_email_address"
                            title="Editer l'adresse mail" data-tooltip>
@@ -148,7 +148,7 @@
                     </li>
                     <li class="list-group-item list-group-item-action">
                         Mot de passe :
-                        <a href="{% url 'planner:garden_edit_password' garden.id %}" class="pull-right"
+                        <a href="{% url 'planner:garden_edit_password' garden_id %}" class="pull-right"
                            title="Changer de mot de passe" data-tooltip>
                             <i class="fas fa-fw fa-pencil-alt"></i>
                         </a>

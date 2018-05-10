@@ -21,14 +21,14 @@
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                 <li data-toggle="tooltip" data-original-title="Ajouter une observation" data-placement="right">
                     <a class="btn btn-primary" data-toggle="modal"
-                       href="{% url 'planner:add_observation' garden.id %}"
+                       href="{% url 'planner:add_observation' garden_id %}"
                        data-target="#modal-add_observation">
                         <i class="fas fa-fw fa-eye"></i>
                     </a>
                 </li>
                 <li data-toggle="tooltip" title="Ajouter une opération" data-placement="right">
                     <a class="btn btn-warning" data-toggle="modal"
-                       href="{% url 'planner:add_punctual_operation' garden.id %}"
+                       href="{% url 'planner:add_punctual_operation' garden_id %}"
                        data-target="#modal-add_punctual_operation">
                         <i class="fas fa-fw fa-bolt"></i>
                     </a>
@@ -36,7 +36,7 @@
                 </li>
                 <li data-toggle="tooltip" title="Ajouter une plantation" data-placement="right">
                     <a class="btn btn-success" data-toggle="modal"
-                       href="{% url 'planner:add_seed_view' garden.id %}"
+                       href="{% url 'planner:add_seed_view' garden_id %}"
                        data-target="#modal-add_seed">
                         <i class="fas fa-fw fa-leaf"></i>
                     </a>
@@ -86,7 +86,7 @@
         {% load l10n %}
         <div class="panel panel-default ">
             <div class="panel-heading">Opérations à faire
-                <a href="{% url 'planner:print_forthcoming_operations' garden.id %}"
+                <a href="{% url 'planner:print_forthcoming_operations' garden_id %}"
                    class="pull-right blue"
                    data-toggle="modal"
                    data-target="#modal-print_operations" title="Imprimer la feuille les opérations à faire"
@@ -113,22 +113,22 @@
                                 <td><b>{{ current_alert.area_concerned.label }} </b></td>
                                 <td>{{ current_alert.area_concerned.vegetable }}</td>
                                 <td>{{ current_alert.original_cultural_operation.name }}</td>
-                                <td>{% due_date current_alert garden.id as current_due_date %} {{ current_due_date|date:"j F" }} </td>
+                                <td>{% due_date current_alert garden_id as current_due_date %} {{ current_due_date|date:"j F" }} </td>
                                 <td>
                                     <a class="" data-toggle="modal"
-                                       href="{% url 'planner:validate_alert_view' garden.id current_alert.id %}"
+                                       href="{% url 'planner:validate_alert_view' garden_id current_alert.id %}"
                                        data-target="#modal-validate_alert" title="Valider l'action"
                                        data-tooltip>
                                         <i class="fas fa-fw fa-check"></i>
                                     </a>
                                     <a class="" data-toggle="modal"
-                                       href="{% url 'planner:postpone_alert_view' garden.id current_alert.id %}"
+                                       href="{% url 'planner:postpone_alert_view' garden_id current_alert.id %}"
                                        data-target="#modal-postpone_alert" title="Reporter l'action"
                                        data-tooltip>
                                         <i class="fas fa-fw fa-redo"></i>
                                     </a>
                                     <a class="" data-toggle="modal"
-                                       href="{% url 'planner:delete_alert_view' garden.id current_alert.id %}"
+                                       href="{% url 'planner:delete_alert_view' garden_id current_alert.id %}"
                                        data-target="#modal-delete_alert" title="Supprimer l'action"
                                        data-tooltip>
                                         <i class="fas fa-fw fa-times"></i>
@@ -160,12 +160,12 @@
     <div class=" col-md-5 ">
         <!--<div class="align-content-center">-->
         <!--<a class="btn btn-success" data-toggle="modal"-->
-        <!--href="{% url 'planner:add_punctual_operation' garden.id %}"-->
+        <!--href="{% url 'planner:add_punctual_operation' garden_id %}"-->
         <!--data-target="#modal-add_punctual_operation" title="Ajouter une opération ponctuelle" data-tooltip>-->
         <!--<i class="fas fa-fw fa-plus"></i>Ajouter une action-->
         <!--</a>-->
         <!--<a class="btn btn-success" data-toggle="modal"-->
-        <!--href="{% url 'planner:add_observation' garden.id %}"-->
+        <!--href="{% url 'planner:add_observation' garden_id %}"-->
         <!--data-target="#modal-add_observation" title="Ajouter une observation" data-tooltip>-->
         <!--<i class="fas fa-fw fa-plus"></i> Ajouter une observation-->
         <!--</a>-->

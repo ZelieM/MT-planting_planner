@@ -16,7 +16,7 @@ class BedQRView(View):
         garden = Garden.objects.get(pk=kwargs['garden_id'])
         bed = Bed.objects.get(pk=kwargs['pk'])
         active_areas = CultivatedArea.objects.filter(garden=garden, surface=bed, is_active=True)
-        context = {'garden': garden, 'bed': bed, 'areas': active_areas}
+        context = {'bed': bed, 'areas': active_areas}
         return render(self.request, self.template_name, context)
 
 
@@ -46,5 +46,5 @@ class OperationByAreaQRView(TemplateView):
         garden = Garden.objects.get(pk=kwargs['garden_id'])
         area = CultivatedArea.objects.get(pk=kwargs['pk'])
         alerts = queries.get_currently_active_alerts(garden.id, area.id)
-        context = {'garden': garden, 'alerts': alerts, 'area': area}
+        context = {'alerts': alerts, 'area': area}
         return render(request, self.template_name, context)

@@ -17,7 +17,7 @@ class AlertView(TemplateView):
         garden_id = kwargs['garden_id']
         alerts = queries.get_currently_active_alerts(garden_id)
         history = queries.done_alerts(garden_id)
-        context = {'garden': Garden.objects.get(pk=garden_id), 'alerts': alerts, 'history': history}
+        context = {'alerts': alerts, 'history': history}
         return render(request, self.template_name, context)
 
 
@@ -29,7 +29,7 @@ class AddSeed(View):
         garden_id = kwargs['garden_id']
         vegetables = Vegetable.objects.filter(garden_id=garden_id)
         surfaces = Bed.objects.filter(garden_id=garden_id)
-        context = {'garden': Garden.objects.get(pk=garden_id), 'vegetables': vegetables, 'surfaces': surfaces}
+        context = {'vegetables': vegetables, 'surfaces': surfaces}
         return render(request, 'planner/modals/add_seeding_form.html', context)
 
     def post(self, request, **kwargs):
@@ -54,8 +54,7 @@ class AddSeed(View):
 
 class OperationsOnAlertViews(View):
     def get(self, request, **kwargs):
-        garden = Garden.objects.get(pk=kwargs['garden_id'])
-        context = {'garden': garden, 'alert_id': kwargs['alert_id']}
+        context = {'alert_id': kwargs['alert_id']}
         return render(request, self.template_name, context)
 
 
@@ -114,8 +113,7 @@ class PrintForthcomingOperations(FormView):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
-        garden = Garden.objects.get(pk=kwargs['garden_id'])
-        context = {'garden': garden, 'form': form}
+        context = {'form': form}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
