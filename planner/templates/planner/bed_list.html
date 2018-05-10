@@ -113,7 +113,7 @@
         <!-- Strongly inspired from https://simonsarris.com/making-html5-canvas-useful/ -->
         <div id="beds-graphical-representation" class="row">
           <div class="col-sm-12">
-            <canvas id="beds-canvas" width="1000" height="400" style="border: 1px solid darkgray;">
+            <canvas id="beds-canvas" width="1000" height="800" style="border: 1px solid darkgray;">
               <!-- This text is displayed if your browser does not support HTML5 Canvas. -->
               Sorry, your web browser does not support HTML5 canvas. Therefore, we cannot draw the beds.
             </canvas>
@@ -121,6 +121,12 @@
                     class="btn btn-info">
               Sauvegarder la configuration
             </button>
+            <div id="beds-canvas-saved-alert" class="alert alert-success" hidden>
+              Configuration sauvergardée!
+            </div>
+            <div id="beds-canvas-error-alert" class="alert alert-danger" hidden>
+              Une erreur est survenue lors de le sauvegarde de la configuration! Veuillez réessayer.
+            </div>
           </div>
 
           <script>
@@ -129,6 +135,8 @@
             var DEFAULT_COLOR = 'rgba(27, 193, 91, .7)';
             var DEFAULT_TEXT_COLOR = 'black'
             var TEXT_OFFSET_Y = -5;
+            var ALERT_SAVED_SUCCESS_DURATION = 2000;
+            var ALERT_SAVED_ERROR_DURATION = 5000;
 
             // Constructor for Shape objects to hold data for all drawn objects.
             // For now they will just be defined as rectangles.
@@ -374,6 +382,7 @@
             scaleFactorHeight = maxHeight / document.getElementById('beds-canvas').height;
             scaleFactorWidth = maxWidth / document.getElementById('beds-canvas').width;
             SCALE_FACTOR = scaleFactorHeight > scaleFactorWidth ? scaleFactorHeight : scaleFactorWidth;
+            SCALE_FACTOR = SCALE_FACTOR * 5; // make five times more space than the biggest bed
 
             var canvasState = new CanvasState(document.getElementById('beds-canvas'));
             // Add all the beds as Shape and draw them
@@ -384,6 +393,8 @@
 
             // When the save button is hit, get all the Shape's position and save them
             $("#beds-canvas-save-btn").click(function(event) {
+              $('#beds-canvas-save-btn').prop('disabled', true);
+
               var bedsToSave = [];
               for(var shapeIndex in canvasState.shapes) {
                 var shape = canvasState.shapes[shapeIndex];
@@ -403,9 +414,19 @@
                 url: "{% url 'planner:save_bed_position' garden_id %}",
                 data: JSON.stringify(bedsToSave),
                 success: function() {
-                  console.log('saved');
+                  $('#beds-canvas-save-btn').prop('disabled', false);
+                  $('#beds-canvas-saved-alert').toggle(true);
+                  setTimeout(function() {
+                    $('#beds-canvas-saved-alert').toggle(false);
+                  }, ALERT_SAVED_SUCCESS_DURATION)
                 },
-                dataType: 'json'
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                  $('#beds-canvas-save-btn').prop('disabled', false);
+                  $('#beds-canvas-error-alert').toggle(true);
+                  setTimeout(function() {
+                    $('#beds-canvas-error-alert').toggle(false);
+                  }, ALERT_SAVED_ERROR_DURATION)
+                }
               });
             });
           </script>

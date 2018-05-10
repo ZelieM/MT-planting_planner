@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, TemplateView, View
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 import json
 
 from planner.models import Garden, Bed
@@ -62,4 +62,4 @@ class SaveBedPosition(View):
             current_bed.y = e.get('y')
             current_bed.save()
 
-        return HttpResponseRedirect(reverse('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']}))
+        return HttpResponse()
