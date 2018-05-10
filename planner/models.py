@@ -117,6 +117,10 @@ class Bed(models.Model):
 
     exposition = models.CharField(max_length=2, choices=EXPOSITION_CHOICES, default=NORTH, verbose_name='Exposition')
 
+    # The following properties are specific to the graphic representation of the Bed
+    x = models.IntegerField(verbose_name='Coodinate X of upper-left corner of the rectangle', default=0)
+    y = models.IntegerField(verbose_name='Coordinate Y of upper-left corner of the rectangle', default=0)
+
     @property
     def get_area(self):
         return (self.length * self.width) / 10000  # Division to have m² instead of cm²

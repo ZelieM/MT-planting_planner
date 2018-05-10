@@ -23,6 +23,7 @@ urlpatterns = [
     path('<int:garden_id>/delete_bed/<int:pk>', access_private_garden(BedDelete.as_view()),
          name='delete_bed'),
     path('<int:garden_id>', access_private_garden(GardenView.as_view()), name='garden_view'),
+    path('<int:garden_id>/save_bed_position', access_private_garden(SaveBedPosition.as_view()), name='save_bed_position'),
 
     # QR codes logic
     path('<int:garden_id>/qr/<int:pk>', access_private_garden(BedQRView.as_view()), name="qr_bed_view"),
