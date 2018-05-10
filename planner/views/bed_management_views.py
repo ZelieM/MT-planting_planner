@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, TemplateView, View
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 import json
 
 from planner.models import Garden, Bed
@@ -55,12 +55,11 @@ class BedDelete(DeleteView):
 
 class SaveBedPosition(View):
     def post(self, request, **kwargs):
-        json_data = json.loads(request.body)
-        print(json_data)
+        json_data = json.loads(request.body.decode('utf-8'))
         for e in json_data:
             current_bed = Bed.objects.get(pk=e.get('id'))
             current_bed.x = e.get('x')
             current_bed.y = e.get('y')
             current_bed.save()
 
-        return HttpResponseRedirect(reverse('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']}))
+        return HttpResponse()

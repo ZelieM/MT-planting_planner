@@ -8,32 +8,32 @@
 
 {% block content %}
 
-<div id="action-buttons">
-    <div class="fab-btn btn-group show-on-hover dropup">
-        <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">
-            <button type="button" class="btn btn-danger btn-io dropdown-toggle" data-toggle="dropdown">
+    <div id="action-buttons">
+        <div class="fab-btn btn-group show-on-hover dropup">
+            <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">
+                <button type="button" class="btn btn-danger btn-io dropdown-toggle" data-toggle="dropdown">
                     <span class="">
                       <i class="fas fa-plus"></i>
                     </span>
-            </button>
+                </button>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li data-toggle="tooltip" data-original-title="Ajouter un légume" data-placement="right">
+                    <a class="btn btn-success" data-toggle="modal"
+                       href="{% url 'planner:add_vegetable_to_garden_view' garden_id %}"
+                       data-target="#modal-add_vegetable">
+                        <i class="fas fa-fw fa-plus"></i>
+                    </a>
+                </li>
+                <li data-toggle="tooltip" title="Importer un légume depuis la librairie" data-placement="right">
+                    <a class="btn btn-primary" data-toggle="modal"
+                       href="{% url 'planner:garden_import_vegetables_view' garden_id %}">
+                        <i class="fas fa-fw fa-download"></i>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-            <li data-toggle="tooltip" data-original-title="Ajouter un légume" data-placement="right">
-                <a class="btn btn-success" data-toggle="modal"
-                   href="{% url 'planner:add_vegetable_to_garden_view' garden_id %}"
-                   data-target="#modal-add_vegetable">
-                    <i class="fas fa-fw fa-plus"></i>
-                </a>
-            </li>
-            <li data-toggle="tooltip" title="Importer un légume depuis la librairie" data-placement="right">
-                <a class="btn btn-primary" data-toggle="modal"
-                   href="{% url 'planner:garden_import_vegetables_view' garden_id %}">
-                    <i class="fas fa-fw fa-download"></i>
-                </a>
-            </li>
-        </ul>
     </div>
-</div>
 
     <!-- Modal -->
     <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -55,65 +55,68 @@
 
 
         {% load planner_extras %}
+
         <div class="container">
-            <div class="panel-group">
-                <div class="panel panel-primary">
-                    {% for v in vegetables.all %}
-                        <div class="panel-heading">
-                            <h4 data-toggle="collapse" href="#collapse-v{{ v.id }}" class="panel-title clickable">
-                                <span>{{ v }} <span class="pull-right"><i class="fas fa-fw fa-chevron-down"></i></span></span>
-                            </h4>
-                        </div>
-                        <div id="collapse-v{{ v.id }}" class="panel-collapse collapse">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Action</th>
-                                        <th>Date ou délai</th>
-                                        <th class="hidden-xs hidden-sm">Durée [h/m²]</th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    {% for co in cultural_operations|related_to:v.id %}
-                                        <tbody>
+            <div class="form-group">
+                <input class="form-control" id="search_input" type="text" placeholder="Rechercher..">
+            </div>
+            <div class="row card-deck" id="searchable_cards">
+                {% for v in vegetables.all %}
+                    <div class="card-container col-sm-12 col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title searchable">{{ v }}</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
                                         <tr>
-                                            <td>{{ co.name }}</td>
-                                            {% load humanize %}
-                                            <td>{{ co.get_date|date:"j F" }}</td>
-                                            <td class="hidden-xs hidden-sm" title="hh:mm:ss">{{ co.duration }}</td>
-                                            <td>
-
-                                                <a class="" data-toggle="modal"
-                                                   href="{% url 'planner:edit_co_view' garden_id co.id %}"
-                                                   data-target="#modal-edit" title="edit item" data-tooltip>
-                                                    <i class="fas fa-fw fa-pencil-alt"></i>
-                                                </a>
-                                                <a href="{% url 'planner:delete_co' garden_id co.id %}">
-                                                    <i class="fas fa-fw fa-times"></i>
-                                                </a>
-                                            </td>
+                                            <th>Action</th>
+                                            <th>Date ou délai</th>
+                                            <th class="hidden-xs hidden-sm">Durée [h/m²]</th>
+                                            <th></th>
                                         </tr>
-                                        </tbody>
-                                    {% endfor %}
-                                </table>
+                                        </thead>
+                                        {% for co in cultural_operations|related_to:v.id %}
+                                            <tbody>
+                                            <tr>
+                                                <td>{{ co.name }}</td>
+                                                {% load humanize %}
+                                                <td>{{ co.get_date|date:"j F" }}</td>
+                                                <td class="hidden-xs hidden-sm" title="hh:mm:ss">{{ co.duration }}</td>
+                                                <td>
 
-                                <a class="btn btn-success margin-button" data-toggle="modal"
-                                   href="{% url 'planner:pick_co_type' garden_id v.id %}"
-                                   data-target="#modal-pick-type" title="add item" data-tooltip>
-                                    <i class="fas fa-fw fa-plus"></i>
-                                    Ajouter une opération
-                                </a>
-
+                                                    <a class="" data-toggle="modal"
+                                                       href="{% url 'planner:edit_co_view' garden_id co.id %}"
+                                                       data-target="#modal-edit" title="edit item" data-tooltip>
+                                                        <i class="fas fa-fw fa-pencil-alt"></i>
+                                                    </a>
+                                                    <a href="{% url 'planner:delete_co' garden_id co.id %}">
+                                                        <i class="fas fa-fw fa-times"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                                <div class="card-footer">
+                                    <a class="btn btn-success btn-block" data-toggle="modal"
+                                       href="{% url 'planner:pick_co_type' garden_id v.id %}"
+                                       data-target="#modal-pick-type" title="add item" data-tooltip>
+                                        <i class="fas fa-fw fa-plus"></i>
+                                        Ajouter une opération
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
 
-        {% else %}
-        <p>Pas encore de légumes dans ce jardin, cliquez sur le bouton <i class="fas fa-fw fa-plus green"></i> pour en créer ou en importer</p>
+    {% else %}
+        <p>Pas encore de légumes dans ce jardin, cliquez sur le bouton <i class="fas fa-fw fa-plus green"></i> pour en
+            créer ou en importer</p>
 
     {% endif %}
 
@@ -122,5 +125,6 @@
     {% load static %}
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>
     <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
+    <script src="{% static 'planner/js/search_vegetable.js' %}"></script>
 
 {% endblock content %}
