@@ -73,6 +73,15 @@ def inactive_cultivated_areas(bed):
 
 
 @register.simple_tag
+def active_cultivated_vegetable(vegetable):
+    return CultivatedArea.objects.filter(vegetable_id=vegetable, is_active=True)
+
+
+@register.simple_tag
+def inactive_cultivated_vegetable(vegetable):
+    return CultivatedArea.objects.filter(vegetable_id=vegetable, is_active=False)
+
+@register.simple_tag
 def productivity(harvest_details):
     price = harvest_details.total_selling_price
     kg = harvest_details.kg_produced

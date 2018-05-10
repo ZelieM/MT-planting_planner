@@ -23,6 +23,16 @@ class CropsIndexView(View):
         return render(request, self.template_name, context=c)
 
 
+class CropsByVegetableView(View):
+    template_name = 'planner/crops_by_vegetable_view.html'
+
+    def get(self, request, **kwargs):
+        garden = get_object_or_404(Garden, pk=kwargs['garden_id'])
+        vegetables = garden.vegetable_set.all()
+        c = {'vegetables': vegetables}
+        return render(request, self.template_name, context=c)
+
+
 class DeactivateCultivatedArea(UpdateView):
     template_name = 'planner/modals/deactivate_crop_from.html'
     form_class = HarvestForm
@@ -44,7 +54,8 @@ class DeactivateCultivatedArea(UpdateView):
         form.save()
         if CultivatedArea.objects.get(pk=self.kwargs['area_id']).is_active:
             services.deactivate_cultivated_area(self.kwargs['area_id'], self.request.user)
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+        # return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse_lazy('planner:crops_view', kwargs={'garden_id': self.kwargs['garden_id']})

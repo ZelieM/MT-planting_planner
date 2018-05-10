@@ -4,6 +4,13 @@
 
 {% block content %}
     {# View containing the list of beds of the current garden and a form to add new beds #}
+    <div align="center" class="form-group">
+        <a href="{% url 'planner:crops_view' garden_id %}" class="btn btn-default">Par planche
+        </a>
+        <a href="{% url 'planner:crops_by_vegetable_view' garden_id %}" class="btn btn-default">Par légume
+        </a>
+    </div>
+
     {% if beds %}
 
         <div class="modal fade" id="modal-deactivate_cultivated_area" tabindex="-1" role="dialog"
@@ -26,9 +33,9 @@
                             {% if active_cultivated_areas %}
                                 {% for ca in active_cultivated_areas %}
                                     <li class="list-group-item list-group-item-action">
-                                    <a href="{% url 'planner:qr_area_view' garden_id ca.id %}">
-                                        {{ ca.label }} : {{ ca.vegetable }}
-                                    </a>
+                                        <a href="{% url 'planner:qr_area_view' garden_id ca.id %}">
+                                            {{ ca.label }} : {{ ca.vegetable }}
+                                        </a>
 
                                         <a href="{% url 'planner:deactivate_cultivated_area_view' garden_id ca.id %}"
                                            class="pull-right red"
@@ -53,44 +60,44 @@
                                 {% for ca in inactive_cultivated_areas %}
                                     <li class="list-group-item list-group-item-action" data-toggle="collapse"
                                         href="#collapse-ca{{ ca.id }}" class="clickable">
-                                        {{ ca.label }} : {{ ca.vegetable }} ({{ ca.harvest_date|date:"F Y"}})
+                                        {{ ca.label }} : {{ ca.vegetable }} ({{ ca.harvest_date|date:"F Y" }})
                                         <span class="pull-right"><i class="fas fa-fw fa-chevron-down"></i></span>
                                         <div id="collapse-ca{{ ca.id }}" class="collapse">
                                             <br>
-                                                <table class="table table-hover table-bordered table-responsive">
-                                                    <tr>
-                                                        <th>Date de récolte</th>
-                                                        <th>Production (kg)</th>
+                                            <table class="table table-hover table-bordered table-responsive">
+                                                <tr>
+                                                    <th>Date de récolte</th>
+                                                    <th>Production (kg)</th>
 
-                                                        <th> Prix de vente (€)</th>
-                                                        <th> Rendement (€/kg)</th>
-                                                        <th> Editer</th>
-                                                    </tr>
-                                                        <tr>
-                                                            <td class="col-md-3">
-                                                                {{ ca.harvest_date }}
-                                                            </td>
-                                                            <td class="col-md-3">
-                                                                {{ ca.kg_produced }}
-                                                            </td>
-                                                            <td>
-                                                                {{ ca.total_selling_price }}
-                                                            </td>
-                                                            <td>
-                                                                {% productivity ca %}
-                                                            </td>
-                                                            <td>
-                                                                <a href="{% url 'planner:deactivate_cultivated_area_view' garden_id ca.id%}"
-                                                                   class="pull-right blue"
-                                                                   data-toggle="modal"
-                                                                   data-target="#modal-deactivate_cultivated_area"
-                                                                   title="Editer les données de récolte" data-tooltip>
-                                                                    <i class="fas fa-fw fa-pencil-alt"></i>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
+                                                    <th> Prix de vente (€)</th>
+                                                    <th> Rendement (€/kg)</th>
+                                                    <th> Editer</th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-3">
+                                                        {{ ca.harvest_date }}
+                                                    </td>
+                                                    <td class="col-md-3">
+                                                        {{ ca.kg_produced }}
+                                                    </td>
+                                                    <td>
+                                                        {{ ca.total_selling_price }}
+                                                    </td>
+                                                    <td>
+                                                        {% productivity ca %}
+                                                    </td>
+                                                    <td>
+                                                        <a href="{% url 'planner:deactivate_cultivated_area_view' garden_id ca.id %}"
+                                                           class="pull-right blue"
+                                                           data-toggle="modal"
+                                                           data-target="#modal-deactivate_cultivated_area"
+                                                           title="Editer les données de récolte" data-tooltip>
+                                                            <i class="fas fa-fw fa-pencil-alt"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
 
-                                                </table>
+                                            </table>
                                         </div>
                                     </li>
                                 {% endfor %}
