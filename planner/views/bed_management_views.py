@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import CreateView, UpdateView, DeleteView, TemplateView, View
 
 from planner.models import Garden, Bed
 
@@ -63,4 +63,14 @@ class BedDelete(DeleteView):
         return context
 
     def get_success_url(self):
+        return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
+
+
+class SaveBedPosition(View):
+    def post(self, request, *args, **kwargs):
+        print(kwargs)
+        print(args)
+        print(request)
+        # TODO save
+
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
