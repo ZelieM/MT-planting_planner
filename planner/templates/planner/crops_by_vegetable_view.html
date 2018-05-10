@@ -4,10 +4,13 @@
 
 {% block content %}
 
+    {% load planner_extras %}
     <div align="center" class="form-group">
-        <a href="{% url 'planner:crops_view' garden_id %}" class="btn btn-default">Par planche
+        <a href="{% url 'planner:crops_view' garden_id %}"
+           class="btn btn-default {% active_button request 'planner:crops_view' garden_id %}">Par planche
         </a>
-        <a href="{% url 'planner:crops_by_vegetable_view' garden_id %}" class="btn btn-default">Par légume
+        <a href="{% url 'planner:crops_by_vegetable_view' garden_id %}"
+           class="btn btn-default {% active_button request 'planner:crops_by_vegetable_view' garden_id %}">Par légume
         </a>
     </div>
 
@@ -20,7 +23,6 @@
         </div>
 
 
-        {% load planner_extras %}
         <div class="form-group">
             <input class="form-control" id="search_input" type="text" placeholder="Rechercher..">
         </div>
