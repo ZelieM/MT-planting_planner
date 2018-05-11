@@ -13,16 +13,17 @@
             <input class="btn btn-success" type="submit" value="Editer"/>
         </div>
     </form>
-{% endblock modal_content %}
-<script>
-    var form_options = {
-        target: '#modal-edit',
-        success: function () {
+    <script>
+        var form_options = {
+            target: '#modal-edit',
+            success: function () {
+            }
         }
-    }
-    $('#co_update_form').ajaxForm(form_options);
+        $('#co_update_form').ajaxForm(form_options);
 
-</script>
+    </script>
+{% endblock modal_content %}
+
 
 
 
