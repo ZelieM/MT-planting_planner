@@ -81,9 +81,9 @@ class EditCulturalOperationView(View):
         # check whether it's valid:
         if form.is_valid():
             form.save()
-            success_message = 'Vous avez ajouté modifié l\'opération " {} " du légume {}'.format(
-                co.name, co.vegetable)
-            messages.add_message(request, messages.SUCCESS, success_message)
+            # success_message = 'Vous avez modifié l\'opération " {} " du légume {}'.format(
+            #     co.name, co.vegetable)
+            # messages.add_message(request, messages.SUCCESS, success_message)
             return HttpResponseRedirect(
                 reverse('planner:vegetables_view', kwargs={'garden_id': co.vegetable.garden_id}))
 

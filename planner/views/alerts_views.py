@@ -121,4 +121,12 @@ class PrintForthcomingOperations(FormView):
         days_period = request.POST['delay_to_print']
         int_period = int(days_period)
         operations_to_print = queries.get_alert_within_notification_period(garden_id, int_period)
-        return generate_pdf_helper.forthcoming_operations_as_pdf(request, operations_to_print, garden_id)
+
+        return generate_pdf_helper.render_html_template_to_pdf(
+            'planner/printable/print_forthcoming_operations_template.html',
+            {
+                'pagesize': 'A4',
+                'operations': operations_to_print,
+                'garden_id': garden_id,
+            })
+        # return generate_pdf_helper.forthcoming_operations_as_pdf(request, operations_to_print, garden_id)
