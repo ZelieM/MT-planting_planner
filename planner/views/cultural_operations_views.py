@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -80,7 +81,11 @@ class EditCulturalOperationView(View):
         # check whether it's valid:
         if form.is_valid():
             form.save()
-            return render(request, 'planner/modals/co_form_success.html', {'co': co})
+            success_message = 'Vous avez ajouté modifié l\'opération " {} " du légume {}'.format(
+                co.name, co.vegetable)
+            messages.add_message(request, messages.SUCCESS, success_message)
+            return HttpResponseRedirect(
+                reverse('planner:vegetables_view', kwargs={'garden_id': co.vegetable.garden_id}))
 
 
 class PickCOType(TemplateView):
