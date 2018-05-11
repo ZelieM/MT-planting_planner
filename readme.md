@@ -71,6 +71,7 @@ coverage run --source='.' manage.py test planner --settings=planting_planner.set
 - Clone the repository
 - Ensure that python3 is installed
 - Install all requirements (with pip3)
+- Migrations: `python3 manage.py migrate --settings=planting_planner.settings.production`
 - After each migration, restart apache (`service apache2 restart`)
 
 
