@@ -17,7 +17,7 @@ class AddUserToGarden(TemplateView):
     def get(self, request, *args, **kwargs):
         garden = Garden.objects.get(pk=kwargs['garden_id'])
         users = User.objects.exclude(garden=garden)
-        context = {'users': users}
+        context = {'garden': garden, 'users': users}
         return render(request, self.template_name, context)
 
     def post(self, request, **kwargs):

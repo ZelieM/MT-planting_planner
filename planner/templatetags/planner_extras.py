@@ -25,13 +25,6 @@ def navactive(request, url, arg):
         return "active"
     return ""
 
-@register.simple_tag
-def active_button(request, url, arg):
-    if request.path == (reverse(url, args=[arg])):
-        return "disabled"
-    return ""
-
-
 @register.filter
 def addstr(arg1, arg2):
     """concatenate arg1 & arg2"""
