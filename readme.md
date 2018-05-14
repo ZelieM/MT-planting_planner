@@ -71,10 +71,11 @@ coverage run --source='.' manage.py test planner --settings=planting_planner.set
 - Clone the repository
 - Ensure that python3 is installed
 - Install all requirements (with pip3)
+- Install Apache and mod_wsgi
 - Migrations: `python3 manage.py migrate --settings=planting_planner.settings.production`
 - After each migration, restart apache (`service apache2 restart`)
 
-
+## Apache configuration
 Apache config file (`/etc/apache2/sites-available/lauzeplan.conf`)
 
 ````
@@ -97,7 +98,10 @@ Alias /static /home/zmulders/MT-planting_planner/planner/static
 </Directory>
 ````
 
+##Automatic deployment
 This project is automatically updated on the server thanks to a CGI script written in Perl.
+However, the migrations are not run automatically.
+
 
 Dump of the vegetable library database, from production server:
  `pg_dump lauzeplan_library -h pgsql.uclouvain.be -p 5440 --username=lauzeplan -f test_dump_db.txt`
