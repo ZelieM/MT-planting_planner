@@ -98,7 +98,10 @@ Alias /static /home/zmulders/MT-planting_planner/planner/static
 </Directory>
 ````
 
+##Automatic deployment
 This project is automatically updated on the server thanks to a CGI script written in Perl.
+However, the migrations are not run automatically.
+
 
 Dump of the vegetable library database, from production server:
  `pg_dump lauzeplan_library -h pgsql.uclouvain.be -p 5440 --username=lauzeplan -f test_dump_db.txt`
