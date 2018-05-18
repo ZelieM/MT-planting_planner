@@ -10,6 +10,9 @@ app_name = 'planner'
 urlpatterns = [
     path('', index, name='index'),
 
+    # PWA offline page
+    path('offline', PWAOfflineView.as_view(), name='pwa_offline_page'),
+
     # Authentications views
     url(r'^login/$', auth_views.login, {'template_name': 'planner/login.html'}, name='login'),
     path('signup', signup, name='signup'),
@@ -23,7 +26,8 @@ urlpatterns = [
     path('<int:garden_id>/delete_bed/<int:pk>', access_private_garden(BedDelete.as_view()),
          name='delete_bed'),
     path('<int:garden_id>', access_private_garden(GardenView.as_view()), name='garden_view'),
-    path('<int:garden_id>/save_bed_position', access_private_garden(SaveBedPosition.as_view()), name='save_bed_position'),
+    path('<int:garden_id>/save_bed_position', access_private_garden(SaveBedPosition.as_view()),
+         name='save_bed_position'),
 
     # QR codes logic
     path('<int:garden_id>/qr/<int:pk>', access_private_garden(BedQRView.as_view()), name="qr_bed_view"),
@@ -33,7 +37,8 @@ urlpatterns = [
 
     # Crops management
     path('<int:garden_id>/crops', access_private_garden(CropsIndexView.as_view()), name='crops_view'),
-    path('<int:garden_id>/crops/vegetables_based', access_private_garden(CropsByVegetableView.as_view()), name='crops_by_vegetable_view'),
+    path('<int:garden_id>/crops/vegetables_based', access_private_garden(CropsByVegetableView.as_view()),
+         name='crops_by_vegetable_view'),
     path('<int:garden_id>/<int:area_id>/terminate_cropping',
          access_private_garden(DeactivateCultivatedArea.as_view()),
          name='deactivate_cultivated_area_view'),

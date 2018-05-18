@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'planner.apps.PlannerConfig',
     'vegetables_library.apps.VegetablesLibraryConfig',
     'research.apps.ResearchConfig',
+    'pwa',
 
 ]
 
@@ -123,3 +124,23 @@ GRAPH_MODELS = {
 }
 
 DATABASE_ROUTERS = ['vegetables_library.dbRouter.VegetablesLibraryDBRouter']
+
+
+PWA_APP_NAME = 'Lauzeplan'
+PWA_APP_DESCRIPTION = "Organisation des tâches quotidiennes d'un jardin maraicher"
+PWA_APP_THEME_COLOR = '#0A0302'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/planner/icons/android-icon-192x192.png',
+        'sizes': '192x192'
+    },
+    {
+        'src': '/static/planner/icons/apple-icon-152x152.png',
+        'sizes': '152x152'
+    },
+    {
+        'src': '/static/planner/icons/tree.png',
+        'sizes': '512x512'
+    }
+]
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'serviceworker.js')
