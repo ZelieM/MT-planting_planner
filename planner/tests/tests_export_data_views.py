@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 
-from planner.models import Garden, Bed
+from planner.models import Garden
 
 
 class ExportDataViewsTests(TestCase):

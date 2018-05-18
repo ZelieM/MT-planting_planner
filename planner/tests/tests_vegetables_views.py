@@ -16,12 +16,12 @@ class VegetablesViewsTests(TestCase):
         self.garden.users.add(self.user)
 
     def test_index_view(self):
-        login = self.client.login(username=self.username, password=self.password)
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get('/{}/vegetables'.format(self.garden.id))
         self.assertEqual(response.status_code, 200)
 
     def test_add_vegetable(self):
-        login = self.client.login(username=self.username, password=self.password)
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get('/{}/vegetables/new'.format(self.garden.id))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(self.garden.vegetable_set.all()), 0)
