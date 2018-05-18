@@ -112,6 +112,10 @@ def get_future_work_hours_by_week(garden_id):
     for fop in future_operations:
         op_week = services.get_due_date(fop, past_operations).isocalendar()[1]
         y_axis[op_week] += from_timedelta_to_hours(services.get_expected_duration(fop))
+    for pop in past_operations:
+        op_week = services.get_due_date(pop, past_operations).isocalendar()[1]
+        y_axis[op_week] += from_timedelta_to_hours(services.get_expected_duration(pop))
+
     return x_axis, y_axis
 
 
