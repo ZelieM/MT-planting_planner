@@ -79,6 +79,20 @@ coverage run --source='.' manage.py test planner --settings=planting_planner.set
 Apache config file (`/etc/apache2/sites-available/lauzeplan.conf`)
 
 ````
+
+WSGIPythonPath /home/zmulders/MT-planting_planner
+
+<VirtualHost *:80>
+ServerName lauzeplan.sipr.ucl.ac.be
+Redirect permanent / https://lauzeplan.sipr.ucl.ac.be/
+</VirtualHost>
+
+
+<VirtualHost *:443>
+
+ServerName lauzeplan.sipr.ucl.ac.be
+DocumentRoot /home/zmulders/MT-planting_planner/planting_planner
+
 # Specify the path where Apache is authorized to run CGI scripts
 # /webhook/ is the path in the URL
 # the second path is the location of the scripts
@@ -90,11 +104,9 @@ ScriptAlias /webhook/ /home/zmulders/webhook_github_master/
   Require all granted
 </Directory>
 
-
 # Below is the Django application's configuration
 
 WSGIScriptAlias / /home/zmulders/MT-planting_planner/planting_planner/wsgi.py
-WSGIPythonPath /home/zmulders/MT-planting_planner
 
 Alias /static /home/zmulders/MT-planting_planner/planner/static
 
@@ -109,6 +121,13 @@ Alias /static /home/zmulders/MT-planting_planner/planner/static
     Require all granted
   </Files>
 </Directory>
+
+
+SSLCertificateFile /etc/ssl/lauzeplan_sipr_ucl_ac_be.crt
+SSLCertificateKeyFile /etc/ssl/lauzeplan.sipr.ucl.ac.be.key
+SSLCertificateChainFile /etc/ssl/DigiCertCA.crt
+
+</VirtualHost>
 ````
 
 ##Automatic deployment
