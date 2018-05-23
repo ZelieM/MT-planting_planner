@@ -66,6 +66,10 @@ urlpatterns = [
     path('<int:garden_id>/vegetables', access_private_garden(VegetablesView.as_view()), name='vegetables_view'),
     path('<int:garden_id>/vegetables/new', access_private_garden(AddVegetableView.as_view()),
          name='add_vegetable_to_garden_view'),
+    path('<int:garden_id>/delete_vegetable/<int:pk>', access_private_garden(VegetableDelete.as_view()),
+         name='delete_vegetable'),
+    path('<int:garden_id>/update_vegetable/<int:pk>', access_private_garden(VegetableUpdateView.as_view()),
+         name='update_vegetable'),
 
     # Cultural operations management
     path('<int:garden_id>/vegetables/delete_co/<int:co_id>', access_private_garden(CulturalOperationDelete.as_view()),

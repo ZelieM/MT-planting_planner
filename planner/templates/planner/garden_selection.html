@@ -1,92 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends "planner/base.html" %}
+{% block extra_head %}
 
-    {% load pwa %}
-    {% progressive_web_app_meta %}
 
-    <meta charset="UTF-8">
-    <title>Lauzeplan - Selection du jardin</title>
 
-    {% load static %}
-    {% include "planner/favicon.html" %}
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
-            integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{% static "planner/css/style.css" %}">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
             integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
             crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
 
 
-<body>
-<div class="jumbotron">
-    <div class="container text-center">
-        <h1>Gestion de plantations maraicheres</h1>
-    </div>
-</div>
 
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+    {% block extra_js %}{% endblock extra_js %}
+
+{% endblock extra_head %}
+
+{% block page_body %}
+    {% load static %}
+
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-brand"> LauzePlan
+                </p>
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                {% if is_searcher %}
+                    <ul class="nav navbar-nav ">
+                        <li class=""><a
+                                href="{% url 'research:all_gardens_view' %}">Accéder à l'interface chercheur</a></li>
+
+                    </ul>
+                {% endif %}
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'planner:log_out' %}"><i class="fas fa-fw fa-sign-out-alt"></i> Se
+                        déconnecter</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-            {% if is_searcher %}
-            <ul class="nav navbar-nav ">
-                <li class=""><a
-                        href="{% url 'research:all_gardens_view' %}">Accéder à l'interface chercheur</a></li>
+    </nav>
 
-            </ul>
-            {% endif %}
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'planner:log_out' %}"><i class="fas fa-fw fa-sign-out-alt"></i> Se déconnecter</a>
-                </li>
-            </ul>
+
+    <div class="container col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">Liste des jardins dans lesquels vous êtes actif</div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    {% for g in gardens_followed %}
+                        <a href="{{ g.get_absolute_url }}"
+                           class="list-group-item list-group-item-action"> {{ g.name }}</a>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Créer un nouveau jardin</div>
+            <div class="panel-body">
+                {% load crispy_forms_tags %}
+                <form action="" name="" role="form" class="form-horizontal col-md-12" method="post"
+                      accept-charset="utf-8">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input class="btn btn-success" type="submit" value="Créer"/>
+                </form>
+            </div>
         </div>
     </div>
-</nav>
 
-
-<div class="container col-md-6 col-md-offset-3">
-    <div class="panel panel-default">
-        <div class="panel-heading">Liste des jardins dans lesquels vous êtes actif</div>
-        <div class="panel-body">
-            <ul class="list-group">
-                {% for g in gardens_followed %}
-                    <a href="{{ g.get_absolute_url }}"
-                       class="list-group-item list-group-item-action"> {{ g.name }}</a>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">Créer un nouveau jardin</div>
-        <div class="panel-body">
-            {% load crispy_forms_tags %}
-            <form action="" name="" role="form" class="form-horizontal col-md-12" method="post"
-                  accept-charset="utf-8">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <input class="btn btn-success" type="submit" value="Créer"/>
-            </form>
-        </div>
-    </div>
-</div>
-
-{% include "planner/footer.html" %}
-</body>
-</html>
+    {% include "planner/footer.html" %}
+{% endblock page_body %}
