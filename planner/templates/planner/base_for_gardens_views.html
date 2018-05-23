@@ -39,7 +39,7 @@
 
                     <div class="collapse navbar-collapse" id="myNavbar">
                         <ul class="nav navbar-nav ">
-                            <li><a href="{% url 'planner:garden_selection' %}">Choix du jardin</a></li>
+                            <li><a href="{% url 'planner:garden_selection' %}">Choix de l'exploitation</a></li>
                             <li class="{% navactive request 'planner:alerts_view' garden_id %}"><a
                                     href="{% url 'planner:alerts_view' garden_id %}">Alertes</a></li>
                             <li class="{% navactive request 'planner:vegetables_view' garden_id %}"><a

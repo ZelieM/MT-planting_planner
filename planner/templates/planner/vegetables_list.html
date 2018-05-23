@@ -118,14 +118,14 @@
                                         {% endfor %}
                                     </table>
                                 </div>
-                                <div class="card-footer">
-                                    <a class="btn btn-success btn-block" data-toggle="modal"
-                                       href="{% url 'planner:pick_co_type' garden_id v.id %}"
-                                       data-target="#modal-pick-type" title="add item" data-tooltip>
-                                        <i class="fas fa-fw fa-plus"></i>
-                                        Ajouter une opération
-                                    </a>
-                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a class="btn btn-success btn-block" data-toggle="modal"
+                                   href="{% url 'planner:pick_co_type' garden_id v.id %}"
+                                   data-target="#modal-pick-type" title="add item" data-tooltip>
+                                    <i class="fas fa-fw fa-plus"></i>
+                                    Ajouter une opération
+                                </a>
                             </div>
                         </div>
                     </div>
