@@ -6,7 +6,8 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
             integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
             crossorigin="anonymous"></script>
-
+      {% load static %}
+    <script src="{% static 'planner/js/info-bubble.js' %}"></script>
 
 
     {% block extra_js %}{% endblock extra_js %}
@@ -22,6 +23,9 @@
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <div class="navbar-logos">
+                            <div class="navbar-brand" id="info-bubble">
+                                <i class="fas fa-fw fa-question-circle"></i>
+                            </div>
                             <a class="navbar-brand" href="{% url 'planner:alerts_view' garden_id %}">
                                 <img alt="LauzePlan" src="{% static '/planner/icons/apple-icon-57x57.png' %}">
                             </a>
@@ -41,7 +45,7 @@
                         <ul class="nav navbar-nav ">
                             <li><a href="{% url 'planner:garden_selection' %}">Choix de l'exploitation</a></li>
                             <li class="{% navactive request 'planner:alerts_view' garden_id %}"><a
-                                    href="{% url 'planner:alerts_view' garden_id %}">Alertes</a></li>
+                                    href="{% url 'planner:alerts_view' garden_id %}">Gestion</a></li>
                             <li class="{% navactive request 'planner:vegetables_view' garden_id %}"><a
                                     href="{% url 'planner:vegetables_view' garden_id %}">Mes légumes</a></li>
                             <li class="{% navactive request 'planner:garden_view' garden_id %}"><a
@@ -73,7 +77,7 @@
                 </div>
             </nav>
 
-            <div class="container body-container">
+            <div class="container body-container" id="body-container">
 
                 {% block content %}{% endblock content %}
 

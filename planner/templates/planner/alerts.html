@@ -9,6 +9,21 @@
 
 {% block content %}
 
+    {% load planner_extras %}
+    <div class="alert alert-info" id="info-bubble-content">
+        Cette page vous permet de consulter les opérations à venir et celles qui ont déjà été réalisées.
+        Chaque opération a plus de détails accessibles en cliquant sur la ligne concernée.
+        Le bouton <i class="fas fa-plus red"></i> vous permet d'ajouter une nouvelle plantation, opération ou observation.
+        Une nouvelle plantation ajoutera toutes les opérations relatives au légume planté dans vos opérations à venir.
+        (Pour retrouver et modifier ces opérations, rendez-vous dans l'onglet <a href="{% url 'planner:vegetables_view' garden_id %}">Mes légumes</a>)
+        Ces alertes ne seront visibles qu'à partir de {% get_notification_delay garden_id %} jours avant leur date d'expiration.
+        Cette valeur peut être changée dans <a href="{% url 'planner:garden_settings_view' garden_id %}">vos
+        paramètres</a>.
+        Les opérations ponctuelles et les observations vous permettent simplement de garder une trace des actions que
+        vous faites au fur et à mesure.
+
+    </div>
+
     <div id="action-buttons">
         <div class="fab-btn btn-group show-on-hover dropup">
             <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">
@@ -82,7 +97,8 @@
     <!-- Modal -->
 
     <div class="col-md-7">
-        {% load planner_extras %}
+
+
         {% load l10n %}
         <div class="panel panel-default ">
             <div class="panel-heading">Opérations à faire
@@ -138,8 +154,8 @@
                             <tr class="info">
                                 <td colspan="5" class="hiddenRow">
                                     <div class="collapse" id="collapse-a{{ current_alert.id }}">
-{#                                        <b> Légume : </b> {{ current_alert.area_concerned.vegetable }}#}
-{#                                        <br>#}
+                                        {#                                        <b> Légume : </b> {{ current_alert.area_concerned.vegetable }}#}
+                                        {#                                        <br>#}
                                         <b> Planche : </b> {{ current_alert.area_concerned.surface.name }}
                                         <br>
                                         <b> Reporté de : </b> {{ current_alert.postponement }} jours

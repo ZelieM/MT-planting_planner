@@ -15,7 +15,13 @@
         </div>
     {% endif %}
 
-
+    <div class="alert alert-info" id="info-bubble-content">
+    Cette page vous permet de télécharger certaines de vos données au format Excel.
+    Vous pouvez choisir de télécharger l'historique des actions réalisées sur vos cultures qui reprend les données provenant de la colonne historique, dans l'onglet <a
+            href="{% url 'planner:alerts_view' garden_id %}">Gestion</a>.
+    Ou alors, vous pouvez télécharger les données de récolte qui ont été encodées via l'onglet <a
+            href="{% url 'planner:crops_view' garden_id %}">Mes cultures</a>
+    </div>
     <div class="container col-md-6 col-md-offset-3">
         <div class="panel panel-default">
             <div class="panel-heading">Exporter l'historique des actions de ce jardin</div>

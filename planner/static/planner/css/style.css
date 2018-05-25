@@ -310,3 +310,11 @@ html, body {
   /*margin-top: 20px;*/
   /*width: calc(100% - 50px);*/
 }
+
+
+
+#info-bubble-content{
+    white-space: pre-line;
+    display: none;
+}
+

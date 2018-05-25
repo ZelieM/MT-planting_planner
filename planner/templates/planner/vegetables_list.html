@@ -8,6 +8,18 @@
 
 {% block content %}
 
+        <div class="alert alert-info" id="info-bubble-content">
+        Cette page regroupe l'ensemble des légumes que vous pouvez cultiver sur votre exploitation. Ca représente un peu votre bibliothèque cultivable.
+        Pour effectuer une plantation d'un de ces légumes sur une de vos planches (onglet <a
+            href="{% url 'planner:garden_view' garden_id %}">Mes planches</a>), rendez-vous dans l'onglet <a
+            href="{% url 'planner:alerts_view' garden_id %}">Gestion</a>.
+        Vous pouvez créer vos propres légumes ou en importer depuis une librarie remplie par l'université en cliquant sur le bouton <i class="fas fa-fw fa-plus red"></i>.
+        Chaque légume peut avoir un ensemble d'opérations à faire au cours de l'année, une sorte d'itinéraire technique.
+        Ces opérations vous seront rappelées au fur et à mesure dans l'onglet <a
+            href="{% url 'planner:alerts_view' garden_id %}">Gestion</a>.
+    </div>
+
+
     <div id="action-buttons">
         <div class="fab-btn btn-group show-on-hover dropup">
             <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">

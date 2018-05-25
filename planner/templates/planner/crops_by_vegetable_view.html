@@ -5,6 +5,18 @@
 {% block content %}
 
     {% load planner_extras %}
+
+
+    <div class="alert alert-info" id="info-bubble-content">
+        Cette page regroupe l'ensemble de vos cultures organisées par légume.
+        Chaque légume a un historique de plantations et des cultures en cours.
+        Les cultures en cours peuvent être arrêtées ou cloturées en cliquant sur la <i
+            class="fas fa-fw fa-times red"></i>.
+        Chaque culture dans l'historique a des détails de récolte. Ces détails peuvent être téléchargés en format excel
+        sous l'onglet <a
+            href="{% url 'planner:garden_export_view' garden_id %}"> <i class="fas fa-fw fa-upload"></i> Exporter</a>.
+    </div>
+
     <div align="center" class="form-group">
         <a href="{% url 'planner:crops_view' garden_id %}"
            class="btn btn-default {% navactive request 'planner:crops_view' garden_id %}">Par planche
