@@ -22,7 +22,7 @@ class ExportDataViewsTests(TestCase):
 
     def test_post(self):
         login = self.client.login(username=self.username, password=self.password)
-        form = {'history_start_date': '2018-04-15'}
+        form = {'first_date': '2018-04-15', 'end_date': '2018-05-01'}
         response = self.client.post('/{}/export_history'.format(self.garden.id), form)
         self.assertEquals(
             response.get('Content-Disposition'),
