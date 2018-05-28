@@ -4,8 +4,10 @@ $(document).ready(function () {
         if (e) {
             if (e.style.display === "none") {
                 e.style.display = "block";
+                document.getElementById('info-bubble').className = "navbar-brand active-logo"
             } else {
                 e.style.display = "none";
+                document.getElementById('info-bubble').className = "navbar-brand"
             }
         }
         else {

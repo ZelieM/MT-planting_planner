@@ -315,6 +315,9 @@ html, body {
 
 #info-bubble-content{
     white-space: pre-line;
-    display: none;
+}
+
+.active-logo{
+    color: white !important;
 }
 
