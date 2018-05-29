@@ -4,7 +4,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, TemplateVie
 from django.http import HttpResponse
 import json
 
-from planner.models import Garden, Bed
+from planner.models import Garden, Bed, Parcel
 
 
 class GardenView(TemplateView):
@@ -17,14 +17,20 @@ class GardenView(TemplateView):
         for s in surfaces:
             if isinstance(s, Bed):
                 beds.append(s)
-        c = {'beds': beds}
+        parcels = Parcel.objects.filter(garden_id=garden.id)
+        c = {'parcels': parcels, 'beds': beds}
         return render(request, self.template_name, context=c)
 
 
 class BedCreateView(CreateView):
     model = Bed
-    fields = ['name', 'length', 'width', 'comment', 'soil_type', 'exposition']
+    fields = ['parcel', 'name', 'length', 'width', 'comment', 'soil_type', 'exposition']
     template_name = 'planner/modals/bed_create_with_details_form.html'
+
+    def get_form(self, *args, **kwargs):
+        form = super(BedCreateView, self).get_form(*args, **kwargs)
+        form.fields['parcel'].queryset = Parcel.objects.filter(garden_id=self.kwargs['garden_id'])
+        return form
 
     def get_success_url(self):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
@@ -38,8 +44,13 @@ class BedCreateView(CreateView):
 
 class BedUpdateView(UpdateView):
     model = Bed
-    fields = ['name', 'length', 'width', 'comment', 'soil_type', 'exposition']
+    fields = ['parcel', 'name', 'length', 'width', 'comment', 'soil_type', 'exposition']
     template_name = 'planner/modals/bed_update_with_details_form.html'
+
+    def get_form(self, *args, **kwargs):
+        form = super(BedUpdateView, self).get_form(*args, **kwargs)
+        form.fields['parcel'].queryset = Parcel.objects.filter(garden_id=self.kwargs['garden_id'])
+        return form
 
     def get_success_url(self):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
@@ -48,6 +59,38 @@ class BedUpdateView(UpdateView):
 class BedDelete(DeleteView):
     model = Bed
     template_name = 'planner/modals/bed_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
+
+
+class ParcelCreateView(CreateView):
+    model = Parcel
+    fields = ['name']
+    template_name = 'planner/modals/parcel_create_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
+
+    def form_valid(self, form):
+        new_parcel = form.save(commit=False)
+        new_parcel.garden = Garden.objects.get(pk=self.kwargs["garden_id"])
+        new_parcel.save()
+        return super().form_valid(form)
+
+
+class ParcelUpdateView(UpdateView):
+    model = Parcel
+    fields = ['name']
+    template_name = 'planner/modals/parcel_update_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
+
+
+class ParcelDelete(DeleteView):
+    model = Parcel
+    template_name = 'planner/modals/parcel_confirm_delete.html'
 
     def get_success_url(self):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})

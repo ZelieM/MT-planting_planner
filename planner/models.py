@@ -87,8 +87,16 @@ class COWithDate(CulturalOperation):
         return self.absoluteDate
 
 
+class Parcel(models.Model):
+    name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name="Nom")
+    garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
 class Bed(models.Model):
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
+    parcel = models.ForeignKey(Parcel, on_delete=models.CASCADE, null=True, verbose_name="Parcelle")
     name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name='Nom')
     length = models.IntegerField(verbose_name='Longueur (cm)')
     width = models.IntegerField(verbose_name='Largeur (cm)')

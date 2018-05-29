@@ -5,7 +5,7 @@ from planner import services, queries
 
 from datetime import date, timedelta
 
-from planner.models import Operation, ForthcomingOperation, CultivatedArea, Garden
+from planner.models import Operation, ForthcomingOperation, CultivatedArea, Garden, Bed
 from vegetables_library.models import Variety
 
 register = template.Library()
@@ -100,3 +100,8 @@ def get_notification_delay(garden_id):
 @register.filter
 def is_operation(history_item):
     return type(history_item) is Operation
+
+
+@register.simple_tag()
+def get_beds_from_parcel(parcel_id):
+    return Bed.objects.filter(parcel_id=parcel_id)

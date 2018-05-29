@@ -7,17 +7,23 @@
 
     <div class="alert alert-info" id="info-bubble-content" style="display: none;">
         Cette page regroupe l'ensemble des planches qui constituent votre exploitation.
-        Ces planches représentent des planches physiques qui deviendront des cultures une fois que vous aurez planté quelque chose dessus.
+        Ces planches représentent des planches physiques qui deviendront des cultures une fois que vous aurez planté
+        quelque chose dessus.
         La plantation se fait via l'onglet <a href="{% url 'planner:alerts_view' garden_id %}">Gestion</a>.
-        Toutes les cultures en cours peuvent être trouvées dans l'onglet <a href="{% url 'planner:crops_view' garden_id %}">Mes cultures</a>.
+        Toutes les cultures en cours peuvent être trouvées dans l'onglet <a
+            href="{% url 'planner:crops_view' garden_id %}">Mes cultures</a>.
         Vous pouvez facilement ajouter des planches via le bouton <i class="fas fa-ellipsis-h red"></i>.
-        Ce bouton permet aussi d'imprimer des QR codes reliés à chaque planche (via le boutont <i class="fas fa-fw fa-qrcode"></i>).
+        Ce bouton permet aussi d'imprimer des QR codes reliés à chaque planche (via le boutont <i
+            class="fas fa-fw fa-qrcode"></i>).
         Ces QR codes peuvent être imprimés et ensuite placés au début de vos planches.
-        Quand vous scannez ces QR codes, vous avez la liste des cultures en cours sur cette planche ainsi que les opérations à effectuer.
+        Quand vous scannez ces QR codes, vous avez la liste des cultures en cours sur cette planche ainsi que les
+        opérations à effectuer.
 
     </div>
 
     <div class="modal fade" id="modal-create_bed" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+    <div class="modal fade" id="modal-create_parcel" tabindex="-1" role="dialog" aria-hidden="true">
     </div>
 
     <div id="action-buttons">
@@ -36,18 +42,25 @@
                     </a>
 
                 </li>
+                <li data-toggle="tooltip" title="Ajouter une parcelle" data-placement="right">
+                    <a class="btn btn-success" data-toggle="modal"
+                       href="{% url 'planner:create_parcel' garden_id %}"
+                       data-target="#modal-create_parcel">
+                        <i class="fas fa-fw fa-th"></i>
+                    </a>
+                </li>
                 <li data-toggle="tooltip" title="Ajouter une planche" data-placement="right">
                     <a class="btn btn-success" data-toggle="modal"
                        href="{% url 'planner:create_bed' garden_id %}"
                        data-target="#modal-create_bed">
-                        <i class="fas fa-fw fa-plus"></i>
+                        <i class="fas fa-fw fa-square"></i>
                     </a>
                 </li>
             </ul>
         </div>
     </div>
     {# View containing the list of beds of the current garden  #}
-    {% if beds %}
+    {% if parcels %}
 
         {% load planner_extras %}
         <div class="modal fade" id="modal-deactivate_cultivated_area" tabindex="-1" role="dialog" aria-hidden="true">
@@ -56,71 +69,99 @@
         </div>
         <div class="modal fade" id="modal-delete_bed" tabindex="-1" role="dialog" aria-hidden="true">
         </div>
+        <div class="modal fade" id="modal-update_parcel" tabindex="-1" role="dialog" aria-hidden="true">
+        </div>
+        <div class="modal fade" id="modal-delete_parcel" tabindex="-1" role="dialog" aria-hidden="true">
+        </div>
 
-        <table class="table table-hover table-bordered table-responsive ">
-            <tr>
-                <th>Planche
-                </th>
-                <th>Dimensions</th>
+        {% for p in parcels %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{ p.name }}
+                    <a href="{% url 'planner:delete_parcel' garden_id p.id %}"
+                       class="pull-right red"
+                       data-toggle="modal"
+                       data-target="#modal-delete_parcel" title="Supprimer cette parcelle" data-tooltip>
+                        <i class="fas fa-fw fa-times red"></i>
+                    </a>
+                    <a href="{% url 'planner:update_parcel' garden_id p.id %}"
+                       class="pull-right blue"
+                       data-toggle="modal"
+                       data-target="#modal-update_parcel" title="Editer cette parcelle" data-tooltip>
+                        <i class="fas fa-fw fa-pencil-alt blue"></i>
+                    </a>
+                </div>
+                <div class="panel-body">
 
-                <th> Détails</th>
-            </tr>
-            {% for b in beds %}
-                <tr>
-                    <td class="col-md-3">
-                        {{ b.name }}
-                        <a href="{% url 'planner:delete_bed' garden_id b.id %}"
-                           class="pull-right red"
-                           data-toggle="modal"
-                           data-target="#modal-delete_bed" title="Supprimer cette planche" data-tooltip>
-                            <i class="fas fa-fw fa-times red"></i>
-                        </a>
-                        <a href="{% url 'planner:update_bed' garden_id b.id %}"
-                           class="pull-right blue"
-                           data-toggle="modal"
-                           data-target="#modal-update_bed" title="Editer cette planche" data-tooltip>
-                            <i class="fas fa-fw fa-pencil-alt blue"></i>
-                        </a>
-                    </td>
-                    <td class="col-md-3">
-                        <ul class="list-group">
-                            <li class="list-group-item list-group-item-action">
-                                <b> Longueur [cm] : </b>
-                                {{ b.length }}
 
-                            </li>
-                            <li class="list-group-item list-group-item-action">
-                                <b> Largeur [cm] : </b>
-                                {{ b.width }}
-                            </li>
-                            <li class="list-group-item list-group-item-action">
-                                <b> Surface [m²] : </b>
-                                {{ b.get_area }}
-                            </li>
+                    {% get_beds_from_parcel p as beds %}
+                    <table class="table table-hover table-bordered table-responsive ">
+                        <tr>
+                            <th>Planche
+                            </th>
+                            <th>Dimensions</th>
 
-                        </ul>
-                    </td>
-                    <td>
-                        <ul class="list-group">
-                            <li class="list-group-item list-group-item-action">
-                                <b>Description : </b>
-                                {{ b.comment }}
+                            <th> Détails</th>
+                        </tr>
+                        {% for b in beds %}
+                            <tr>
+                                <td class="col-md-3">
+                                    {{ b.name }}
+                                    <a href="{% url 'planner:delete_bed' garden_id b.id %}"
+                                       class="pull-right red"
+                                       data-toggle="modal"
+                                       data-target="#modal-delete_bed" title="Supprimer cette planche" data-tooltip>
+                                        <i class="fas fa-fw fa-times red"></i>
+                                    </a>
+                                    <a href="{% url 'planner:update_bed' garden_id b.id %}"
+                                       class="pull-right blue"
+                                       data-toggle="modal"
+                                       data-target="#modal-update_bed" title="Editer cette planche" data-tooltip>
+                                        <i class="fas fa-fw fa-pencil-alt blue"></i>
+                                    </a>
+                                </td>
+                                <td class="col-md-3">
+                                    <ul class="list-group">
+                                        <li class="list-group-item list-group-item-action">
+                                            <b> Longueur [cm] : </b>
+                                            {{ b.length }}
 
-                            </li>
-                            <li class="list-group-item list-group-item-action">
-                                <b>Type de sol : </b>
-                                {{ b.soil_type }}
-                            </li>
-                            <li class="list-group-item list-group-item-action">
-                                <b> Exposition : </b>
-                                {{ b.exposition }}
-                            </li>
+                                        </li>
+                                        <li class="list-group-item list-group-item-action">
+                                            <b> Largeur [cm] : </b>
+                                            {{ b.width }}
+                                        </li>
+                                        <li class="list-group-item list-group-item-action">
+                                            <b> Surface [m²] : </b>
+                                            {{ b.get_area }}
+                                        </li>
 
-                        </ul>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul class="list-group">
+                                        <li class="list-group-item list-group-item-action">
+                                            <b>Description : </b>
+                                            {{ b.comment }}
+
+                                        </li>
+                                        <li class="list-group-item list-group-item-action">
+                                            <b>Type de sol : </b>
+                                            {{ b.soil_type }}
+                                        </li>
+                                        <li class="list-group-item list-group-item-action">
+                                            <b> Exposition : </b>
+                                            {{ b.exposition }}
+                                        </li>
+
+                                    </ul>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
 
         <!-- Canvas to draw the bed's graphical representation -->
         <!-- Strongly inspired from https://simonsarris.com/making-html5-canvas-useful/ -->
