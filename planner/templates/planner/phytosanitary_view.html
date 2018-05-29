@@ -1,0 +1,28 @@
+{% extends "planner/base_for_gardens_views.html" %}
+
+{% block page_title %}Gestion des produits phytosanitaires{% endblock page_title %}
+
+{% block content %}
+
+
+
+
+
+    <div class="container col-md-6 col-md-offset-3">
+        <select class="form-control js-example-tags">
+            <option selected="selected">orange</option>
+            <option>white</option>
+            <option>purple</option>
+        </select>
+
+
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $(".js-example-tags").select2({
+                tags: true
+            });
+        });
+    </script>
+{% endblock content %}

@@ -13,3 +13,4 @@ from .crops_management_views import *
 from .qr_logic_views import *
 from .contact_views import *
 from .pwa_views import *
+from .phytosanitary_views import *

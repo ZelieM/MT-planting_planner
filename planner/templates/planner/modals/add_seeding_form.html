@@ -21,16 +21,22 @@
                        placeholder="Label" required>
             </div>
 
+            <br>
+
             <div class="form-group">
-                <label for="surface_selection">Sur quelle surface sera cette plantation? </label>
-                <select class="form-control" id="surface_selection" name="surface_selection" required>
-                    {% for s in surfaces %}
-                        <option id="surface_seeded" name="surface_seeded"
-                                value="{{ s.id }}">{{ s.name }}</option>
+                <label for="multiple_beds_selection">Sur quelle surface sera cette plantation? </label>
+                {% load planner_extras %}
+                <select class="form-control select2" id="multiple_beds_selection" name="multiple_beds_selection" required>
+                    {% for p in parcels %}
+                        <optgroup label="{{ p.name }}"> {{ p.name }}
+                            {% get_beds_from_parcel p as beds %}
+                            {% for b in beds %}
+                                <option value="{{ b.id }}">{{ b.name }}</option>
+                            {% endfor %}
+                        </optgroup>
                     {% endfor %}
                 </select>
             </div>
-            <br>
 
         </div>
 
@@ -42,5 +48,14 @@
     </div>
     <script>
         document.getElementById('seeding_date').valueAsDate = new Date();
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                multiple: true,
+                closeOnSelect: false
+            });
+        });
+
     </script>
 {% endblock modal_content %}
