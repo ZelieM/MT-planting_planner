@@ -31,6 +31,12 @@
     <div class="modal fade" id="modal-export_harvests" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
     </div>
+    <div class="modal fade" id="modal-export_phytosanitary_usage" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
+    <div class="modal fade" id="modal-export_phytosanitary_entries" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
 
     <div class="container col-md-6 col-md-offset-3">
         <div class="panel panel-default">
@@ -52,6 +58,24 @@
                            data-toggle="modal"
                            data-target="#modal-export_harvests"
                            title="Exporter les données de récoltes de ce jardin" data-tooltip>
+                            <i class="fas fa-fw fa-upload"></i>
+                        </a>
+                    </li>
+                    <li class="list-group-item list-group-item-action">
+                        Le registre d'entrée de produits phytopharmaceutiques
+                        <a href="{% url 'planner:garden_entry_register_export' garden_id %}" class="pull-right"
+                           data-toggle="modal"
+                           data-target="#modal-export_phytosanitary_entries"
+                           title="Exporter le registre d'entrée de produits phytopharmaceutiques" data-tooltip>
+                            <i class="fas fa-fw fa-upload"></i>
+                        </a>
+                    </li>
+                    <li class="list-group-item list-group-item-action">
+                        Le registre d'utilisation de produits phytopharmaceutiques
+                        <a href="{% url 'planner:garden_usage_register_export' garden_id %}" class="pull-right"
+                           data-toggle="modal"
+                           data-target="#modal-export_phytosanitary_usage"
+                           title="Exporter le registre d'utilisation de produits phytopharmaceutiques" data-tooltip>
                             <i class="fas fa-fw fa-upload"></i>
                         </a>
                     </li>

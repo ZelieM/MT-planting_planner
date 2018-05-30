@@ -1,0 +1,24 @@
+{% extends "planner/modals/base_modal.html" %}
+{% block modal_title %}Édition d'une entrée dans le registre d'utilisation de produits
+    phytopharmaceutiques {% endblock modal_title %}
+{% block modal_content %}
+    {% load crispy_forms_tags %}
+    <form action="{% url 'planner:update_phytosanitary_usage' garden_id form.instance.id %}" name=""
+          role="form" class="" method="post" accept-charset="utf-8">
+        <div class="modal-body">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+        </div>
+        <div class="modal-footer">
+            <input class="btn btn-success" type="submit" value="Editer"/>
+        </div>
+    </form>
+    <script>
+        $(document).ready(function () {
+            $("#id_commercial_name").select2({
+                tags: true
+            });
+        });
+    </script>
+{% endblock modal_content %}

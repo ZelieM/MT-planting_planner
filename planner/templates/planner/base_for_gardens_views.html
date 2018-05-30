@@ -55,6 +55,8 @@
                             <li class="{% navactive request 'planner:crops_view' garden_id %}
                                    {% navactive request 'planner:crops_by_vegetable_view' garden_id %}"><a
                                     href="{% url 'planner:crops_view' garden_id %}">Mes cultures</a></li>
+                            <li class="{% navactive request 'planner:phytosanitary_view' garden_id %}"><a
+                                    href="{% url 'planner:phytosanitary_view' garden_id %}">Phytopharmaceutiques</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li>

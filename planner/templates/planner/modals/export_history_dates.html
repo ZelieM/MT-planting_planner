@@ -2,8 +2,7 @@
 {% block modal_title %} Choisissez les dates limites de l'export que vous voulez réaliser{% endblock modal_title %}
 {% block modal_content %}
     {% load crispy_forms_tags %}
-    <form action="{% url 'planner:garden_history_export_view' garden_id %}" name=""
-          role="form" class="" method="post" accept-charset="utf-8">
+    <form action="{{ request.path }}" role="form" method="post" accept-charset="utf-8">
         <div class="modal-body">
             {% csrf_token %}
             {{ form|crispy }}

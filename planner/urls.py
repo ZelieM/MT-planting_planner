@@ -111,6 +111,10 @@ urlpatterns = [
          name='garden_history_export_view'),
     path('<int:garden_id>/export_harvest', access_private_garden(ExportGardenHarvests.as_view()),
          name='garden_harvest_export_view'),
+    path('<int:garden_id>/export_entry_register', access_private_garden(ExportGardenEntryRegister.as_view()),
+         name='garden_entry_register_export'),
+    path('<int:garden_id>/export_usage_register', access_private_garden(ExportGardenUsageRegister.as_view()),
+         name='garden_usage_register_export'),
 
     # Statistics page
     path('<int:garden_id>/statistics', access_private_garden(GardenStatisticsView.as_view()),
@@ -125,6 +129,18 @@ urlpatterns = [
     # Phytosanitary views
     path('<int:garden_id>/phytosanitaire', access_private_garden(PhytosanitaryView.as_view()),
          name='phytosanitary_view'),
+    path('<int:garden_id>/create_phytosanitaire/', access_private_garden(CreatePhytosanitaryView.as_view()),
+         name='create_phytosanitary_entry'),
+    path('<int:garden_id>/delete_phytosanitaire/<int:pk>', access_private_garden(DeletePhytosanitaryView.as_view()),
+         name='delete_phytosanitary_entry'),
+    path('<int:garden_id>/edit_phytosanitaire/<int:pk>', access_private_garden(UpdatePhytosanitaryView.as_view()),
+         name='update_phytosanitary_entry'),
+    path('<int:garden_id>/create_phytosanitaire_usage/', access_private_garden(CreatePhytosanitaryUsage.as_view()),
+         name='create_phytosanitary_usage'),
+    path('<int:garden_id>/delete_phytosanitaire_usage/<int:pk>', access_private_garden(DeletePhytosanitaryUsage.as_view()),
+         name='delete_phytosanitary_usage'),
+    path('<int:garden_id>/edit_phytosanitaire_usage/<int:pk>', access_private_garden(UpdatePhytosanitaryUsage.as_view()),
+         name='update_phytosanitary_usage'),
 
 
     # Contact modal

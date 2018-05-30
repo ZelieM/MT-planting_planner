@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 from vegetables_library import models as library_models
 
-NAME_MAX_LENGTH = 100
+NAME_MAX_LENGTH = 200
 TYPE_MAX_LENGTH = 100
 
 
@@ -94,6 +94,7 @@ class Parcel(models.Model):
     def __str__(self):
         return self.name
 
+
 class Bed(models.Model):
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
     parcel = models.ForeignKey(Parcel, on_delete=models.CASCADE, null=True, verbose_name="Parcelle")
@@ -151,7 +152,7 @@ class CultivatedArea(models.Model):
     total_selling_price = models.IntegerField(blank=True, default=0, verbose_name="Prix de vente total (€)")
 
     def __str__(self):
-        return self.label
+        return self.label + ' - ' + self.surface.name
 
 
 class ForthcomingOperation(models.Model):
@@ -188,3 +189,33 @@ class Operation(HistoryItem):
     duration = models.DurationField(blank=True, null=True, verbose_name="Durée")
     is_deletion = models.BooleanField(default=False)
     original_alert = models.ForeignKey(ForthcomingOperation, on_delete=models.SET_NULL, blank=True, null=True)
+
+
+KILO = 'kg'
+GRAM = 'g'
+LITER = 'l'
+
+UNITY_CHOICES = (
+    (KILO, KILO),
+    (GRAM, GRAM),
+    (LITER, LITER),
+)
+
+
+class IncomingPhytosanitaire(models.Model):
+    garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
+    commercial_name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name="Nom commercial du produit")
+    quantity = models.IntegerField(verbose_name="Quantité")
+    unity = models.CharField(max_length=2, choices=UNITY_CHOICES, verbose_name="Unité")
+    receipt_date = models.DateField(verbose_name="Date de réception")
+    supplier = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name="Identification de l'unité fournissant le produit")
+
+
+class PhytosanitaireUsage(models.Model):
+    garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
+    commercial_name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name="Nom commercial du produit")
+    usage_date = models.DateField(verbose_name="Date d'application")
+    dose_used = models.IntegerField(verbose_name="Dose utilisée")
+    unity = models.CharField(max_length=2, choices=UNITY_CHOICES, verbose_name="Unité")
+    crop_treated = models.ForeignKey(CultivatedArea, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Culture traitée")
+    comment = models.TextField(verbose_name="Commentaire éventuel", null=True, blank=True)
