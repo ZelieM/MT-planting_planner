@@ -1,7 +1,7 @@
 {% extends "planner/modals/base_modal.html" %}
 {% block modal_title %}Ajouter une plantation{% endblock modal_title %}
 {% block modal_content %}
-    <form id="add_seeding_form" action="{% url 'planner:add_seed_view' garden_id %}" name=""
+    <form action="{{ request.path }}" name=""
           role="form" class="" method="post" accept-charset="utf-8">
         <div class="modal-body">
             {% csrf_token %}

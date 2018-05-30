@@ -26,6 +26,33 @@
         </a>
     </div>
 
+
+    <div id="action-buttons">
+        <div class="fab-btn btn-group show-on-hover dropup">
+            <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">
+                <button type="button" class="btn btn-danger btn-io dropdown-toggle" data-toggle="dropdown">
+                    <span class="">
+                      <i class="fas fa-plus"></i>
+                    </span>
+                </button>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li data-toggle="tooltip" title="Ajouter une plantation" data-placement="right">
+                    <a class="btn btn-success" data-toggle="modal"
+                       href="{% url 'planner:add_seed_view' garden_id %}"
+                       data-target="#modal-add_seed">
+                        <i class="fas fa-fw fa-leaf"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-add_seed" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
+
+
     {# View containing the list of beds of the current garden and a form to add new beds #}
     {% if vegetables %}
 
@@ -146,6 +173,6 @@
 
     {% load static %}
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>
-
+    <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
     <script src="{% static 'planner/js/search_cultivated_areas.js' %}"></script>
 {% endblock content %}

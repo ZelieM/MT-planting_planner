@@ -50,8 +50,7 @@ class AddSeed(View):
                 warning_message = 'Cette planche a déjà une plantation de {} active, avec le même label '.format(
                     vegetable_concerned)
                 messages.add_message(request, messages.WARNING, warning_message)
-
-        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
 class OperationsOnAlertViews(View):

@@ -1,6 +1,7 @@
 from datetime import date
 
 from django import forms
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, UpdateView, DeleteView, CreateView
@@ -70,6 +71,7 @@ class CreatePhytosanitaryUsage(CreateView):
     template_name = 'planner/modals/phytosanitaire_create_usage_form.html'
 
     def get_success_url(self):
+        # return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
         return reverse_lazy('planner:phytosanitary_view', kwargs={'garden_id': self.kwargs['garden_id']})
 
     def form_valid(self, form):
