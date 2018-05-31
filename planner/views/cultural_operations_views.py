@@ -1,31 +1,11 @@
-from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView
+from django.urls import reverse
 from django.views.generic.base import View, TemplateView
 
-from planner import services
+from .generic_views_overwritten import CulturalOperationCreate
 from planner.forms import CustomDateInput, CustomTimeInput, CODateForm, COOffsetForm
 from planner.models import COWithDate, COWithOffset, CulturalOperation
-
-
-class CulturalOperationCreate(CreateView):
-    template_name = "planner/create_co_form.html"
-
-    def form_valid(self, form):
-        response = super(CulturalOperationCreate, self).form_valid(form)
-        services.add_new_operation_to_alerts(self.object)
-        return response
-
-    def get_initial(self):
-        return {'vegetable': self.kwargs['vegetable_id']}
-
-    def get_success_url(self):
-        if self.kwargs:
-            return reverse_lazy('planner:vegetables_view', kwargs={'garden_id': self.kwargs['garden_id']})
-        else:
-            return reverse_lazy('planner:garden_selection')
 
 
 class CulturalOperationWithDateCreate(CulturalOperationCreate):

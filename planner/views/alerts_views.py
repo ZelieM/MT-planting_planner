@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView, FormView
 
+from .generic_views_overwritten import OperationsOnAlertViews
 from planner import queries, services, generate_pdf_helper
 from planner.forms import ForthcomingOperationsDelayForm
 from planner.models import Garden, Vegetable, Bed, ForthcomingOperation, Parcel
@@ -51,12 +52,6 @@ class AddSeed(View):
                     vegetable_concerned)
                 messages.add_message(request, messages.WARNING, warning_message)
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
-
-
-class OperationsOnAlertViews(View):
-    def get(self, request, **kwargs):
-        context = {'alert_id': kwargs['alert_id']}
-        return render(request, self.template_name, context)
 
 
 class ValidateAlert(OperationsOnAlertViews):

@@ -4,10 +4,11 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.views import View
-from django.views.generic import UpdateView, TemplateView, FormView
+from django.views.generic import TemplateView, FormView
 
+from .generic_views_overwritten import GardenDetailsUpdate
 from planner.models import Garden
 
 
@@ -68,12 +69,6 @@ class EditNotificationDelay(View):
         success_message = 'Les alertes apparaitront maintenant {} jours avant la date d\'échéance'.format(new_delay)
         messages.add_message(request, messages.SUCCESS, success_message)
         return HttpResponseRedirect(reverse('planner:garden_settings_view', kwargs=kwargs))
-
-
-class GardenDetailsUpdate(UpdateView):
-
-    def get_success_url(self):
-        return reverse_lazy('planner:garden_settings_view', kwargs={'garden_id': self.kwargs['garden_id']})
 
 
 class UserEmail(GardenDetailsUpdate):

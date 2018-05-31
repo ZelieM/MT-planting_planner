@@ -16,9 +16,12 @@ class ExportGardenHistoryView(FormView):
         return render(request, self.template_name)
 
 
-class ExportGardenOperationHistory(FormView):
+class ExportDataViews(FormView):
     template_name = 'planner/modals/export_history_dates.html'
     form_class = ExportParametersForm
+
+
+class ExportGardenOperationHistory(ExportDataViews):
 
     def post(self, request, *args, **kwargs):
         start_date = request.POST['first_date']
@@ -26,9 +29,7 @@ class ExportGardenOperationHistory(FormView):
         return export_garden_history(first_date=start_date, end_date=end_date, garden_id=kwargs['garden_id'])
 
 
-class ExportGardenHarvests(FormView):
-    template_name = 'planner/modals/export_history_dates.html'
-    form_class = ExportParametersForm
+class ExportGardenHarvests(ExportDataViews):
 
     def post(self, request, *args, **kwargs):
         start_date = request.POST['first_date']
@@ -36,9 +37,7 @@ class ExportGardenHarvests(FormView):
         return export_garden_harvest_history(kwargs['garden_id'], start_date, end_date=end_date)
 
 
-class ExportGardenEntryRegister(FormView):
-    template_name = 'planner/modals/export_history_dates.html'
-    form_class = ExportParametersForm
+class ExportGardenEntryRegister(ExportDataViews):
 
     def post(self, request, *args, **kwargs):
         start_date = request.POST['first_date']
@@ -46,9 +45,7 @@ class ExportGardenEntryRegister(FormView):
         return export_garden_incoming_phytosanitaires(kwargs['garden_id'], start_date, end_date=end_date)
 
 
-class ExportGardenUsageRegister(FormView):
-    template_name = 'planner/modals/export_history_dates.html'
-    form_class = ExportParametersForm
+class ExportGardenUsageRegister(ExportDataViews):
 
     def post(self, request, *args, **kwargs):
         start_date = request.POST['first_date']
@@ -80,7 +77,9 @@ def export_garden_harvest_history(garden_id, start_date, end_date):
     writer.writerow(['Date', 'Légume', 'Surface', 'KG', 'Revenu (€)', 'Rendement (€/kg)'])
     for h in items:
         if h.harvest_date and start_date <= h.harvest_date <= end_date:
-            productivity = round(h.total_selling_price / h.kg_produced, 2)
+            productivity = 0
+            if h.kg_produced:
+                productivity = round(h.total_selling_price / h.kg_produced, 2)
             writer.writerow(
                 [h.harvest_date, h.vegetable, h.surface.name, h.kg_produced, h.total_selling_price, productivity]
             )

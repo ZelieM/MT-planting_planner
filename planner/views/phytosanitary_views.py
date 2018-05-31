@@ -1,13 +1,12 @@
 from datetime import date
 
-from django import forms
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, UpdateView, DeleteView, CreateView
+from django.views.generic import TemplateView, UpdateView, DeleteView
 
 from planner.forms import CustomDateInput
-from planner.models import IncomingPhytosanitaire, Garden, PhytosanitaireUsage, CultivatedArea
+from planner.models import IncomingPhytosanitaire, PhytosanitaireUsage, CultivatedArea
+from planner.views import CreateGardenDependentObjects
 
 
 class PhytosanitaryView(TemplateView):
@@ -21,19 +20,13 @@ class PhytosanitaryView(TemplateView):
         return render(request, self.template_name, context)
 
 
-class CreatePhytosanitaryView(CreateView):
+class CreatePhytosanitaryView(CreateGardenDependentObjects):
     model = IncomingPhytosanitaire
     fields = ['commercial_name', 'quantity', 'unity', 'receipt_date', 'supplier']
     template_name = 'planner/modals/incoming_phytosanitaire_create_form.html'
 
     def get_success_url(self):
         return reverse_lazy('planner:phytosanitary_view', kwargs={'garden_id': self.kwargs['garden_id']})
-
-    def form_valid(self, form):
-        new_register_entry = form.save(commit=False)
-        new_register_entry.garden = Garden.objects.get(pk=self.kwargs["garden_id"])
-        new_register_entry.save()
-        return super().form_valid(form)
 
     def get_form(self, form_class=None):
         form = super(CreatePhytosanitaryView, self).get_form(form_class)
@@ -65,7 +58,7 @@ class DeletePhytosanitaryView(DeleteView):
         return reverse_lazy('planner:phytosanitary_view', kwargs={'garden_id': self.kwargs['garden_id']})
 
 
-class CreatePhytosanitaryUsage(CreateView):
+class CreatePhytosanitaryUsage(CreateGardenDependentObjects):
     model = PhytosanitaireUsage
     fields = ['commercial_name', 'usage_date', 'dose_used', 'unity', 'crop_treated', 'comment']
     template_name = 'planner/modals/phytosanitaire_create_usage_form.html'
@@ -73,12 +66,6 @@ class CreatePhytosanitaryUsage(CreateView):
     def get_success_url(self):
         # return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
         return reverse_lazy('planner:phytosanitary_view', kwargs={'garden_id': self.kwargs['garden_id']})
-
-    def form_valid(self, form):
-        new_register_entry = form.save(commit=False)
-        new_register_entry.garden = Garden.objects.get(pk=self.kwargs["garden_id"])
-        new_register_entry.save()
-        return super().form_valid(form)
 
     def get_form(self, form_class=None):
         form = super(CreatePhytosanitaryUsage, self).get_form(form_class)

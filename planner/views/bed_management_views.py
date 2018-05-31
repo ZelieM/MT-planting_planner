@@ -1,9 +1,11 @@
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView, DeleteView, TemplateView, View
-from django.http import HttpResponse
 import json
 
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse_lazy
+from django.views.generic import UpdateView, DeleteView, TemplateView, View
+
+from .generic_views_overwritten import CreateGardenDependentObjects
 from planner.models import Garden, Bed, Parcel
 
 
@@ -22,7 +24,7 @@ class GardenView(TemplateView):
         return render(request, self.template_name, context=c)
 
 
-class BedCreateView(CreateView):
+class BedCreateView(CreateGardenDependentObjects):
     model = Bed
     fields = ['parcel', 'name', 'length', 'width', 'comment', 'soil_type', 'exposition']
     template_name = 'planner/modals/bed_create_with_details_form.html'
@@ -34,12 +36,6 @@ class BedCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
-
-    def form_valid(self, form):
-        new_bed = form.save(commit=False)
-        new_bed.garden = Garden.objects.get(pk=self.kwargs["garden_id"])
-        new_bed.save()
-        return super().form_valid(form)
 
 
 class BedUpdateView(UpdateView):
@@ -64,19 +60,13 @@ class BedDelete(DeleteView):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
 
 
-class ParcelCreateView(CreateView):
+class ParcelCreateView(CreateGardenDependentObjects):
     model = Parcel
     fields = ['name']
     template_name = 'planner/modals/parcel_create_form.html'
 
     def get_success_url(self):
         return reverse_lazy('planner:garden_view', kwargs={'garden_id': self.kwargs['garden_id']})
-
-    def form_valid(self, form):
-        new_parcel = form.save(commit=False)
-        new_parcel.garden = Garden.objects.get(pk=self.kwargs["garden_id"])
-        new_parcel.save()
-        return super().form_valid(form)
 
 
 class ParcelUpdateView(UpdateView):
