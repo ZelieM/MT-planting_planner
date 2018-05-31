@@ -205,7 +205,7 @@ UNITY_CHOICES = (
 class IncomingPhytosanitaire(models.Model):
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
     commercial_name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name="Nom commercial du produit")
-    quantity = models.IntegerField(verbose_name="Quantité")
+    quantity = models.DecimalField(max_digits=13, decimal_places=3, verbose_name="Quantité")
     unity = models.CharField(max_length=2, choices=UNITY_CHOICES, verbose_name="Unité")
     receipt_date = models.DateField(verbose_name="Date de réception")
     supplier = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name="Identification de l'unité fournissant le produit")
@@ -215,7 +215,7 @@ class PhytosanitaireUsage(models.Model):
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE)
     commercial_name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name="Nom commercial du produit")
     usage_date = models.DateField(verbose_name="Date d'application")
-    dose_used = models.IntegerField(verbose_name="Dose utilisée")
+    dose_used = models.DecimalField(max_digits=13, decimal_places=3,verbose_name="Dose utilisée")
     unity = models.CharField(max_length=2, choices=UNITY_CHOICES, verbose_name="Unité")
     crop_treated = models.ForeignKey(CultivatedArea, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Culture traitée")
     comment = models.TextField(verbose_name="Commentaire éventuel", null=True, blank=True)

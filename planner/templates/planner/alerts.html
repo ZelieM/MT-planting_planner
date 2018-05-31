@@ -13,17 +13,12 @@
     <div class="alert alert-info" id="info-bubble-content" style="display: none;">
         Cette page vous permet de consulter les opérations à venir et celles qui ont déjà été réalisées.
         Chaque opération a plus de détails accessibles en cliquant sur la ligne concernée.
-        Le bouton <i class="fas fa-plus red"></i> vous permet d'ajouter une nouvelle plantation, opération ou
-        observation.
+        Le bouton <i class="fas fa-plus red"></i> vous permet d'ajouter une nouvelle plantation, une utilisation de produit phytosanitaire, une opération ponctuelle ou uneobservation.
         Une nouvelle plantation ajoutera toutes les opérations relatives au légume planté dans vos opérations à venir.
-        (Pour retrouver et modifier ces opérations, rendez-vous dans l'onglet <a
-            href="{% url 'planner:vegetables_view' garden_id %}">Mes légumes</a>)
-        Ces alertes ne seront visibles qu'à partir de {% get_notification_delay garden_id %} jours avant leur date
-        d'expiration.
-        Cette valeur peut être changée dans <a href="{% url 'planner:garden_settings_view' garden_id %}">vos
-        paramètres</a>.
-        Les opérations ponctuelles et les observations vous permettent simplement de garder une trace des actions que
-        vous faites au fur et à mesure.
+        (Pour retrouver et modifier ces opérations, rendez-vous dans l'onglet <a href="{% url 'planner:vegetables_view' garden_id %}">Mes légumes</a>)
+        Ces alertes ne seront visibles qu'à partir de {% get_notification_delay garden_id %} jours avant leur date d'expiration.
+        Cette valeur peut être changée dans <a href="{% url 'planner:garden_settings_view' garden_id %}">vos paramètres</a>.
+        Les opérations ponctuelles et les observations vous permettent simplement de garder une trace des actions que vous faites au fur et à mesure.
 
     </div>
 
