@@ -40,7 +40,7 @@ class AddSeed(View):
         vegetable_concerned = Vegetable.objects.get(pk=vegetable_id).name
         garden = Garden.objects.get(pk=garden_id)
         beds_id = request.POST.getlist('multiple_beds_selection')
-        for b in beds_id :
+        for b in beds_id:
             if services.add_new_plantation_to_alerts(garden=garden, vegetable_id=vegetable_id,
                                                      label=request.POST['seeding_label'],
                                                      surface_id=b):
@@ -125,4 +125,3 @@ class PrintForthcomingOperations(FormView):
                 'operations': operations_to_print,
                 'garden_id': garden_id,
             })
-        # return generate_pdf_helper.forthcoming_operations_as_pdf(request, operations_to_print, garden_id)
