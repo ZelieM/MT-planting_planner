@@ -6,6 +6,7 @@ from django.views import View
 from django.views.generic import CreateView, UpdateView, FormView
 
 from planner import services, queries
+from planner.forms import ExportParametersForm
 from planner.models import Garden
 
 
@@ -66,3 +67,16 @@ class AddHistoryItemView(FormView):
         new_history_item.history = services.get_current_history(self.kwargs['garden_id'])
         new_history_item.save()
         return super().form_valid(form)
+
+
+class ExportDataViews(FormView):
+    template_name = 'planner/modals/export_history_dates.html'
+    form_class = ExportParametersForm
+
+    def post(self, request, *args, **kwargs):
+        start_date = request.POST['first_date']
+        end_date = request.POST['end_date']
+        return self.export_data(kwargs['garden_id'], start_date, end_date=end_date)
+
+    def export_data(self, garden_id, start_date, end_date):
+        pass

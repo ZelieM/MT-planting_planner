@@ -78,9 +78,9 @@
             <div class="form-group">
                 <input class="form-control" id="search_input" type="text" placeholder="Rechercher..">
             </div>
-            <div class="row card-deck" id="searchable_cards">
+            <div class="row card-deck" id="searchable_element">
                 {% for v in vegetables.all %}
-                    <div class="card-container col-sm-12 col-md-4">
+                    <div class="card-container searchable-container col-sm-12 col-md-4">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title searchable">{{ v }}
@@ -156,6 +156,6 @@
     {% load static %}
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>
     <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
-    <script src="{% static 'planner/js/search_vegetable.js' %}"></script>
+    <script src="{% static 'planner/js/search_elements.js' %}"></script>
 
 {% endblock content %}
