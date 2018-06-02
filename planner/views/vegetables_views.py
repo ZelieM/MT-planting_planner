@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView, TemplateView, UpdateView, DeleteView
 
 from planner.forms import VegetableForm
 from planner.models import Garden, Vegetable, CulturalOperation
@@ -34,3 +34,20 @@ class AddVegetableView(FormView):
         new_vegetable.garden_id = self.kwargs['garden_id']
         new_vegetable.save()
         return super().form_valid(form)
+
+
+class VegetableUpdateView(UpdateView):
+    model = Vegetable
+    fields = ['name', 'variety']
+    template_name = 'planner/modals/vegetable_update_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('planner:vegetables_view', kwargs={'garden_id': self.kwargs['garden_id']})
+
+
+class VegetableDelete(DeleteView):
+    model = Vegetable
+    template_name = 'planner/modals/vegetable_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('planner:vegetables_view', kwargs={'garden_id': self.kwargs['garden_id']})

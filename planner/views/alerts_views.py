@@ -5,9 +5,10 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView, FormView
 
+from .generic_views_overwritten import OperationsOnAlertViews
 from planner import queries, services, generate_pdf_helper
 from planner.forms import ForthcomingOperationsDelayForm
-from planner.models import Garden, Vegetable, Bed, ForthcomingOperation
+from planner.models import Garden, Vegetable, Bed, ForthcomingOperation, Parcel
 
 
 class AlertView(TemplateView):
@@ -29,33 +30,28 @@ class AddSeed(View):
         garden_id = kwargs['garden_id']
         vegetables = Vegetable.objects.filter(garden_id=garden_id)
         surfaces = Bed.objects.filter(garden_id=garden_id)
-        context = {'vegetables': vegetables, 'surfaces': surfaces}
+        parcels = Parcel.objects.filter(garden_id=garden_id)
+        context = {'vegetables': vegetables, 'surfaces': surfaces, 'parcels': parcels}
         return render(request, 'planner/modals/add_seeding_form.html', context)
 
     def post(self, request, **kwargs):
         garden_id = kwargs['garden_id']
-        surface = request.POST['surface_selection']
         vegetable_id = request.POST['vegetable_selection']
         vegetable_concerned = Vegetable.objects.get(pk=vegetable_id).name
         garden = Garden.objects.get(pk=garden_id)
-        if services.add_new_plantation_to_alerts(garden=garden, vegetable_id=vegetable_id,
-                                                 label=request.POST['seeding_label'],
-                                                 surface_id=surface):
-            success_message = 'Vous ({}) avez ajouté une plantation de {} '.format(
-                request.user.username, vegetable_concerned)
-            messages.add_message(request, messages.SUCCESS, success_message)
-        else:
-            warning_message = 'Cette planche a déjà une plantation de {} active, avec le même label '.format(
-                vegetable_concerned)
-            messages.add_message(request, messages.WARNING, warning_message)
-
-        return HttpResponseRedirect(reverse('planner:alerts_view', kwargs={'garden_id': garden_id}))
-
-
-class OperationsOnAlertViews(View):
-    def get(self, request, **kwargs):
-        context = {'alert_id': kwargs['alert_id']}
-        return render(request, self.template_name, context)
+        beds_id = request.POST.getlist('multiple_beds_selection')
+        for b in beds_id:
+            if services.add_new_plantation_to_alerts(garden=garden, vegetable_id=vegetable_id,
+                                                     label=request.POST['seeding_label'],
+                                                     surface_id=b):
+                success_message = 'Vous ({}) avez ajouté une plantation de {} '.format(
+                    request.user.username, vegetable_concerned)
+                messages.add_message(request, messages.SUCCESS, success_message)
+            else:
+                warning_message = 'Cette planche a déjà une plantation de {} active, avec le même label '.format(
+                    vegetable_concerned)
+                messages.add_message(request, messages.WARNING, warning_message)
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
 class ValidateAlert(OperationsOnAlertViews):
@@ -129,4 +125,3 @@ class PrintForthcomingOperations(FormView):
                 'operations': operations_to_print,
                 'garden_id': garden_id,
             })
-        # return generate_pdf_helper.forthcoming_operations_as_pdf(request, operations_to_print, garden_id)

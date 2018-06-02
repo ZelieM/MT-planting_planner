@@ -25,6 +25,11 @@ urlpatterns = [
          name='update_bed'),
     path('<int:garden_id>/delete_bed/<int:pk>', access_private_garden(BedDelete.as_view()),
          name='delete_bed'),
+    path('<int:garden_id>/create_parcel', access_private_garden(ParcelCreateView.as_view()), name='create_parcel'),
+    path('<int:garden_id>/update_parcel/<int:pk>', access_private_garden(ParcelUpdateView.as_view()),
+         name='update_parcel'),
+    path('<int:garden_id>/delete_parcel/<int:pk>', access_private_garden(ParcelDelete.as_view()),
+         name='delete_parcel'),
     path('<int:garden_id>', access_private_garden(GardenView.as_view()), name='garden_view'),
     path('<int:garden_id>/save_bed_position', access_private_garden(SaveBedPosition.as_view()),
          name='save_bed_position'),
@@ -66,6 +71,10 @@ urlpatterns = [
     path('<int:garden_id>/vegetables', access_private_garden(VegetablesView.as_view()), name='vegetables_view'),
     path('<int:garden_id>/vegetables/new', access_private_garden(AddVegetableView.as_view()),
          name='add_vegetable_to_garden_view'),
+    path('<int:garden_id>/delete_vegetable/<int:pk>', access_private_garden(VegetableDelete.as_view()),
+         name='delete_vegetable'),
+    path('<int:garden_id>/update_vegetable/<int:pk>', access_private_garden(VegetableUpdateView.as_view()),
+         name='update_vegetable'),
 
     # Cultural operations management
     path('<int:garden_id>/vegetables/delete_co/<int:co_id>', access_private_garden(CulturalOperationDelete.as_view()),
@@ -102,6 +111,10 @@ urlpatterns = [
          name='garden_history_export_view'),
     path('<int:garden_id>/export_harvest', access_private_garden(ExportGardenHarvests.as_view()),
          name='garden_harvest_export_view'),
+    path('<int:garden_id>/export_entry_register', access_private_garden(ExportGardenEntryRegister.as_view()),
+         name='garden_entry_register_export'),
+    path('<int:garden_id>/export_usage_register', access_private_garden(ExportGardenUsageRegister.as_view()),
+         name='garden_usage_register_export'),
 
     # Statistics page
     path('<int:garden_id>/statistics', access_private_garden(GardenStatisticsView.as_view()),
@@ -112,6 +125,24 @@ urlpatterns = [
          name='garden_import_vegetables_view'),
     path('<int:garden_id>/import_vegetables/select', access_private_garden(SelectVegetablesToImportView.as_view()),
          name='select_vegetables_to_import_view'),
+
+    # Phytosanitary views
+    path('<int:garden_id>/phytosanitaire', access_private_garden(PhytosanitaryView.as_view()),
+         name='phytosanitary_view'),
+    path('<int:garden_id>/create_phytosanitaire', access_private_garden(CreatePhytosanitaryView.as_view()),
+         name='create_phytosanitary_entry'),
+    path('<int:garden_id>/delete_phytosanitaire/<int:pk>', access_private_garden(DeletePhytosanitaryView.as_view()),
+         name='delete_phytosanitary_entry'),
+    path('<int:garden_id>/edit_phytosanitaire/<int:pk>', access_private_garden(UpdatePhytosanitaryView.as_view()),
+         name='update_phytosanitary_entry'),
+    path('<int:garden_id>/create_phytosanitaire_usage', access_private_garden(CreatePhytosanitaryUsage.as_view()),
+         name='create_phytosanitary_usage'),
+    path('<int:garden_id>/delete_phytosanitaire_usage/<int:pk>',
+         access_private_garden(DeletePhytosanitaryUsage.as_view()),
+         name='delete_phytosanitary_usage'),
+    path('<int:garden_id>/edit_phytosanitaire_usage/<int:pk>',
+         access_private_garden(UpdatePhytosanitaryUsage.as_view()),
+         name='update_phytosanitary_usage'),
 
     # Contact modal
     path('contact', ContactView.as_view(), name='contact_info'),

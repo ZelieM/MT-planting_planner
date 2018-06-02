@@ -1,4 +1,4 @@
-{% extends "planner/base.html" %}
+{% extends "planner/base_for_gardens_views.html" %}
 
 {% block page_title %}Statistiques{% endblock page_title %}
 
@@ -21,6 +21,13 @@
         </div>
     {% endif %}
 
+        <div class="alert alert-info" id="info-bubble-content" style="display: none;">
+        Cette page vous donne un aperçu du temps de travail estimé par semaine par rapport au temps de travail réel.
+        Le temps est estimé sur base de la durée des opérations renseignées dans l'onglet <a
+            href="{% url 'planner:vegetables_view' garden_id %}">Mes légumes</a> ainsi que la surface cultivée de chaque légume.
+        Le temps réel est récupéré des actions trouvées dans l'historique de la page <a
+            href="{% url 'planner:alerts_view' garden_id %}">Gestion</a>.
+    </div>
 
     {% if x_axis_estimated %}
 

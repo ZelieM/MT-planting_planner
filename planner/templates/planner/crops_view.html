@@ -1,10 +1,22 @@
-{% extends "planner/base.html" %}
+{% extends "planner/base_for_gardens_views.html" %}
 
 {% block page_title %}Mes cultures{% endblock page_title %}
 
 {% block content %}
     {% load planner_extras %}
     {# View containing the list of beds of the current garden and a form to add new beds #}
+
+    <div class="alert alert-info" id="info-bubble-content" style="display: none;">
+        Cette page regroupe l'ensemble de vos cultures organisées par planche.
+        Chaque planche a un historique de plantations et des cultures en cours.
+        Les cultures en cours peuvent être arrêtées ou cloturées en cliquant sur la <i
+            class="fas fa-fw fa-times red"></i>.
+        Vous pouvez également ajouter une nouvelle plantation via le bouton <i class="fas fa-fw fa-plus red"></i>.
+        Chaque culture dans l'historique a des détails de récolte. Ces détails peuvent être téléchargés en format excel
+        sous l'onglet <a href="{% url 'planner:garden_export_view' garden_id %}"> <i class="fas fa-fw fa-upload"></i>
+        Exporter</a>.
+    </div>
+
     <div align="center" class="form-group">
         <a href="{% url 'planner:crops_view' garden_id %}"
            class="btn btn-default {% navactive request 'planner:crops_view' garden_id %}">Par planche
@@ -12,6 +24,32 @@
         <a href="{% url 'planner:crops_by_vegetable_view' garden_id %}"
            class="btn btn-default {% navactive request 'planner:crops_by_vegetable_view' garden_id %}">Par légume
         </a>
+    </div>
+
+
+    <div id="action-buttons">
+        <div class="fab-btn btn-group show-on-hover dropup">
+            <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">
+                <button type="button" class="btn btn-danger btn-io dropdown-toggle" data-toggle="dropdown">
+                    <span class="">
+                      <i class="fas fa-plus"></i>
+                    </span>
+                </button>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li data-toggle="tooltip" title="Ajouter une plantation" data-placement="right">
+                    <a class="btn btn-success" data-toggle="modal"
+                       href="{% url 'planner:add_seed_view' garden_id %}"
+                       data-target="#modal-add_seed">
+                        <i class="fas fa-fw fa-leaf"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-add_seed" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
     </div>
 
     {% if beds %}
@@ -26,9 +64,9 @@
             <input class="form-control" id="search_input" type="text" placeholder="Rechercher..">
         </div>
 
-        <div id="searchable_panels">
+        <div id="searchable_element">
             {% for b in beds %}
-                <div class="panel panel-success ">
+                <div class="panel panel-success searchable-container">
                     <div class="panel-heading searchable"> {{ b.name }}</div>
                     <div class="panel-body bed_panel">
 
@@ -69,7 +107,7 @@
                                         <li class="list-group-item list-group-item-action searchable"
                                             data-toggle="collapse"
                                             href="#collapse-ca{{ ca.id }}" class="clickable">
-                                            {{ ca.label }} : {{ ca.vegetable }} ({{ ca.harvest_date|date:"F Y" }})
+                                            {{ ca.label }} : {{ ca.vegetable.name }} ({{ ca.harvest_date|date:"F Y" }})
                                             <span class="pull-right"><i class="fas fa-fw fa-chevron-down"></i></span>
                                             <div id="collapse-ca{{ ca.id }}" class="collapse">
                                                 <br>
@@ -133,6 +171,7 @@
 
 
     {% load static %}
+    <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>
-    <script src="{% static 'planner/js/search_cultivated_areas.js' %}"></script>
+    <script src="{% static 'planner/js/search_elements.js' %}"></script>
 {% endblock content %}

@@ -1,4 +1,4 @@
-{% extends "planner/base.html" %}
+{% extends "planner/base_for_gardens_views.html" %}
 
 {% block page_title %}Paramètres du jardin{% endblock page_title %}
 
@@ -15,6 +15,15 @@
             {% endfor %}
         </div>
     {% endif %}
+
+        <div class="alert alert-info" id="info-bubble-content" style="display: none;">
+        Cette page vous permet de changer certains paramètres de votre exploitation.
+        C'est ici que vous pouvez choisir d'ajouter des informations sur votre exploitation ou de modifier vos informations personnelles.
+        Vous pouvez aussi ajouter de nouveaux utilisateurs qui auront accès à votre exploitation.
+        Le délai de notification représente à partir de combien de jours avant leur date limite les opérations apparaissent dans votre liste de choses à faire dans l'onglet <a
+            href="{% url 'planner:alerts_view' garden_id %}">Gestion</a>.
+        Il est aussi important de noter que c'est ici que vous décidez quelles informations vous acceptez de partager avec l'Université Catholique de Louvain.
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="modal-edit_garden_details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"

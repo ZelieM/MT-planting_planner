@@ -90,7 +90,10 @@ class ForthcomingOperationsDelayForm(forms.Form):
 
 
 class ExportParametersForm(forms.Form):
-    first_date = DateField(label="Depuis quelle date voulez-vous l'historique?", required=True, initial=date.today(),
+    first_date = DateField(label="Date de début", required=True, initial=date(date.today().year, 1, 1),
+                           validators=[MaxValueValidator(date.today())], widget=CustomDateInput()
+                           )
+    end_date = DateField(label="Date de fin", required=True, initial=date.today(),
                            validators=[MaxValueValidator(date.today())], widget=CustomDateInput()
                            )
 
