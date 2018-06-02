@@ -8,94 +8,28 @@
     <meta charset="UTF-8">
     <title>Lauzeplan - {% block page_title %}{% endblock page_title %}</title>
 
+
     {% load static %}
     {% include "planner/favicon.html" %}
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
             integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
-            crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static "planner/css/style.css" %}">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-
-    {% block extra_js %}{% endblock extra_js %}
+    {% block extra_head %} {% endblock extra_head %}
 
 </head>
+
 <body>
-{% with request.resolver_match.kwargs.garden_id as garden_id %}
-    <div class="body-wrap">
-        {% load planner_extras %}
-        <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <div class="navbar-logos">
-                        <a class="navbar-brand" href="{% url 'planner:alerts_view' garden_id %}">
-                            <img alt="LauzePlan" src="{% static '/planner/icons/apple-icon-57x57.png' %}">
-                        </a>
-                        <a class="navbar-brand" href="{% url 'planner:alerts_view' garden_id %}">
-                            LauzePlan
-                        </a>
-                    </div>
-                    <!-- Hamburger button -->
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
 
-                <div class="collapse navbar-collapse" id="myNavbar">
-                    <ul class="nav navbar-nav ">
-                        <li><a href="{% url 'planner:garden_selection' %}">Choix du jardin</a></li>
-                        <li class="{% navactive request 'planner:alerts_view' garden_id %}"><a
-                                href="{% url 'planner:alerts_view' garden_id %}">Alertes</a></li>
-                        <li class="{% navactive request 'planner:vegetables_view' garden_id %}"><a
-                                href="{% url 'planner:vegetables_view' garden_id %}">Mes légumes</a></li>
-                        <li class="{% navactive request 'planner:garden_view' garden_id %}"><a
-                                href="{% url 'planner:garden_view' garden_id %}">Mes planches</a></li>
-                        <li class="{% navactive request 'planner:crops_view' garden_id %}
-                                   {% navactive request 'planner:crops_by_vegetable_view' garden_id %}"><a
-                                href="{% url 'planner:crops_view' garden_id %}">Mes cultures</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <a class="navbar-date">{% now "D d F Y" %}</a>
-                        </li>
-                        <li><a href="{% url 'planner:garden_statistics_view' garden_id %}">
-                            <i class="fas fa-fw fa-chart-bar"></i> <span class="hidden-md hidden-lg hidden-sm"> Statistiques</span>
-                        </a></li>
-                        <li><a href="{% url 'planner:garden_export_view' garden_id %}">
-                            <i class="fas fa-fw fa-upload"></i> <span
-                                class="hidden-md hidden-lg hidden-sm"> Exporter</span>
-                        </a></li>
-                        <li><a href="{% url 'planner:garden_settings_view' garden_id %}">
-                            <i class="fas fa-fw fa-cog"></i><span
-                                class="hidden-md hidden-lg hidden-sm"> Paramètres</span>
-                        </a></li>
-                        <li><a href="{% url 'planner:log_out' %}">
-                            <i class="fas fa-fw fa-sign-out-alt"></i><span class="hidden-md hidden-lg hidden-sm"> Se déconnecter</span>
-                        </a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+{% block page_body %}
 
-        <div class="container body-container">
+{% endblock page_body %}
 
-            {% block content %}{% endblock content %}
-
-        </div>
-
-    </div>
-{% endwith %}
-{% include "planner/footer.html" %}
 </body>
-</html>

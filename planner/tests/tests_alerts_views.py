@@ -3,7 +3,7 @@ from datetime import date
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 
-from planner.models import Garden, Vegetable, Bed, CultivatedArea, ForthcomingOperation, COWithDate, History
+from planner.models import Garden, Vegetable, Bed, CultivatedArea, ForthcomingOperation, COWithDate, History, Parcel
 
 
 class AlertsViewsTests(TestCase):
@@ -18,7 +18,8 @@ class AlertsViewsTests(TestCase):
         History.objects.create(garden=self.garden)
         self.garden.users.add(self.user)
         self.vegetable = Vegetable.objects.create(name="Tomato", variety="Yellow Pearshaped", garden=self.garden)
-        self.surface = Bed.objects.create(name="Bedding", garden=self.garden, width=250, length=250)
+        self.parcel = Parcel.objects.create(name="MyParcel", garden_id=self.garden.id)
+        self.surface = Bed.objects.create(name="Bedding", garden=self.garden, parcel=self.parcel, width=250, length=250)
         operation = COWithDate.objects.create(name="Work", vegetable=self.vegetable, absoluteDate=date(2018, 8, 3))
         area = CultivatedArea.objects.create(vegetable=self.vegetable, garden=self.garden, label="Tomato area",
                                              surface=self.surface)
@@ -36,10 +37,10 @@ class AlertsViewsTests(TestCase):
         response = self.client.get('/{}/alerts/add_seed'.format(self.garden.id))
         self.assertEqual(response.status_code, 200)
         form = {'vegetable_selection': self.vegetable.id, "seeding_label": "My seeding",
-                "surface_selection": self.surface.id}
+                "multiple_beds_selection": self.surface.id}
         self.assertEqual(len(CultivatedArea.objects.filter(label="My seeding")), 0)
         response = self.client.post('/{}/alerts/add_seed'.format(self.garden.id), form)
-        self.assertRedirects(response, '/{}/alerts'.format(self.garden.id))
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(len(CultivatedArea.objects.filter(label="My seeding")), 1)
 
 

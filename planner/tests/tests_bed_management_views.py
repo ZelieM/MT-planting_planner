@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 
-from planner.models import Garden, Bed
+from planner.models import Garden, Bed, Parcel
 
 
 class BedManagementViewsTests(TestCase):
@@ -13,6 +13,7 @@ class BedManagementViewsTests(TestCase):
         self.password = 'test'
         self.user = User.objects.create_user(self.username, self.email, self.password)
         self.garden = Garden.objects.create(name="MyGarden", postal_code=1000)
+        self.parcel = Parcel.objects.create(name="MyParcel", garden=self.garden)
         self.garden.users.add(self.user)
 
     def test_beds_index(self):
@@ -20,14 +21,25 @@ class BedManagementViewsTests(TestCase):
         response = self.client.get('/{}'.format(self.garden.id))
         self.assertEqual(response.status_code, 200)
 
+    def test_create_parcel(self):
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get('/{}/create_parcel'.format(self.garden.id))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(self.garden.parcel_set.all()), 1)
+        form = {'name': 'SecondParcel'}
+        response = self.client.post('/{}/create_parcel'.format(self.garden.id), form)
+        self.assertRedirects(response, expected_url='/{}'.format(self.garden.id), status_code=302,
+                             target_status_code=200)
+        self.assertEqual(len(self.garden.parcel_set.all()), 2)
+
     def test_create_bed(self):
         login = self.client.login(username=self.username, password=self.password)
         response = self.client.get('/{}/create_bed'.format(self.garden.id))
         self.assertEqual(response.status_code, 200)
         # Creating a bed
         self.assertEqual(len(self.garden.bed_set.all()), 0)
-        form = {'name': 'MyBed', 'length': '450', 'width': '350', 'exposition': 'NO', 'comment': 'nocomment',
-                'soil_type': 'oily'}
+        form = {'parcel': self.parcel.id, 'name': 'MyBed', 'length': '450', 'width': '350', 'exposition': 'NO',
+                'comment': 'nocomment', 'soil_type': 'oily'}
         response = self.client.post('/{}/create_bed'.format(self.garden.id), form)
         self.assertRedirects(response, expected_url='/{}'.format(self.garden.id), status_code=302,
                              target_status_code=200)
@@ -38,7 +50,7 @@ class BedManagementViewsTests(TestCase):
         login = self.client.login(username=self.username, password=self.password)
         response = self.client.get('/{}/update_bed/{}'.format(self.garden.id, bed.id))
         self.assertEqual(response.status_code, 200)
-        form = {'name': 'ChangingName', 'length': '450', 'width': '350', 'exposition': 'NO', 'comment': 'nocomment',
+        form = {'parcel': self.parcel.id, 'name': 'ChangingName', 'length': '450', 'width': '350', 'exposition': 'NO', 'comment': 'nocomment',
                 'soil_type': 'oily'}
         response = self.client.post('/{}/update_bed/{}'.format(self.garden.id, bed.id), data=form)
         self.assertRedirects(response, expected_url='/{}'.format(self.garden.id), status_code=302,

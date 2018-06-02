@@ -1,0 +1,14 @@
+{% extends "planner/modals/base_modal.html" %}
+{% block modal_title %} Choisissez les dates limites de l'export que vous voulez réaliser{% endblock modal_title %}
+{% block modal_content %}
+    {% load crispy_forms_tags %}
+    <form action="{{ request.path }}" role="form" method="post" accept-charset="utf-8">
+        <div class="modal-body">
+            {% csrf_token %}
+            {{ form|crispy }}
+        </div>
+        <div class="modal-footer">
+            <input class="btn btn-success" type="submit" value="Exporter"/>
+        </div>
+    </form>
+{% endblock modal_content %}

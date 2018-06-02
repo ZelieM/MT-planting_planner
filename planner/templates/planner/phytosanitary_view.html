@@ -1,0 +1,217 @@
+{% extends "planner/base_for_gardens_views.html" %}
+
+{% block page_title %}Gestion des produits phytosanitaires{% endblock page_title %}
+
+{% block content %}
+
+
+    <div class="alert alert-info" id="info-bubble-content" style="display: none;">
+        Cette page vous permet de gérer votre utilisation de produits phytosanitaires comme demandé par l'AFSCA.
+        Vous pouvez ajouter des produits phytopharmaceutiques dans votre registre d'entrée et des utilisations dans le
+        registre d'utilisation via le bouton <i class="fas fa-fw fa-ellipsis-h red"></i>.
+        Vos registres peuvent ensuite être téléchargé au format excel via l'onglet <a
+            href="{% url 'planner:garden_export_view' garden_id %}"> <i class="fas fa-fw fa-upload"></i> Exporter</a> ou en cliquant directement sur le bouton <i class="fas fa-fw fa-upload blue"></i> relatif au registre que vous
+        voulez télécharger.
+    </div>
+
+
+    <div class="modal fade" id="modal-update_register_entry" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+    <div class="modal fade" id="modal-delete_register_entry" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+    <div class="modal fade" id="modal-create_incoming_phytosanitaire" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+
+    <div class="modal fade" id="modal-update_register_usage" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+    <div class="modal fade" id="modal-delete_register_usage" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+    <div class="modal fade" id="modal-create_phytosanitaire_usage" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+
+
+    <div class="modal fade" id="modal-export_phytosanitary_entries" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+    <div class="modal fade" id="modal-export_phytosanitary_usage" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+
+    <div id="action-buttons">
+        <div class="fab-btn btn-group show-on-hover dropup">
+            <div data-toggle="tooltip" data-placement="right" title="Actions" style="margin-left: 42px;">
+                <button type="button" class="btn btn-danger btn-io dropdown-toggle" data-toggle="dropdown">
+                    <span class="">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </span>
+                </button>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li data-toggle="tooltip" title="Registre d'entrée" data-placement="right">
+                    <a class="btn btn-success" data-toggle="modal"
+                       href="{% url 'planner:create_phytosanitary_entry' garden_id %}"
+                       data-target="#modal-create_incoming_phytosanitaire">
+                        <i class="fas fa-fw fa-truck-loading"></i>
+                    </a>
+
+                </li>
+                <li data-toggle="tooltip" title="Utilisation de phytosanitaire" data-placement="right">
+                    <a class="btn btn-success" data-toggle="modal"
+                       href="{% url 'planner:create_phytosanitary_usage' garden_id %}"
+                       data-target="#modal-create_phytosanitaire_usage">
+                        <i class="fas fa-fw fa-vial"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+
+    <div class="col-md-6">
+        <div class="panel panel-default ">
+            <div class="panel-heading">
+                Registre d'utilisation de produits phytopharmaceutiques dans l'exploitation
+                <a href="{% url 'planner:garden_usage_register_export' garden_id %}" class="pull-right"
+                   data-toggle="modal"
+                   data-target="#modal-export_phytosanitary_usage"
+                   title="Exporter le registre d'utilisation de produits phytopharmaceutiques" data-tooltip>
+                    <i class="fas fa-fw fa-upload"></i>
+                </a>
+            </div>
+            <div class="panel-body">
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Nom du produit</th>
+                            <th>Date d'application</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        {% for u in usage_register %}
+                            <tbody>
+                            <tr data-toggle="collapse" href="#collapse-usage{{ u.id }}" class="clickable">
+                                <td> {{ u.commercial_name }}  </td>
+                                <td>{{ u.usage_date }}</td>
+                                <th>
+                                    <a href="{% url 'planner:delete_phytosanitary_usage' garden_id u.id %}"
+                                       class="pull-right red"
+                                       data-toggle="modal"
+                                       data-target="#modal-delete_register_usage" title="Supprimer cette utilisation"
+                                       data-tooltip>
+                                        <i class="fas fa-fw fa-times red"></i>
+                                    </a>
+                                    <a href="{% url 'planner:update_phytosanitary_usage' garden_id u.id %}"
+                                       class="pull-right blue"
+                                       data-toggle="modal"
+                                       data-target="#modal-update_register_usage" title="Editer cette utilisation"
+                                       data-tooltip>
+                                        <i class="fas fa-fw fa-pencil-alt blue"></i>
+                                    </a>
+                                </th>
+                            </tr>
+
+                            <tr class="info">
+                                <td colspan="5" class="hiddenRow">
+                                    <div class="collapse" id="collapse-usage{{ u.id }}">
+                                        <b> Dose utilisée : </b> {{ u.dose_used }} {{ u.unity }}
+                                        <br>
+                                        <b> Culture traitée
+                                            : </b> {{ u.crop_treated }}, {{ u.crop_treated.surface.name }}
+                                        <br>
+                                        <b> Légume traité : </b> {{ u.crop_treated.vegetable }}
+                                        <br>
+                                        <b> Superficie : </b> {{ u.crop_treated.surface.get_area }} (m²)
+                                        <br>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-default ">
+            <div class="panel-heading">
+                Registre d'entrée de produits phytopharmaceutiques dans l'exploitation
+                <a href="{% url 'planner:garden_entry_register_export' garden_id %}" class="pull-right"
+                   data-toggle="modal"
+                   data-target="#modal-export_phytosanitary_entries"
+                   title="Exporter le registre d'entrée de produits phytopharmaceutiques" data-tooltip>
+                    <i class="fas fa-fw fa-upload"></i>
+                </a>
+            </div>
+            <div class="panel-body">
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Nom du produit</th>
+                            <th>Date de réception</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        {% for i in incoming_register %}
+                            <tbody>
+                            <tr data-toggle="collapse" href="#collapse-entry{{ i.id }}" class="clickable">
+                                <td> {{ i.commercial_name }}  </td>
+                                <td>{{ i.receipt_date }}</td>
+                                <th>
+                                    <a href="{% url 'planner:delete_phytosanitary_entry' garden_id i.id %}"
+                                       class="pull-right red"
+                                       data-toggle="modal"
+                                       data-target="#modal-delete_register_entry" title="Supprimer cette entrée"
+                                       data-tooltip>
+                                        <i class="fas fa-fw fa-times red"></i>
+                                    </a>
+                                    <a href="{% url 'planner:update_phytosanitary_entry' garden_id i.id %}"
+                                       class="pull-right blue"
+                                       data-toggle="modal"
+                                       data-target="#modal-update_register_entry" title="Editer cette entrée"
+                                       data-tooltip>
+                                        <i class="fas fa-fw fa-pencil-alt blue"></i>
+                                    </a>
+                                </th>
+                            </tr>
+
+                            <tr class="info">
+                                <td colspan="5" class="hiddenRow">
+                                    <div class="collapse" id="collapse-entry{{ i.id }}">
+                                        <b> Quantité : </b> {{ i.quantity }} {{ i.unity }}
+                                        <br>
+                                        <b> Identification de l'unité fournissant le produit : </b> {{ i.supplier }}
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#    <select class="form-control js-example-tags" id="id_commercial_name">#}
+    {#        <option selected="selected">orange</option>#}
+    {#        <option>white</option>#}
+    {#        <option>purple</option>#}
+    {#    </select>#}
+
+
+
+    {% load static %}
+    <script src="{% static 'planner/js/activate_modal.js' %}"></script>
+    <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
+    {#    <script>#}
+    {#        $(document).ready(function () {#}
+    {#            $("#id_commercial_name").select2({#}
+    {#                tags: true#}
+    {#            });#}
+    {#        });#}
+    {#    </script>#}
+{% endblock content %}

@@ -1,4 +1,4 @@
-{% extends "planner/base.html" %}
+{% extends "planner/base_for_gardens_views.html" %}
 
 {% block page_title %}Mes légumes{% endblock page_title %}
 
@@ -7,6 +7,18 @@
 {% endblock %}
 
 {% block content %}
+
+        <div class="alert alert-info" id="info-bubble-content" style="display: none;">
+        Cette page regroupe l'ensemble des légumes que vous pouvez cultiver sur votre exploitation. Ca représente un peu votre bibliothèque cultivable.
+        Pour effectuer une plantation d'un de ces légumes sur une de vos planches (onglet <a
+            href="{% url 'planner:garden_view' garden_id %}">Mes planches</a>), rendez-vous dans l'onglet <a
+            href="{% url 'planner:alerts_view' garden_id %}">Gestion</a>.
+        Vous pouvez créer vos propres légumes ou en importer depuis une librarie remplie par l'université en cliquant sur le bouton <i class="fas fa-fw fa-plus red"></i>.
+        Chaque légume peut avoir un ensemble d'opérations à faire au cours de l'année, une sorte d'itinéraire technique.
+        Ces opérations vous seront rappelées au fur et à mesure dans l'onglet <a
+            href="{% url 'planner:alerts_view' garden_id %}">Gestion</a>.
+    </div>
+
 
     <div id="action-buttons">
         <div class="fab-btn btn-group show-on-hover dropup">
@@ -45,6 +57,12 @@
     <div class="modal fade" id="modal-add_vegetable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
     </div>
+    <div class="modal fade" id="modal-update_vegetable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
+    <div class="modal fade" id="modal-delete_vegetable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    </div>
 
     <!-- /.modal -->
 
@@ -60,12 +78,25 @@
             <div class="form-group">
                 <input class="form-control" id="search_input" type="text" placeholder="Rechercher..">
             </div>
-            <div class="row card-deck" id="searchable_cards">
+            <div class="row card-deck" id="searchable_element">
                 {% for v in vegetables.all %}
-                    <div class="card-container col-sm-12 col-md-4">
+                    <div class="card-container searchable-container col-sm-12 col-md-4">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title searchable">{{ v }}</h4>
+                                <h4 class="card-title searchable">{{ v }}
+                                    <a class="pull-right" data-toggle="modal"
+                                       href="{% url 'planner:delete_vegetable' garden_id v.id %}"
+                                       data-target="#modal-delete_vegetable" title="edit item" data-tooltip>
+                                        <i class="fas fa-fw fa-times red"></i>
+                                    </a>
+                                    <a class="pull-right" data-toggle="modal"
+                                       href="{% url 'planner:update_vegetable' garden_id v.id %}"
+                                       data-target="#modal-update_vegetable" title="edit item" data-tooltip>
+                                        <i class="fas fa-fw fa-pencil-alt"></i>
+                                    </a>
+
+                                </h4>
+
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -99,14 +130,14 @@
                                         {% endfor %}
                                     </table>
                                 </div>
-                                <div class="card-footer">
-                                    <a class="btn btn-success btn-block" data-toggle="modal"
-                                       href="{% url 'planner:pick_co_type' garden_id v.id %}"
-                                       data-target="#modal-pick-type" title="add item" data-tooltip>
-                                        <i class="fas fa-fw fa-plus"></i>
-                                        Ajouter une opération
-                                    </a>
-                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a class="btn btn-success btn-block" data-toggle="modal"
+                                   href="{% url 'planner:pick_co_type' garden_id v.id %}"
+                                   data-target="#modal-pick-type" title="add item" data-tooltip>
+                                    <i class="fas fa-fw fa-plus"></i>
+                                    Ajouter une opération
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -125,6 +156,6 @@
     {% load static %}
     <script src="{% static 'planner/js/activate_modal.js' %}"></script>
     <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
-    <script src="{% static 'planner/js/search_vegetable.js' %}"></script>
+    <script src="{% static 'planner/js/search_elements.js' %}"></script>
 
 {% endblock content %}

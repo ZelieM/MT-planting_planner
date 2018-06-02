@@ -5,7 +5,7 @@ from planner import services, queries
 
 from datetime import date, timedelta
 
-from planner.models import Operation, ForthcomingOperation, CultivatedArea
+from planner.models import Operation, ForthcomingOperation, CultivatedArea, Garden, Bed
 from vegetables_library.models import Variety
 
 register = template.Library()
@@ -24,6 +24,7 @@ def navactive(request, url, arg):
     if request.path == (reverse(url, args=[arg])):
         return "active"
     return ""
+
 
 @register.filter
 def addstr(arg1, arg2):
@@ -80,16 +81,27 @@ def active_cultivated_vegetable(vegetable):
 def inactive_cultivated_vegetable(vegetable):
     return CultivatedArea.objects.filter(vegetable_id=vegetable, is_active=False)
 
+
 @register.simple_tag
 def productivity(harvest_details):
     price = harvest_details.total_selling_price
     kg = harvest_details.kg_produced
     if price != 0 and kg != 0:
-        return round(price/kg, 2)
+        return round(price / kg, 2)
     else:
         return 0
+
+
+@register.simple_tag()
+def get_notification_delay(garden_id):
+    return Garden.objects.get(pk=garden_id).notification_delay
 
 
 @register.filter
 def is_operation(history_item):
     return type(history_item) is Operation
+
+
+@register.simple_tag()
+def get_beds_from_parcel(parcel_id):
+    return Bed.objects.filter(parcel_id=parcel_id)
