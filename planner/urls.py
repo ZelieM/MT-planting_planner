@@ -14,7 +14,7 @@ urlpatterns = [
     path('offline', PWAOfflineView.as_view(), name='pwa_offline_page'),
 
     # Authentications views
-    url(r'^login/$', auth_views.login, {'template_name': 'planner/login.html'}, name='login'),
+    path('login', auth_views.login, {'template_name': 'planner/login.html'}, name='login'),
     path('signup', signup, name='signup'),
     path('garden_selection', custom_login_required(GardenSelectionView.as_view()), name='garden_selection'),
     path('logout', log_out, name="log_out"),

@@ -14,7 +14,7 @@ class GardensDataViewsTests(TestCase):
     def test_index(self):
         login = self.client.login(username=self.username, password=self.password)
         response = self.client.get('/research/vegetables')
-        self.assertRedirects(response, '/login/?next=/research/vegetables')
+        self.assertRedirects(response, '/login?next=/research/vegetables')
         permission = Permission.objects.get(name='Can access research interface')
         self.user.user_permissions.add(permission)
         response = self.client.get('/research/vegetables')

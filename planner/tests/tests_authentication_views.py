@@ -36,13 +36,13 @@ class AuthenticationViewsTests(TestCase):
 
     def test_login(self):
         login = self.client.login(username=self.username, password=self.password)
-        response = self.client.get('/login/')
+        response = self.client.get('/login')
         self.assertEqual(response.status_code, 200)
 
     def test_logout(self):
         login = self.client.login(username=self.username, password=self.password)
         response = self.client.get('/logout')
-        self.assertRedirects(response, '/login/', status_code=302)
+        self.assertRedirects(response, '/login', status_code=302)
 
     def test_signup(self):
         response = self.client.get('/signup')
@@ -53,8 +53,7 @@ class AuthenticationViewsTests(TestCase):
 
     def test_index(self):
         response = self.client.get('/')
-        self.assertRedirects(response, '/login', status_code=302,
-                             target_status_code=301)  # /login permanently redirects to /login/
+        self.assertRedirects(response, '/login')  # /login permanently redirects to /login/
         login = self.client.login(username=self.username, password=self.password)
         response = self.client.get('/')
         self.assertRedirects(response, '/garden_selection', status_code=302, target_status_code=200)

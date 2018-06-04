@@ -4,4 +4,4 @@ from django.http import HttpResponseRedirect
 
 def log_out(request):
     logout(request)
-    return HttpResponseRedirect("/login/")
+    return HttpResponseRedirect("/login")

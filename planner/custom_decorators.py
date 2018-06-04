@@ -6,7 +6,7 @@ from django.utils.functional import wraps
 from planner.models import Garden
 
 
-def custom_login_required(function=None, login_url="/login/"):
+def custom_login_required(function=None, login_url="/login"):
     """
     Custom decorator with a login url set based on this application
     """

@@ -29,8 +29,9 @@
                     <span class="icon-bar"></span>
                 </button>
             </div>
+        {% load planner_extras %}
             <div class="collapse navbar-collapse" id="myNavbar">
-                {% if is_searcher %}
+                {% if request.user|is_researcher %}
                     <ul class="nav navbar-nav ">
                         <li class=""><a
                                 href="{% url 'research:all_gardens_view' %}">Accéder à l'interface chercheur</a></li>

@@ -36,7 +36,7 @@ def signup(request):
 
 def log_out(request):
     logout(request)
-    return HttpResponseRedirect("/login/")
+    return HttpResponseRedirect("/login")
 
 
 class GardenSelectionView(View):

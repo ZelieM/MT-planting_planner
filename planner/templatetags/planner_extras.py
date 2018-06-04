@@ -1,4 +1,5 @@
 from django import template
+from django.contrib.auth.models import User
 from django.urls import reverse
 
 from planner import services, queries
@@ -105,3 +106,8 @@ def is_operation(history_item):
 @register.simple_tag()
 def get_beds_from_parcel(parcel_id):
     return Bed.objects.filter(parcel_id=parcel_id)
+
+
+@register.filter()
+def is_researcher(user):
+    return user.has_perm("research.is_researcher")

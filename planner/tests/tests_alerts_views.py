@@ -27,7 +27,7 @@ class AlertsViewsTests(TestCase):
 
     def test_alert_view_index(self):
         response = self.client.get('/{}/alerts'.format(self.garden.id))
-        self.assertRedirects(response, expected_url='/login/?next=/{}/alerts'.format(self.garden.id), status_code=302)
+        self.assertRedirects(response, expected_url='/login?next=/{}/alerts'.format(self.garden.id), status_code=302)
         self.client.login(username=self.username, password=self.password)
         response = self.client.get('/{}/alerts'.format(self.garden.id))
         self.assertEqual(response.status_code, 200)
