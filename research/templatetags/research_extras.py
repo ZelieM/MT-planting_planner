@@ -26,6 +26,11 @@ def vegetable_operations(vegetableid):
 
 
 @register.filter
-def varieties_from_species(species):
+def garden_vegetable_operations(vegetableid):
+    from planner.models import CulturalOperation
+    return CulturalOperation.objects.select_subclasses().filter(vegetable_id=vegetableid).all()
 
+
+@register.filter
+def varieties_from_species(species):
     return Variety.objects.filter(species=species)

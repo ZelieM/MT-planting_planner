@@ -1,13 +1,9 @@
 import codecs
 import csv
-import os
-import tempfile
 from datetime import date
-from subprocess import Popen, PIPE
 
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.template.loader import get_template
 from django.views import View
 from django.views.generic import TemplateView
 

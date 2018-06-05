@@ -2,12 +2,30 @@
 
 {% block content %}
     {% load research_extras %}
+    {% load humanize %}
+
+
+    <div id="action-buttons">
+        <div class="fab-btn btn-group show-on-hover dropup">
+            <div data-toggle="tooltip" data-placement="right" title="Exporter" style="margin-left: 42px;">
+                <a href="{% url 'research:export_vegetables_data' %}">
+                    <button class="btn btn-primary btn-io">
+                    <span class="">
+                      <i class="fas fa-w fa-download"></i>
+                    </span>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
     <h2> Légumes utilisés dans les jardins </h2>
     <table class="table table-hover table-bordered table-responsive ">
         <tr>
             <th> Jardin</th>
             <th>Légume - Variété</th>
-            <th> Détails </th>
+            <th> Itinéraire technique</th>
         </tr>
         {% for v in vegetables %}
             <tr>
@@ -18,11 +36,20 @@
                     {{ v.name }} - {{ v.variety }}
                 </td>
                 <td>
-
+                    <ul>
+                        {% for o in v.id|garden_vegetable_operations %}
+                            <li>
+                                {{ o.name }} - {{ o.get_date|date:"j F" }}
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </td>
             </tr>
         {% endfor %}
     </table>
 
+
+    {% load static %}
+    <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
 
 {% endblock content %}
