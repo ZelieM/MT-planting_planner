@@ -15,6 +15,7 @@ class LibraryView(TemplateView):
 
         species = Species.objects.all()
         context['library_species'] = species
+        context['library_varieties'] = Variety.objects.all().order_by('species__french_name')
         return context
 
 

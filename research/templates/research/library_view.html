@@ -15,12 +15,6 @@
                 </button>
             </div>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-{#                <li data-toggle="tooltip" data-original-title="Télécharger les opérations" data-placement="right">#}
-{#                    <a class="btn btn-primary"#}
-{#                       href="{% url "research:export_library" %}">#}
-{#                        <i class="fas fa-fw fa-download"></i>#}
-{#                    </a>#}
-{#                </li>#}
                 <li data-toggle="tooltip" data-original-title="Télécharger les espèces" data-placement="right">
                     <a class="btn btn-success"
                        href="{% url "research:export_library_species" %}">
@@ -33,60 +27,69 @@
                         <i class="fas fa-fw fa-seedling"></i>
                     </a>
                 </li>
-                {#                <li data-toggle="tooltip" title="Importer des données" data-placement="right">#}
-                {#                    <a class="btn btn-warning"#}
-                {#                       href="">#}
-                {#                        <i class="fas fa-fw fa-upload"></i>#}
-                {#                    </a>#}
-                {##}
-                {#                </li>#}
             </ul>
         </div>
     </div>
 
 
+    {% load humanize %}
     <div class="container">
-        <div class="panel-group">
-            <div class="panel panel-primary">
-                {% for s in library_species %}
-                    <div class="panel-heading">
-                        <h4 data-toggle="collapse" href="#collapse-v{{ s.id }}" class="panel-title clickable">
-                            <span>{{ s }} <span class="pull-right"><i
-                                    class="fas fa-fw fa-chevron-down"></i></span></span>
-                        </h4>
-                    </div>
-                    <div id="collapse-v{{ s.id }}" class="panel-collapse collapse">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Legume</th>
-                                    <th>Nom latin</th>
-                                </tr>
-                                </thead>
-                                {% for v in s.id|varieties_from_species %}
+        <div class="form-group">
+            <input class="form-control" id="search_input" type="text" placeholder="Rechercher..">
+        </div>
+        <div class="row card-deck" id="searchable_element">
+            {% for v in library_varieties %}
+                <div class="card-container searchable-container col-sm-12 col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title searchable">{{ v.species }} - {{ v.french_name }} </h4>
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Début</th>
+                                        <th> Fin</th>
+                                    </tr>
+                                    </thead>
                                     <tbody>
                                     <tr>
-                                        <td>{{ v.french_name }}</td>
+                                        <td> Semis</td>
+                                        <td>{{ v.open_ground_seeding.seeding_start|date:"j F" }}</td>
+                                        <td>{{ v.open_ground_seeding.seeding_end|date:"j F" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td> Récolte</td>
+                                        <td>{{ v.open_ground_seeding.harvest_start|date:"j F" }}</td>
+                                        <td>{{ v.open_ground_seeding.harvest_end|date:"j F" }}</td>
+                                    </tr>
 
-                                        <td>{{ v.latin_name }}</td>
-
-
+                                    {% for co in v.id|vegetable_operations %}
+                                        <tr>
+                                            <td> {{ co.name }}</td>
+                                            <td></td>
+                                            <td>{{ co.get_date|date:"j F" }}</td>
+                                        </tr>
+                                    {% endfor %}
                                     </tbody>
-                                {% endfor %}
-                            </table>
-                            {##}
 
-
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <p> Durée du cycle : {{ v.open_ground_seeding.cycle_duration }} jours </p>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 
 
+
     {% load static %}
     <script src="{% static 'planner/js/activate_tooltips.js' %}"></script>
+    <script src="{% static 'planner/js/search_elements.js' %}"></script>
 
 {% endblock content %}
