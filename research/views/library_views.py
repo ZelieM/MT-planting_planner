@@ -12,9 +12,6 @@ class LibraryView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        species = Species.objects.all()
-        context['library_species'] = species
         context['library_varieties'] = Variety.objects.all().order_by('species__french_name')
         return context
 
