@@ -29,7 +29,7 @@
                     <span class="icon-bar"></span>
                 </button>
             </div>
-        {% load planner_extras %}
+            {% load planner_extras %}
             <div class="collapse navbar-collapse" id="myNavbar">
                 {% if request.user|is_researcher %}
                     <ul class="nav navbar-nav ">
@@ -47,33 +47,35 @@
         </div>
     </nav>
 
+    <div class="body-wrap">
+        <div class="body-container">
+            <div class="container col-md-6 col-md-offset-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Liste des exploitations maraichères dans lesquelles vous êtes actif</div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            {% for g in gardens_followed %}
+                                <a href="{{ g.get_absolute_url }}"
+                                   class="list-group-item list-group-item-action"> {{ g.name }}</a>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
 
-    <div class="container col-md-6 col-md-offset-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">Liste des exploitations maraichères dans lesquelles vous êtes actif</div>
-            <div class="panel-body">
-                <ul class="list-group">
-                    {% for g in gardens_followed %}
-                        <a href="{{ g.get_absolute_url }}"
-                           class="list-group-item list-group-item-action"> {{ g.name }}</a>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">Créer une nouvelle exploitation maraichère</div>
-            <div class="panel-body">
-                {% load crispy_forms_tags %}
-                <form action="" name="" role="form" class="form-horizontal col-md-12" method="post"
-                      accept-charset="utf-8">
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                    <input class="btn btn-success" type="submit" value="Créer"/>
-                </form>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Créer une nouvelle exploitation maraichère</div>
+                    <div class="panel-body">
+                        {% load crispy_forms_tags %}
+                        <form action="" name="" role="form" class="form-horizontal col-md-12" method="post"
+                              accept-charset="utf-8">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <input class="btn btn-success" type="submit" value="Créer"/>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
     {% include "planner/footer.html" %}
 {% endblock page_body %}
